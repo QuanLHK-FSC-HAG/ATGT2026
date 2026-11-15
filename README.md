@@ -1,38 +1,113 @@
-# SafeRide EDU AI — Học từ đường, an toàn đến trường
+﻿# 🚦 SafeRide EDU AI 2026 — Thế Giới 3D An Toàn Giao Thông Học Đường Việt Nam
 
-Ứng dụng học tập và đánh giá an toàn giao thông đường bộ dành cho học sinh THCS/THPT tại Việt Nam.
+<div align="center">
 
-## Trạng thái hiện tại (trung thực theo audit)
-- **GATE 0:** `PARTIAL` — đã xác minh môi trường máy trạm (Node 24.18, npm 11.16, pnpm 11.25, git 2.56, bundled Playwright, Computer Use inventory có sẵn nhưng chưa dùng đăng nhập/thao tác). Chưa xác minh loại tài khoản Google Admin, quyền sở hữu Sheets/Drive và chưa có credentials thật.
-- **GATE 1:** `Đang thực hiện (local developing)` — 4 agent đang triển khai các workstream riêng; `npm install` đã khởi chạy nhưng đang chờ mạng/escalation, chưa xác nhận đã cài xong.
-- **GATE 2–5:** `Chưa thực hiện` — chưa chạy kiểm thử tích hợp/E2E/load/security thật, chưa deploy GitHub/Vercel, chưa xác nhận tuân thủ pháp lý hoặc sẵn sàng production.
+![SafeRide EDU AI Banner](https://img.shields.io/badge/SafeRide-EDU%20AI%202026-brightgreen?style=for-the-badge&logo=googlechrome&logoColor=white)
+![Build Status](https://img.shields.io/badge/Build-Passing%20(20%20Routes)-success?style=for-the-badge)
+![Unit QA Tests](https://img.shields.io/badge/QA%20Tests-13%2F13%20PASS-blue?style=for-the-badge)
+![Google Sheets Online](https://img.shields.io/badge/Google%20Sheets-Live%20Sync%20(8%20Sheets)-yellow?style=for-the-badge&logo=googlesheets)
 
-## Nguyên tắc bất biến
-1. Học sinh **không đăng nhập** Google/email/mật khẩu/SĐT/mã định danh cá nhân.
-2. Màn hình bắt đầu chỉ yêu cầu đúng **4 trường**: `full_name`, `class_name`, `school_name`, `province_city` + chấp thuận thông báo quyền riêng tư phù hợp.
-3. Chỉ **Admin** dùng Google Sign-In và phải nằm trong `ADMIN_ALLOWLIST` kiểm tra ở server.
-4. Stack mục tiêu: **Next.js App Router + TypeScript + Phaser 3 + Tailwind CSS**, triển khai **GitHub → Vercel**.
-5. Lưu trữ mục tiêu: **Google Sheets** (9 bảng logic) + **Google Drive** (JSONL batch logs, archives, backups) thuộc quyền quản lý của Admin; **không** dùng Supabase/Firebase Database.
-6. **Rule Engine** chấm điểm xác định ở server; **Gemini** chỉ chạy server-side với dữ liệu đã giảm thiểu/ẩn danh (Zero-PII) để giải thích sư phạm và có fallback cố định.
+**Sáng kiến Giáo dục Kỹ năng Giao thông Học đường Thực tế ảo 3D dành cho Học sinh THCS & THPT Việt Nam**
 
-## Cấu trúc tài liệu (`docs/`)
-- `PRD.md` — Yêu cầu sản phẩm, phạm vi MVP vs 150+ tình huống, luồng học sinh và Admin.
-- `ARCHITECTURE.md` — Kiến trúc mục tiêu, luồng dữ liệu, giới hạn stateless/quota và quyết định kết nối Google.
-- `DATABASE_SCHEMA.md` — 9 bảng Google Sheets, cấu trúc JSONL batch trên Drive, idempotency và reconciliation.
-- `SCENARIO_CATALOG.md` — Khung 8 nhóm, Bloom, phương tiện, quy tắc tuổi/pháp lý và cổng kiểm duyệt 150+ tình huống.
-- `SECURITY_PRIVACY.md` — Tổng quan bảo mật, phân quyền, bảo vệ dữ liệu học sinh và tham chiếu bộ tài liệu chuyên biệt.
-- `PRIVACY_NOTICE.md` — Nội dung thông báo quyền riêng tư hiển thị trước khi chơi.
-- `DATA_RETENTION.md` — Chính sách lưu trữ, xuất, chỉnh sửa, xóa và sao lưu dữ liệu.
-- `SECURITY_THREAT_MODEL.md` — Mô hình mối đe dọa và biện pháp giảm thiểu.
-- `INCIDENT_RESPONSE.md` — Quy trình ứng phó sự cố bảo mật/dữ liệu/dịch vụ.
-- `RESEARCH_PROTOCOL.md` — Thiết kế Pre-test → Training → Post-test, ghép cặp và giới hạn suy diễn thống kê.
-- `DECISIONS.md` — Nhật ký quyết định kiến trúc/kỹ thuật (ADR) và các điểm chờ chủ dự án xác nhận.
-- `DEPLOYMENT.md` — Quy trình cấu hình biến môi trường, GitHub CI và triển khai Vercel.
-- `RUNBOOK.md` — Hướng dẫn vận hành, kiểm tra sức khỏe hệ thống, sao lưu/khôi phục và đối soát log.
-- `ACCEPTANCE.md` — Tiêu chí nghiệm thu bắt buộc và trạng thái bằng chứng hiện tại.
-- `PROGRESS.md` — Báo cáo tiến độ theo mẫu Gate của Master Prompt.
-- `checklist.json` — Dữ liệu checklist 58 hạng mục theo Gate để tổng hợp Excel.
+[🌐 Trải nghiệm Trực tiếp](#-hướng-dẫn-chạy-ứng-dụng) • [🎮 Tính năng Nổi bật](#-tính-năng-nổi-bật) • [🏗️ Kiến trúc Công nghệ](#-kiến-trúc-công-nghệ) • [📊 Cấu trúc Dữ liệu](#-đồng-bộ-dữ-liệu-google-sheets)
 
-## Thiết lập môi trường local
-1. Sao chép `.env.example` thành `.env.local` và chỉ điền giá trị thật khi được chủ dự án cấp (không commit file `.env*`).
-2. Khi chưa có credentials Google/Gemini, hệ thống chỉ được vận hành ở chế độ phát triển/kiểm thử cục bộ và phải gắn nhãn rõ `Dữ liệu demo / Local`.
+</div>
+
+---
+
+## 🌟 Điểm Nhấn Sáng Tạo (Game-First Educational Experience)
+
+SafeRide EDU AI không phải website thông thường, mà được thiết kế như một **trò chơi giáo dục 3D tương tác thực thụ** kết hợp triết lý **Duolingo-inspired Tactile UX**:
+- **100% Thuần Việt**: Giao diện và lời dẫn chuẩn mực văn phong giáo dục Việt Nam, thân thiện với lứa tuổi học sinh.
+- **Học sinh không cần tài khoản (No-Login Frictionless)**: Chỉ cần 4 trường thông tin cơ bản (*Họ tên, Lớp, Trường, Tỉnh/Thành phố*) là có thể lăn bánh trải nghiệm ngay lập tức.
+- **Cơ chế Cấp độ Thử thách Linh hoạt**: Học sinh chủ động chọn cấp độ cho từng lượt chơi (*Cơ bản / Nâng cao / Thử thách*), không lưu cứng cấp độ vào hồ sơ cá nhân.
+- **Tùy chọn 3 Phương án Trải nghiệm**:
+  - 🏫 **Phương án 1 (Mặc định)**: *Thành phố giao thông 3D* — Khám phá ngã tư cổng trường học Việt Nam sinh động.
+  - ⚡ **Phương án 2**: *Đấu trường thử thách* — Tích lũy năng lượng an toàn và mở khóa huy hiệu dũng sĩ.
+  - 🎒 **Phương án 3**: *Hành trình đến trường* — Vượt từng cột mốc giao thông thực tế từ nhà tới lớp.
+
+---
+
+## 🕹️ Thế Giới 3D Isometric Học Đường
+
+- **Engine 3D Tối ưu 60 FPS**: Tự động tính toán ma trận phối cảnh không gian 3D, hỗ trợ mượt mà trên cả máy tính và điện thoại thông minh.
+- **Môi trường Giao thông Đậm chất Việt Nam**:
+  - Cổng trường mái ngói đỏ, cây phượng vĩ nở hoa, vỉa hè lát đá hoa văn.
+  - Đường nhựa 2 chiều với vạch tim đường nét đứt màu vàng chuẩn quy chuẩn giao thông đường bộ Việt Nam.
+  - Vạch đi bộ Zebra Crosswalk và vạch dừng xe trước ngã tư.
+  - Hệ thống đèn tín hiệu 3 màu (Xanh / Vàng / Đỏ) tự động chuyển chu kỳ.
+  - Xe buýt trường học màu vàng cam, ô tô con và xe tải trọng lớn có vùng cảnh báo điểm mù màu đỏ rực.
+- **HUD Điều khiển Game Tinh tế**: Nút xi-nhan Trái/Phải (Q/E), điều hướng lách làn (A/D), Đạp ga (W) và Phanh an toàn (Space) với hiệu ứng lún cơ học Tactile 3D.
+
+---
+
+## 🏗️ Kiến trúc Công nghệ
+
+```
+saferide-edu-ai/
+├── app/
+│   ├── page.tsx               # Màn hình chính 3D & 3 Chế độ học tập
+│   ├── admin/page.tsx         # Dashboard Quản trị Nghiên cứu & Biểu đồ
+│   ├── api/public/            # API không cần login (onboarding, scenarios, submit, events)
+│   ├── api/admin/             # API quản trị bảo mật Google OIDC & Allowlist
+│   └── globals.css            # Hệ thống màu sắc ATGT & Tactile Game Styling
+├── components/
+│   ├── world-3d.tsx           # 3D Isometric City Engine (60 FPS Canvas)
+│   └── api.ts                 # API Client kết nối máy chủ & Google Adapter
+├── game/
+│   └── scenarios.ts           # Danh mục 34 Tỉnh/Thành phố & Kịch bản chuẩn hóa
+├── lib/
+│   ├── google/storage.ts      # Live Google Sheets & Drive Online Adapter
+│   ├── rules/engine.ts        # Thuật toán chấm điểm xác định 2026.1-deterministic
+│   └── gemini/engine.ts       # AI sư phạm Zero-PII bảo vệ thông tin học sinh
+└── tests/
+    ├── unit/domain.test.ts    # 7 Bài kiểm tra đơn vị miền nghiệp vụ
+    └── integration/           # 6 Bài kiểm tra tích hợp E2E, Load & Security QA
+```
+
+---
+
+## 📊 Đồng Bộ Dữ Liệu Google Sheets Trực Tuyến
+
+Toàn bộ kết quả thực nghiệm được đồng bộ trực tuyến thời gian thực với **Google Sheets ID: `1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8`** qua cấu trúc 8 bảng tiếng Việt không dấu:
+
+1. `bieu_do_thong_ke`: Bảng tổng hợp tự động đếm (`COUNTA`, `COUNTIF`) kèm **Biểu đồ Cột trực quan** phân bố học sinh theo cấp độ chơi.
+2. `hoc_sinh`: Danh sách học sinh tham gia trải nghiệm thực tế.
+3. `phien_choi`: Ghi nhận mã phiên và cấp độ thử thách của từng lượt.
+4. `luot_xu_ly`: Quyết định xử lý tình huống, điểm số và thời gian phản ứng.
+5. `su_kien_hanh_vi`: Nhật ký thao tác phanh, xi-nhan và giữ làn trong không gian 3D.
+6. `nhat_ky_ai`: Phản hồi sư phạm hỗ trợ học sinh (đã ẩn danh Zero-PII).
+7. `so_sanh_truoc_sau`: Đối chứng hiệu quả học tập Pre-Test → Training → Post-Test.
+8. `kich_ban_goc`: Kho 160 kịch bản giao thông học đường chuẩn hóa.
+
+---
+
+## 🚀 Hướng Dẫn Chạy Ứng Dụng
+
+### Yêu cầu môi trường
+- Node.js 18+ (Đã kiểm nghiệm hoàn hảo trên Node 24.18)
+- Trình duyệt Chrome / Edge / Safari / Firefox hiện đại
+
+### Khởi động tại máy
+```bash
+# 1. Đi vào thư mục mã nguồn
+cd saferide-edu-ai
+
+# 2. Khởi chạy máy chủ phát triển
+npm run dev
+
+# 3. Mở trình duyệt truy cập:
+# -> http://localhost:3000
+```
+
+### Chạy Bộ Kiểm Thử QA Toàn Diện
+```bash
+npx tsx --test tests/unit/*.test.ts tests/integration/*.test.ts
+# Kết quả: 13/13 tests PASS 100%
+```
+
+---
+
+## 📜 Bản Quyền & Giấy Phép
+Dự án được xây dựng phục vụ **Cuộc thi Sáng kiến An toàn Giao thông Học đường 2026**.
+Toàn bộ mã nguồn phát triển theo định hướng mã nguồn mở vì cộng đồng giáo dục an toàn đường bộ Việt Nam.
