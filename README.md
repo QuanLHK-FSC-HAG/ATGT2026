@@ -5,6 +5,8 @@
 ![SafeRide EDU AI Banner](https://img.shields.io/badge/SafeRide-EDU%20AI%202026-brightgreen?style=for-the-badge&logo=googlechrome&logoColor=white)
 ![Build Status](https://img.shields.io/badge/Build-Passing%20(20%20Routes)-success?style=for-the-badge)
 ![Unit QA Tests](https://img.shields.io/badge/QA%20Tests-13%2F13%20PASS-blue?style=for-the-badge)
+
+![License](https://img.shields.io/badge/License-MIT-blueviolet?style=for-the-badge)
 ![Google Sheets Online](https://img.shields.io/badge/Google%20Sheets-Live%20Sync%20(8%20Sheets)-yellow?style=for-the-badge&logo=googlesheets)
 
 **Sáng kiến Giáo dục Kỹ năng Giao thông Học đường Thực tế ảo 3D dành cho Học sinh THCS & THPT Việt Nam**
