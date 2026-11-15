@@ -1,0 +1,44 @@
+﻿# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js / Build
+.next/
+out/
+build/
+dist/
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Environment & Secrets (NEVER COMMIT)
+.env
+.env.*
+!.env.example
+*service-account*.json
+*credentials*.json
+*OAuth*.json
+*atgt2026*.json
+*api key*
+*refresh-token*
+*.pem
+*.key
+
+# Local runtime / test / mock data
+.runtime/
+.local-storage/
+data/runtime/
+tmp/
+temp/
+logs/
+*.jsonl
+playwright-report/
+test-results/
+coverage/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/

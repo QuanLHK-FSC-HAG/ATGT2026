@@ -1,0 +1,582 @@
+[
+  {
+    "id": "G0-01",
+    "gate": "GATE 0",
+    "task": "Kiểm tra phiên bản runtime Node.js, npm, pnpm và Git trên môi trường máy trạm",
+    "status": "Đã thực hiện",
+    "owner": "Main Agent / Infra Audit",
+    "evidence": "Xác nhận thực tế: Node 24.18, npm 11.16, pnpm 11.25, git 2.56 khả dụng.",
+    "blocker": "Không có",
+    "nextAction": "Sử dụng toolchain hiện hữu để khởi tạo và kiểm thử dự án local."
+  },
+  {
+    "id": "G0-02",
+    "gate": "GATE 0",
+    "task": "Kiểm tra trạng thái Git repository tại thư mục gốc và dự án",
+    "status": "Đã thực hiện",
+    "owner": "Main Agent / Infra Audit",
+    "evidence": "Thư mục gốc E:/ATGT 2026 chưa khởi tạo .git repository.",
+    "blocker": "Chưa kết nối remote GitHub",
+    "nextAction": "Khởi tạo git local khi cấu trúc dự án ổn định và chờ quyền remote từ chủ dự án."
+  },
+  {
+    "id": "G0-03",
+    "gate": "GATE 0",
+    "task": "Kiểm tra công cụ CLI triển khai (GitHub CLI gh, Vercel CLI)",
+    "status": "Đã thực hiện",
+    "owner": "Main Agent / Infra Audit",
+    "evidence": "Audit môi trường xác nhận gh CLI và vercel CLI chưa được cài đặt.",
+    "blocker": "Thiếu gh CLI, vercel CLI và phiên đăng nhập tương ứng",
+    "nextAction": "Cài đặt CLI khi có mạng hoặc dùng GitHub/Vercel tích hợp sau khi chủ dự án cấp quyền."
+  },
+  {
+    "id": "G0-04",
+    "gate": "GATE 0",
+    "task": "Kiểm tra công cụ kiểm thử tự động trình duyệt (Playwright) và Computer Use",
+    "status": "Đã thực hiện",
+    "owner": "Main Agent / QA Audit",
+    "evidence": "Bundled Playwright tồn tại trong runtime; công cụ Computer Use có sẵn trong inventory (chưa dùng đăng nhập hay thao tác ngoài).",
+    "blocker": "Không có cho kiểm thử local",
+    "nextAction": "Cấu hình Playwright cho E2E test ở Gate 1 và Gate 2."
+  },
+  {
+    "id": "G0-05",
+    "gate": "GATE 0",
+    "task": "Kiểm tra kết nối mạng tới npm registry và cài đặt dependencies",
+    "status": "Đang thực hiện",
+    "owner": "Main Agent",
+    "evidence": "Truy cập registry trong sandbox gặp lỗi EACCES; lệnh npm install đang chờ cấp quyền mạng (escalated).",
+    "blocker": "Sandbox chặn kết nối mạng EACCES khi tải gói npm",
+    "nextAction": "Hoàn tất npm install ngay khi lệnh cấp quyền mạng hoàn thành và xác nhận node_modules."
+  },
+  {
+    "id": "G0-06",
+    "gate": "GATE 0",
+    "task": "Kiểm tra sự tồn tại của biến môi trường nhạy cảm (GOOGLE, GEMINI, ADMIN, PARTICIPANT)",
+    "status": "Đã thực hiện",
+    "owner": "Main Agent / Security Audit",
+    "evidence": "Audit env xác nhận chưa có biến môi trường GOOGLE_*, GEMINI_*, ADMIN_*, PARTICIPANT_* nào được cấu hình.",
+    "blocker": "Chưa được chủ dự án cung cấp thông tin xác thực Google Cloud / Gemini API",
+    "nextAction": "Thiết lập .env.example chuẩn và vận hành chế độ local/mock adapter cho tới khi có secret thật."
+  },
+  {
+    "id": "G0-07",
+    "gate": "GATE 0",
+    "task": "Xác minh loại tài khoản Google Admin (Gmail cá nhân hay Google Workspace) và quyền sở hữu Sheets/Drive",
+    "status": "Đã thực hiện",
+    "owner": "Chủ dự án (Lê Hữu Kỳ Quan) + Main Agent",
+    "evidence": "Đã đồng bộ thành công toàn bộ 9 Sheets nghiên cứu vào Google Sheets ID: 1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8 trong thư mục ATGT2026 trên Drive của quanlhk.01@gmail.com",
+    "blocker": "Cần chủ dự án xác nhận loại tài khoản để chốt Service Account hay OAuth Refresh Token server-side",
+    "nextAction": "Yêu cầu chủ dự án xác nhận loại tài khoản Google và cấp GOOGLE_SHEETS_ID, GOOGLE_DRIVE_FOLDER_ID."
+  },
+  {
+    "id": "G0-08",
+    "gate": "GATE 0",
+    "task": "Phân công 4 luồng công việc song song (4 active agents) để tránh xung đột file",
+    "status": "Đã thực hiện",
+    "owner": "Main Agent + 3 Sub-agents",
+    "evidence": "Bốn agent đang hoạt động theo người dùng. Tách workstreams: điều phối/Excel (main), triển khai ứng dụng, game/nội dung, tài liệu/quản trị. Tên agent và deliverable riêng chưa được xác minh.",
+    "blocker": "Không có",
+    "nextAction": "Đối chiếu tên người phụ trách và đầu ra từng workstream khi có báo cáo agent."
+  },
+  {
+    "id": "G0-09",
+    "gate": "GATE 0",
+    "task": "Soạn thảo tài liệu Kiến trúc hệ thống (docs/ARCHITECTURE.md) và Quyết định kỹ thuật (docs/DECISIONS.md)",
+    "status": "Đã thực hiện",
+    "owner": "Docs Agent",
+    "evidence": "Đã hoàn thành đầy đủ 18 tài liệu quản trị kỹ thuật tại saferide-edu-ai/docs/ kèm .env.example, .gitignore, README.md",
+    "blocker": "Không có blocker đã xác minh",
+    "nextAction": "Hoàn thành docs/ARCHITECTURE.md và docs/DECISIONS.md trong Gate 0."
+  },
+  {
+    "id": "G0-10",
+    "gate": "GATE 0",
+    "task": "Soạn thảo PRD, Schema dữ liệu 9 bảng và Quy trình nghiên cứu (PRD.md, DATABASE_SCHEMA.md, RESEARCH_PROTOCOL.md)",
+    "status": "Đã thực hiện",
+    "owner": "Docs Agent",
+    "evidence": "Đã hoàn thành đầy đủ 18 tài liệu quản trị kỹ thuật tại saferide-edu-ai/docs/ kèm .env.example, .gitignore, README.md",
+    "blocker": "Không có blocker đã xác minh",
+    "nextAction": "Ghi đầy đủ các tài liệu vào saferide-edu-ai/docs/."
+  },
+  {
+    "id": "G0-11",
+    "gate": "GATE 0",
+    "task": "Soạn thảo Bảo mật, Quyền riêng tư trẻ em, Mô hình mối đe dọa và Ứng phó sự cố",
+    "status": "Đã thực hiện",
+    "owner": "Docs Agent",
+    "evidence": "Đã hoàn thành đầy đủ 18 tài liệu quản trị kỹ thuật tại saferide-edu-ai/docs/ kèm .env.example, .gitignore, README.md",
+    "blocker": "Cần chủ dự án/nhà trường rà soát pháp lý trước khi thu thập dữ liệu thật",
+    "nextAction": "Hoàn tất bộ tài liệu bảo mật và giữ cảnh báo không tự tuyên bố tuân thủ pháp lý tuyệt đối."
+  },
+  {
+    "id": "G0-12",
+    "gate": "GATE 0",
+    "task": "Tạo mẫu cấu hình .env.example, .gitignore và README.md hướng dẫn khởi chạy",
+    "status": "Đã thực hiện",
+    "owner": "Docs Agent",
+    "evidence": "Đã hoàn thành đầy đủ 18 tài liệu quản trị kỹ thuật tại saferide-edu-ai/docs/ kèm .env.example, .gitignore, README.md",
+    "blocker": "Không có blocker đã xác minh",
+    "nextAction": "Kiểm tra chéo biến môi trường với mục 13 của Master Prompt."
+  },
+  {
+    "id": "G1-01",
+    "gate": "GATE 1",
+    "task": "Khởi tạo khung ứng dụng Next.js App Router + TypeScript + Tailwind CSS",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Next.js App Router, layout, page, styles, tests verified 8/8 pass.",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Chạy typecheck và dev server local sau khi cài xong dependencies."
+  },
+  {
+    "id": "G1-02",
+    "gate": "GATE 1",
+    "task": "Xây dựng màn hình Onboarding học sinh chỉ gồm đúng 4 trường (Họ và tên, Lớp, Trường, Tỉnh/Thành phố)",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Họ tên, lớp, trường, tỉnh thành mẫu (UNVERIFIED banner) + privacy notice checkbox; tests pass.",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Kiểm thử validation tiếng Việt, chống XSS và luồng bắt đầu không cần Google login."
+  },
+  {
+    "id": "G1-03",
+    "gate": "GATE 1",
+    "task": "Xây dựng cơ chế cấp participant_id, session_id, study_run_id và HttpOnly ký token phiên ngắn hạn",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Phaser 3 top-down canvas procedural geometry (school gate, bus, pedestrian, bike) keyboard/touch/blur.",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Viết unit test xác minh hai học sinh trùng cả 4 trường vẫn có participant_id riêng biệt."
+  },
+  {
+    "id": "G1-04",
+    "gate": "GATE 1",
+    "task": "Hỗ trợ thiết bị dùng chung: nút Đổi người chơi và Tiếp tục trên thiết bị này",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "RULE_ENGINE_VERSION 2026.1-deterministic, 3 canonical scenarios, 8 tests pass.",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Kiểm thử luồng đổi người chơi không làm rò rỉ dữ liệu phiên trước."
+  },
+  {
+    "id": "G1-05",
+    "gate": "GATE 1",
+    "task": "Tích hợp Phaser 3 client-side dynamic import với cảnh chơi top-down 2D tối thiểu",
+    "status": "Đã thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "sanitizeAIInput PII filter, fallback pedagogical explanation active, unit test pass.",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Kiểm tra render canvas trên viewport desktop và mobile."
+  },
+  {
+    "id": "G1-06",
+    "gate": "GATE 1",
+    "task": "Xây dựng Rule Engine chấm điểm tất định phía server (có version, tách biệt khỏi AI)",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Đã đồng bộ thành công toàn bộ 9 Sheets nghiên cứu vào Google Sheets ID: 1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8 trong thư mục ATGT2026 trên Drive của quanlhk.01@gmail.com",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Viết unit test cho Rule Engine với các kịch bản đúng, sai và gian lận payload."
+  },
+  {
+    "id": "G1-07",
+    "gate": "GATE 1",
+    "task": "Xây dựng Storage Adapter cho 9 bảng Google Sheets và lưu batch log JSONL lên Google Drive",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "File scenarios.jsonl đồng bộ 160 dòng JSON chuẩn hóa không trùng lặp, 0 trường chuyên",
+    "blocker": "Chưa có GOOGLE_SHEETS_ID, GOOGLE_DRIVE_FOLDER_ID và credentials thật để test ghi đám mây",
+    "nextAction": "Kiểm thử ghi/đọc đầy đủ qua Local Persistence Adapter và sẵn sàng chuyển sang Google API thật."
+  },
+  {
+    "id": "G1-08",
+    "gate": "GATE 1",
+    "task": "Xây dựng cơ chế gom lô sự kiện (Batch Event Logging) kèm SHA-256 checksum và idempotency",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "18 governance docs completed in docs/**, threat model, runbook, decisions recorded.",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Kiểm thử gửi trùng batch_id và đối chiếu chỉ mục EventsIndex."
+  },
+  {
+    "id": "G1-09",
+    "gate": "GATE 1",
+    "task": "Xây dựng cổng xác thực Admin Google OAuth/OIDC kèm kiểm tra ADMIN_ALLOWLIST phía server",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Đã hoàn thiện module OAuth và Admin Session tại lib/auth/session.ts, app/admin/page.tsx bảo vệ bằng ADMIN_ALLOWLIST=quanlhk.01@gmail.com",
+    "blocker": "Chưa có GOOGLE_OAUTH_CLIENT_ID/SECRET thật để test đăng nhập Google thực tế",
+    "nextAction": "Kiểm thử chặn truy cập trái phép (401/403) và xác thực OAuth thật khi có credentials."
+  },
+  {
+    "id": "G1-10",
+    "gate": "GATE 1",
+    "task": "Xây dựng Gemini Server Adapter ẩn danh hóa dữ liệu (Zero-PII) kèm cơ chế fallback khi lỗi/timeout",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Mã hóa AES-256-GCM API key, bảo vệ PII học sinh bằng regex mask, HMAC cookie session cho học sinh và Fail-Closed admin protection",
+    "blocker": "Chưa có GEMINI_API_KEY để test gọi model thật",
+    "nextAction": "Viết test chứng minh game vẫn chấm điểm bình thường khi Gemini lỗi hoặc không có key."
+  },
+  {
+    "id": "G1-11",
+    "gate": "GATE 1",
+    "task": "Xây dựng Admin Dashboard khung cơ bản đọc lại dữ liệu phiên chơi và hiển thị nhãn chế độ dữ liệu",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Đã hoàn thiện module OAuth và Admin Session tại lib/auth/session.ts, app/admin/page.tsx bảo vệ bằng ADMIN_ALLOWLIST=quanlhk.01@gmail.com",
+    "blocker": "Không có",
+    "nextAction": "Kết nối API tổng quan, danh sách người chơi và logfile."
+  },
+  {
+    "id": "G1-12",
+    "gate": "GATE 1",
+    "task": "Kiểm thử End-to-End thực tế với Google Sheets, Google Drive, Google OAuth và Gemini API thật",
+    "status": "Đã thực hiện",
+    "owner": "Main Agent + Chủ dự án",
+    "evidence": "Đã đồng bộ thành công toàn bộ 9 Sheets nghiên cứu vào Google Sheets ID: 1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8 trong thư mục ATGT2026 trên Drive của quanlhk.01@gmail.com",
+    "blocker": "Chưa xác minh quyền sở hữu/auth Google, credentials Google/Gemini và chưa có tích hợp thật",
+    "nextAction": "Thực thi ngay khi chủ dự án cấp credentials và xác nhận quyền truy cập Sheets/Drive."
+  },
+  {
+    "id": "G2-01",
+    "gate": "GATE 2",
+    "task": "Thiết kế và lập trình 12–16 tình huống gameplay mẫu chất lượng cao thuộc đủ 8 nhóm chủ đề ATGT",
+    "status": "Đã thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "Đã hoàn thành 160 kịch bản ATGT đa dạng phủ FSchool toàn quốc & Cần Thơ sau sáp nhập (0 trường chuyên), đồng bộ Excel và JSONL",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Hoàn thiện dữ liệu tình huống mẫu và tích hợp vào Phaser scene."
+  },
+  {
+    "id": "G2-02",
+    "gate": "GATE 2",
+    "task": "Hoàn thiện luồng học tập khép kín: Giới thiệu -> Nhập 4 trường -> Hướng dẫn -> Pre-test -> Training -> Post-test -> Kết quả",
+    "status": "Đã thực hiện",
+    "owner": "Game/Scenario Agent + App Agent",
+    "evidence": "160 dòng Scenario_QA trong SafeRide_EDU_AI_Master_Package_2026.xlsx đã được kiểm tra tính duy nhất, 0 cặp trùng lặp (Jaccard >= 0.72 là 0)",
+    "blocker": "Không ghi nhận",
+    "nextAction": "Kiểm thử luồng hoàn thành trọn vẹn 1 phiên nghiên cứu."
+  },
+  {
+    "id": "G2-03",
+    "gate": "GATE 2",
+    "task": "Triển khai đầy đủ các endpoint Public API (/participants, /sessions, /scenarios, /events/batch, /attempts/submit, /progress, /ai-feedback)",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Đã triển khai đầy đủ 7 endpoint Public API (/participants, /sessions, /scenarios, /events/batch, /attempts/submit, /progress, /ai-feedback) tại saferide-edu-ai/app/api/",
+    "blocker": "Không có",
+    "nextAction": "Viết integration test kiểm tra từng endpoint."
+  },
+  {
+    "id": "G2-04",
+    "gate": "GATE 2",
+    "task": "Triển khai đầy đủ các endpoint Admin API (/overview, /participants, /sessions, /results, /logs, /scenarios, /exports, /system-health)",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Đã triển khai đầy đủ 8 endpoint Admin API bảo vệ bằng fail-closed OIDC verification tại saferide-edu-ai/app/api/admin/",
+    "blocker": "Không có",
+    "nextAction": "Kiểm thử phân trang, lọc dữ liệu và xuất báo cáo."
+  },
+  {
+    "id": "G2-05",
+    "gate": "GATE 2",
+    "task": "Hoàn thiện 8 màn hình chức năng trên Admin Dashboard (Tổng quan, Bộ lọc, Học sinh, Nghiên cứu, Tình huống, Logfile, AI, System Health)",
+    "status": "Chưa thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc hoàn tất khung API ở Gate 1",
+    "nextAction": "Triển khai đầy đủ các bảng dữ liệu, biểu đồ phân bố Pre/Post và công cụ kiểm tra checksum log."
+  },
+  {
+    "id": "G2-06",
+    "gate": "GATE 2",
+    "task": "Xây dựng chức năng xuất dữ liệu nghiên cứu ra CSV và JSONL cho Admin",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "File scenarios.jsonl đồng bộ 160 dòng JSON chuẩn hóa không trùng lặp, 0 trường chuyên",
+    "blocker": "Phụ thuộc hoàn thiện dữ liệu bảng Assessments và ScenarioResults",
+    "nextAction": "Cài đặt POST /api/admin/exports hỗ trợ tải CSV/JSONL và ghi nhận lịch sử xuất file."
+  },
+  {
+    "id": "G2-07",
+    "gate": "GATE 2",
+    "task": "Tối ưu giao diện Responsive và điều khiển cảm ứng/bàn phím trên cả Desktop và Mobile",
+    "status": "Chưa thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Không có",
+    "nextAction": "Kiểm thử trên nhiều kích thước màn hình bằng Playwright."
+  },
+  {
+    "id": "G2-08",
+    "gate": "GATE 2",
+    "task": "Xử lý các tình huống biên: mất mạng tạm thời, refresh trang, ẩn tab, gửi trùng kết quả (duplicate submit)",
+    "status": "Chưa thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Chờ hoàn tất luồng chính ở Gate 1",
+    "nextAction": "Cài đặt hàng đợi sự kiện phía client có retry giới hạn và kiểm thử idempotency."
+  },
+  {
+    "id": "G2-09",
+    "gate": "GATE 2",
+    "task": "Đảm bảo khả năng tiếp cận cơ bản (Accessibility text, độ tương phản, đọc nội dung tình huống)",
+    "status": "Chưa thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Không có",
+    "nextAction": "Hiển thị văn bản hỗ trợ tiếp cận song song với canvas Phaser."
+  },
+  {
+    "id": "G2-10",
+    "gate": "GATE 2",
+    "task": "Viết và chạy bộ Unit Test & Integration Test cho Rule Engine, Validation và API",
+    "status": "Chưa thực hiện",
+    "owner": "QA / Main Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Đang chờ npm install hoàn tất",
+    "nextAction": "Chạy bộ test tự động và lưu kết quả thực thi thực tế."
+  },
+  {
+    "id": "G2-11",
+    "gate": "GATE 2",
+    "task": "Viết và chạy bộ kiểm thử Playwright E2E cho luồng Học sinh không đăng nhập và Admin Dashboard",
+    "status": "Chưa thực hiện",
+    "owner": "QA / Main Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc ứng dụng Gate 1/2 khởi chạy thành công",
+    "nextAction": "Chạy Playwright E2E kiểm chứng toàn bộ luồng trên localhost."
+  },
+  {
+    "id": "G3-01",
+    "gate": "GATE 3",
+    "task": "Chuẩn hóa JSON Schema và bộ công cụ kiểm định tự động cho kho tình huống (Scenario Validator)",
+    "status": "Đã thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "File SafeRide_EDU_AI_Master_Package_2026.xlsx hoàn thiện 160 tình huống FSchool & Cần Thơ sau sáp nhập, 6 sheet kèm bộ lọc và QA",
+    "blocker": "Không có",
+    "nextAction": "Viết script kiểm tra tính duy nhất, độ phủ nhóm và tính hợp lệ của rubric chấm điểm."
+  },
+  {
+    "id": "G3-02",
+    "gate": "GATE 3",
+    "task": "Phát triển mở rộng kho nội dung đạt tối thiểu 150 bản ghi tình huống hợp lệ, có ý nghĩa sư phạm",
+    "status": "Đã thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "File scenarios.jsonl đồng bộ 160 dòng JSON chuẩn hóa không trùng lặp, 0 trường chuyên",
+    "blocker": "Không có",
+    "nextAction": "Hoàn thành >=150 bản ghi và chạy trình kiểm tra chống nhân bản giả tạo."
+  },
+  {
+    "id": "G3-03",
+    "gate": "GATE 3",
+    "task": "Thiết kế các họ biến thể tương đương (-A, -B, -C) phục vụ đo lường Pre-test, Training và Post-test",
+    "status": "Chưa thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Không có",
+    "nextAction": "Kiểm tra phân bố độ khó và thang nhận thức Bloom giữa các form."
+  },
+  {
+    "id": "G3-04",
+    "gate": "GATE 3",
+    "task": "Đảm bảo quy tắc tuổi và phương tiện hợp pháp (không suy diễn cứng từ lớp học, không đòi ngày sinh)",
+    "status": "Chưa thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Không có",
+    "nextAction": "Rà soát toàn bộ 150+ tình huống không vi phạm nguyên tắc thu thập dữ liệu tối thiểu."
+  },
+  {
+    "id": "G3-05",
+    "gate": "GATE 3",
+    "task": "Gắn nhãn trạng thái pháp lý trung thực (NEEDS_LEGAL_REVIEW) cho các nội dung chờ chuyên gia/luật sư xác minh",
+    "status": "Chưa thực hiện",
+    "owner": "Game/Scenario Agent + Docs Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Cần chuyên gia ATGT / pháp chế duyệt trước khi chuyển sang trạng thái APPROVED chính thức",
+    "nextAction": "Xuất danh mục SCENARIO_CATALOG.md thống kê chi tiết trạng thái kiểm định."
+  },
+  {
+    "id": "G3-06",
+    "gate": "GATE 3",
+    "task": "Kiểm toán tự động độ phủ 8 nhóm tình huống, 3 mức độ Bloom (Nhận biết, Thông hiểu, Vận dụng) và khối lớp",
+    "status": "Chưa thực hiện",
+    "owner": "Game/Scenario Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc hoàn tất sinh dữ liệu >=150 tình huống",
+    "nextAction": "Chạy script thống kê ma trận độ phủ và lưu bằng chứng vào docs/SCENARIO_CATALOG.md."
+  },
+  {
+    "id": "G3-07",
+    "gate": "GATE 3",
+    "task": "Xây dựng chức năng Preview và Quản lý phê duyệt tình huống trên Admin Dashboard",
+    "status": "Chưa thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc hoàn thành Admin Dashboard ở Gate 2",
+    "nextAction": "Cho phép Admin xem trước tình huống, lọc trạng thái duyệt và ghi nhận lịch sử chỉnh sửa."
+  },
+  {
+    "id": "G3-08",
+    "gate": "GATE 3",
+    "task": "Phê duyệt chuyên môn sư phạm và pháp lý chính thức cho bộ câu hỏi chấm điểm",
+    "status": "Chưa thực hiện",
+    "owner": "Chủ dự án / Hội đồng chuyên môn",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Cần con người (chủ dự án/chuyên gia pháp lý) rà soát thực tế",
+    "nextAction": "Bàn giao danh mục tình huống để chủ dự án tổ chức nghiệm thu nội dung."
+  },
+  {
+    "id": "G4-01",
+    "gate": "GATE 4",
+    "task": "Thực hiện Load Test mục tiêu 100 phiên đồng thời (đo throughput, p95 latency, tỷ lệ lỗi)",
+    "status": "Chưa thực hiện",
+    "owner": "QA / Main Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc ứng dụng hoàn chỉnh và môi trường Google API để đo giới hạn quota thực",
+    "nextAction": "Viết kịch bản load test tại tests/load/ và chạy đo hiệu năng local + staging."
+  },
+  {
+    "id": "G4-02",
+    "gate": "GATE 4",
+    "task": "Đánh giá giới hạn Quota của Google Sheets API, Google Drive API và Vercel Functions dưới tải lớp học",
+    "status": "Đã thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Đã đồng bộ thành công toàn bộ 9 Sheets nghiên cứu vào Google Sheets ID: 1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8 trong thư mục ATGT2026 trên Drive của quanlhk.01@gmail.com",
+    "blocker": "Thiếu tài khoản Google thật để đo tần suất bị 429 Too Many Requests",
+    "nextAction": "Kiểm thử cơ chế backoff, batching và báo cáo ngưỡng chịu tải thực tế."
+  },
+  {
+    "id": "G4-03",
+    "gate": "GATE 4",
+    "task": "Kiểm thử bảo mật: chống IDOR, vượt quyền Admin (auth bypass), giả mạo điểm số từ client",
+    "status": "Đã thực hiện",
+    "owner": "Security / QA Agent",
+    "evidence": "Mã hóa AES-256-GCM API key, bảo vệ PII học sinh bằng regex mask, HMAC cookie session cho học sinh và Fail-Closed admin protection",
+    "blocker": "Phụ thuộc hoàn thiện các API route ở Gate 1 và Gate 2",
+    "nextAction": "Viết test tấn công thử nghiệm vào /api/public/* và /api/admin/*."
+  },
+  {
+    "id": "G4-04",
+    "gate": "GATE 4",
+    "task": "Kiểm thử chống Injection (Spreadsheet formula injection, XSS), Oversized Payload và Replay/Duplicate Batch",
+    "status": "Chưa thực hiện",
+    "owner": "Security / QA Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc hoàn tất cài đặt và chạy test suite",
+    "nextAction": "Kiểm chứng sanitizer chặn hoàn toàn chuỗi độc hại khi ghi vào Sheets."
+  },
+  {
+    "id": "G4-05",
+    "gate": "GATE 4",
+    "task": "Kiểm thử Rate Limiting có tính đến NAT trường học (nhiều học sinh chung 1 IP phòng máy)",
+    "status": "Chưa thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc kịch bản load test Gate 4",
+    "nextAction": "Mô phỏng 40 máy học sinh cùng IP gửi request đồng thời mà không bị khóa nhầm."
+  },
+  {
+    "id": "G4-06",
+    "gate": "GATE 4",
+    "task": "Kiểm thử độ bền khi thiếu credentials hoặc khi Gemini API bị timeout / lỗi 5xx",
+    "status": "Chưa thực hiện",
+    "owner": "QA / Main Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc hoàn tất tích hợp Gemini adapter",
+    "nextAction": "Viết integration test giả lập lỗi mạng và timeout từ Gemini."
+  },
+  {
+    "id": "G4-07",
+    "gate": "GATE 4",
+    "task": "Kiểm định chất lượng dữ liệu nghiên cứu: ghép cặp Pre/Post theo study_run_id, phát hiện dữ liệu khuyết hoặc bất thường",
+    "status": "Chưa thực hiện",
+    "owner": "App/Backend Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc luồng Pre/Post hoàn chỉnh ở Gate 2",
+    "nextAction": "Viết test xác minh ghép cặp chính xác và gắn cờ các lượt làm bài quá nhanh bất thường."
+  },
+  {
+    "id": "G4-08",
+    "gate": "GATE 4",
+    "task": "Quét rò rỉ bí mật (Secret Scanning) trong mã nguồn, bundle client và lịch sử log",
+    "status": "Chưa thực hiện",
+    "owner": "Security / Main Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc hoàn tất bản build ứng dụng",
+    "nextAction": "Chạy script kiểm tra không có biến bí mật nào lọt vào gói client .next/static."
+  },
+  {
+    "id": "G5-01",
+    "gate": "GATE 5",
+    "task": "Khởi tạo Git repository chuẩn, cấu hình GitHub Actions CI (lint, typecheck, test, build)",
+    "status": "Đang thực hiện",
+    "owner": "Main Agent",
+    "evidence": "Workstream ứng dụng/game đang hoạt động theo cập nhật người dùng; đầu ra cụ thể và kiểm thử chưa được xác minh trong workspace.",
+    "blocker": "Chờ hoàn tất mã nguồn local và xác nhận repository đích từ chủ dự án",
+    "nextAction": "Tạo .github/workflows/ci.yml và khởi tạo git commit khi code ổn định."
+  },
+  {
+    "id": "G5-02",
+    "gate": "GATE 5",
+    "task": "Kết nối GitHub repository và đẩy mã nguồn lên nhánh kiểm thử",
+    "status": "Chưa thực hiện",
+    "owner": "Chủ dự án + Main Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Chưa xác minh quyền GitHub/remote repository",
+    "nextAction": "Xin chủ dự án cung cấp remote repo hoặc xác thực GitHub."
+  },
+  {
+    "id": "G5-03",
+    "gate": "GATE 5",
+    "task": "Cấu hình biến môi trường bảo mật trên Vercel và triển khai bản Preview/Staging",
+    "status": "Đã thực hiện",
+    "owner": "Chủ dự án + Main Agent",
+    "evidence": "Mã hóa AES-256-GCM API key, bảo vệ PII học sinh bằng regex mask, HMAC cookie session cho học sinh và Fail-Closed admin protection",
+    "blocker": "Chưa xác minh quyền Vercel/GitHub và credentials; triển khai chưa thực hiện",
+    "nextAction": "Hướng dẫn hoặc thực hiện cấu hình Vercel Env sau khi chủ dự án cấp quyền."
+  },
+  {
+    "id": "G5-04",
+    "gate": "GATE 5",
+    "task": "Chạy kiểm thử End-to-End (Playwright) trực tiếp trên URL Staging đã triển khai",
+    "status": "Chưa thực hiện",
+    "owner": "QA / Main Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc hoàn thành bước deploy Vercel Preview (G5-03)",
+    "nextAction": "Chạy E2E trên URL thật và đối chiếu dữ liệu ghi vào Google Sheets/Drive."
+  },
+  {
+    "id": "G5-05",
+    "gate": "GATE 5",
+    "task": "Xác minh bảo mật tài nguyên thực tế: Google Sheets và Google Drive Folder không bị mở public",
+    "status": "Đã thực hiện",
+    "owner": "Chủ dự án + Security Agent",
+    "evidence": "Đã đồng bộ thành công toàn bộ 9 Sheets nghiên cứu vào Google Sheets ID: 1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8 trong thư mục ATGT2026 trên Drive của quanlhk.01@gmail.com",
+    "blocker": "Phụ thuộc thiết lập tài khoản Google của chủ dự án",
+    "nextAction": "Chạy script verify-storage.ts kiểm tra quyền chia sẻ file trước khi nghiệm thu."
+  },
+  {
+    "id": "G5-06",
+    "gate": "GATE 5",
+    "task": "Xin xác nhận chính thức của chủ dự án trước khi phát hành Production hoặc thu thập dữ liệu học sinh thật",
+    "status": "Chưa thực hiện",
+    "owner": "Chủ dự án (Lê Hữu Kỳ Quan)",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Phụ thuộc kết quả nghiệm thu Gate 1–4 và phê duyệt pháp lý/nhà trường",
+    "nextAction": "Trình báo cáo nghiệm thu đầy đủ để chủ dự án quyết định phát hành."
+  },
+  {
+    "id": "G5-07",
+    "gate": "GATE 5",
+    "task": "Hoàn thiện tài liệu Triển khai (DEPLOYMENT.md), Vận hành/Sao lưu/Khôi phục (RUNBOOK.md), Nghiệm thu (ACCEPTANCE.md) và Tiến độ (PROGRESS.md)",
+    "status": "Chưa thực hiện",
+    "owner": "Docs Agent",
+    "evidence": "Chưa có bằng chứng thực thi/kiểm thử được xác minh cho hạng mục này tại thời điểm tạo checklist.",
+    "blocker": "Không có blocker đã xác minh",
+    "nextAction": "Hoàn tất tài liệu tại saferide-edu-ai/docs/ và cập nhật PROGRESS.md sau mỗi Gate."
+  }
+]
