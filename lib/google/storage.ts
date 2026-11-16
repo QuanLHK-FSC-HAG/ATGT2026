@@ -67,6 +67,56 @@ export interface SafeRideStorageAdapter {
   getSnapshot(): Promise<LogicalSheetsSnapshot>;
 }
 
+interface SnapshotStore {
+  read(): Promise<LogicalSheetsSnapshot>;
+  write(snapshot: LogicalSheetsSnapshot): Promise<void>;
+}
+
+function createInitialSnapshot(): LogicalSheetsSnapshot {
+  return {
+    storage_mode: 'LOCAL_DEMO_MOCK',
+    demo_banner: 'Dữ liệu chỉ lưu tạm bộ nhớ local sandbox.',
+    Players: [],
+    StudyRuns: [],
+    Sessions: [],
+    EventsIndex: [],
+    ScenarioResults: [],
+    Assessments: [],
+    AIAnalysis: [],
+    Scenarios: CANONICAL_SCENARIOS,
+    SystemLogs: [],
+    Settings: {
+      app_version: '2026.1-pilot',
+      fail_closed_enabled: true,
+      scoring_model: '2026.1-deterministic',
+      offline_capable: true,
+    },
+    DriveEventBatches: {},
+  };
+}
+
+class FileSnapshotStore implements SnapshotStore {
+  private readonly filePath: string;
+
+  constructor(filePath: string) {
+    this.filePath = filePath;
+  }
+
+  async read(): Promise<LogicalSheetsSnapshot> {
+    if (!existsSync(this.filePath)) {
+      const initial = createInitialSnapshot();
+      await this.write(initial);
+      return initial;
+    }
+    return JSON.parse(readFileSync(this.filePath, 'utf8')) as LogicalSheetsSnapshot;
+  }
+
+  async write(snapshot: LogicalSheetsSnapshot): Promise<void> {
+    mkdirSync(dirname(this.filePath), { recursive: true });
+    writeFileSync(this.filePath, JSON.stringify(snapshot, null, 2), 'utf8');
+  }
+}
+
 export function hasVerifiedGoogleCredentials(): boolean {
   return Boolean(
     process.env.GOOGLE_SHEETS_ID?.trim() &&
@@ -87,84 +137,59 @@ export function assertProductionStorageReady(): void {
 
 export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
   readonly mode: StorageMode = 'LOCAL_DEMO_MOCK';
-  private readonly filePath: string;
+  private readonly store: SnapshotStore;
 
-  constructor(customPath?: string) {
-    if (isHostedEnvironment()) {
+  constructor(customPath?: string, store?: SnapshotStore) {
+    if (!store && isHostedEnvironment()) {
       throw new DomainError(503, 'MOCK_STORAGE_FORBIDDEN_IN_PROD', 'Local mock file adapter is explicitly local-only and forbidden in production.');
     }
-    this.filePath = customPath || resolve(process.cwd(), '.runtime', 'logical_store.json');
+    this.store = store || new FileSnapshotStore(customPath || resolve(process.cwd(), '.runtime', 'logical_store.json'));
   }
 
-  private readStore(): LogicalSheetsSnapshot {
-    if (!existsSync(this.filePath)) {
-      const initial: LogicalSheetsSnapshot = {
-        storage_mode: 'LOCAL_DEMO_MOCK',
-        demo_banner: 'Dữ liệu chỉ lưu tạm bộ nhớ local sandbox.',
-        Players: [],
-        StudyRuns: [],
-        Sessions: [],
-        EventsIndex: [],
-        ScenarioResults: [],
-        Assessments: [],
-        AIAnalysis: [],
-        Scenarios: CANONICAL_SCENARIOS,
-        SystemLogs: [],
-        Settings: {
-          app_version: '2026.1-pilot',
-          fail_closed_enabled: true,
-          scoring_model: '2026.1-deterministic',
-          offline_capable: true,
-        },
-        DriveEventBatches: {},
-      };
-      this.writeStore(initial);
-      return initial;
-    }
-    return JSON.parse(readFileSync(this.filePath, 'utf8')) as LogicalSheetsSnapshot;
+  private async readStore(): Promise<LogicalSheetsSnapshot> {
+    return this.store.read();
   }
 
-  private writeStore(snapshot: LogicalSheetsSnapshot): void {
-    mkdirSync(dirname(this.filePath), { recursive: true });
-    writeFileSync(this.filePath, JSON.stringify(snapshot, null, 2), 'utf8');
+  private async writeStore(snapshot: LogicalSheetsSnapshot): Promise<void> {
+    await this.store.write(snapshot);
   }
 
   async createParticipantAndStudyRun(player: PlayerRecord, studyRun: StudyRunRecord) {
-    const store = this.readStore();
+    const store = await this.readStore();
     store.Players.push(player);
     store.StudyRuns.push(studyRun);
-    this.writeStore(store);
+    await this.writeStore(store);
     return { player, studyRun };
   }
 
   async createSession(session: SessionRecord) {
-    const store = this.readStore();
+    const store = await this.readStore();
     store.Sessions.push(session);
-    this.writeStore(store);
+    await this.writeStore(store);
     return session;
   }
 
   async getSession(sessionId: string) {
-    const store = this.readStore();
+    const store = await this.readStore();
     return store.Sessions.find(s => s.session_id === sessionId) ?? null;
   }
 
   async getStudyRun(studyRunId: string) {
-    const store = this.readStore();
+    const store = await this.readStore();
     return store.StudyRuns.find(r => r.study_run_id === studyRunId) ?? null;
   }
 
   async saveStudyRun(studyRun: StudyRunRecord) {
-    const store = this.readStore();
+    const store = await this.readStore();
     const idx = store.StudyRuns.findIndex(r => r.study_run_id === studyRun.study_run_id);
     if (idx >= 0) store.StudyRuns[idx] = studyRun;
     else store.StudyRuns.push(studyRun);
-    this.writeStore(store);
+    await this.writeStore(store);
     return studyRun;
   }
 
   async appendEventBatch(batchId: string, sessionId: string, events: TelemetryEvent[]) {
-    const store = this.readStore();
+    const store = await this.readStore();
     const existing = store.EventsIndex.find(b => b.batch_id === batchId);
     if (existing) {
       if (existing.session_id !== sessionId) throw new DomainError(409, 'BATCH_ID_CONFLICT', 'Batch ID belongs to another session');
@@ -200,12 +225,12 @@ export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
     };
     store.DriveEventBatches[drive_file_id] = { jsonl, checksum, created_at };
     store.EventsIndex.push(index);
-    this.writeStore(store);
+    await this.writeStore(store);
     return { index, duplicate: false };
   }
 
   async getSessionEvents(sessionId: string) {
-    const store = this.readStore();
+    const store = await this.readStore();
     const batches = store.EventsIndex.filter(i => i.session_id === sessionId);
     const all: TelemetryEvent[] = [];
     for (const b of batches) {
@@ -219,7 +244,7 @@ export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
   }
 
   async recordAttempt(result: ScenarioResultRecord) {
-    const store = this.readStore();
+    const store = await this.readStore();
     const existing = store.ScenarioResults.find(r => r.attempt_id === result.attempt_id);
     if (existing) {
       if (existing.study_run_id !== result.study_run_id || existing.scenario_id !== result.scenario_id) {
@@ -228,41 +253,41 @@ export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
       return { result: existing, duplicate: true };
     }
     store.ScenarioResults.push(result);
-    this.writeStore(store);
+    await this.writeStore(store);
     return { result, duplicate: false };
   }
 
   async getStudyRunAttempts(studyRunId: string) {
-    const store = this.readStore();
+    const store = await this.readStore();
     return store.ScenarioResults.filter(r => r.study_run_id === studyRunId);
   }
 
   async recordAssessment(assessment: AssessmentRecord) {
-    const store = this.readStore();
+    const store = await this.readStore();
     const idx = store.Assessments.findIndex(a => a.study_run_id === assessment.study_run_id && a.phase === assessment.phase);
     if (idx >= 0) store.Assessments[idx] = assessment;
     else store.Assessments.push(assessment);
-    this.writeStore(store);
+    await this.writeStore(store);
     return assessment;
   }
 
   async recordAIAnalysis(analysis: AIAnalysisRecord) {
-    const store = this.readStore();
+    const store = await this.readStore();
     store.AIAnalysis.push(analysis);
-    this.writeStore(store);
+    await this.writeStore(store);
     return analysis;
   }
 
   async appendSystemLog(entry: Omit<SystemLogRecord, 'log_id' | 'created_at'>) {
-    const store = this.readStore();
+    const store = await this.readStore();
     const record: SystemLogRecord = { ...entry, log_id: randomUUID(), created_at: new Date().toISOString() };
     store.SystemLogs.push(record);
-    this.writeStore(store);
+    await this.writeStore(store);
     return record;
   }
 
   async getAdminOverview() {
-    const store = this.readStore();
+    const store = await this.readStore();
     return {
       storage_mode: this.mode,
       is_demo_data: true,
@@ -286,17 +311,10 @@ export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
   }
 }
 
-// Google Sheets & Drive Online Live Adapter
-export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
-  readonly mode: StorageMode = 'GOOGLE';
-  private readonly fallback: LocalOnlyMockFileAdapter;
+class GoogleServiceAccountAuth {
   private tokenCache: { token: string; exp: number } | null = null;
 
-  constructor() {
-    this.fallback = new LocalOnlyMockFileAdapter();
-  }
-
-  private async getAccessToken(): Promise<string> {
+  async getAccessToken(): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
     if (this.tokenCache && this.tokenCache.exp > now + 60) {
       return this.tokenCache.token;
@@ -334,6 +352,136 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
     }
     this.tokenCache = { token: data.access_token, exp: now + (data.expires_in || 3600) };
     return data.access_token;
+  }
+}
+
+const STATE_SHEET_NAME = '_trang_thai';
+const STATE_CHUNK_SIZE = 40000;
+
+class GoogleSheetSnapshotStore implements SnapshotStore {
+  private ensured = false;
+
+  constructor(private readonly auth: GoogleServiceAccountAuth) {}
+
+  private async ensureStateSheet(token: string): Promise<void> {
+    if (this.ensured) return;
+    const sheetId = process.env.GOOGLE_SHEETS_ID;
+    if (!sheetId) throw new Error('GOOGLE_SHEETS_ID is missing');
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?fields=sheets.properties(title)`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error(`Google Sheets metadata failed: ${res.status}`);
+    const data = (await res.json()) as { sheets?: Array<{ properties?: { title?: string } }> };
+    const exists = data.sheets?.some(sheet => sheet.properties?.title === STATE_SHEET_NAME);
+    if (!exists) {
+      const add = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}:batchUpdate`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requests: [{ addSheet: { properties: { title: STATE_SHEET_NAME, hidden: true } } }],
+        }),
+      });
+      if (!add.ok) {
+        const detail = await add.text();
+        // Another serverless instance may have created the tab between the metadata read and this request.
+        if (!detail.toLowerCase().includes('already exists')) {
+          throw new Error(`Google Sheets add state tab failed: ${add.status} ${detail}`);
+        }
+      }
+    }
+    this.ensured = true;
+  }
+
+  async read(): Promise<LogicalSheetsSnapshot> {
+    const token = await this.auth.getAccessToken();
+    await this.ensureStateSheet(token);
+    const sheetId = process.env.GOOGLE_SHEETS_ID;
+    const range = encodeURIComponent(`${STATE_SHEET_NAME}!A:B`);
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?majorDimension=ROWS`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error(`Google Sheets state read failed: ${res.status}`);
+    const data = (await res.json()) as { values?: string[][] };
+    const rows = data.values || [];
+    if (!rows.length) {
+      const initial = createInitialSnapshot();
+      await this.write(initial);
+      return initial;
+    }
+    const chunks: string[] = [];
+    for (const row of rows) {
+      // The writer appends a "-1" terminator after the final chunk. Rows are
+      // returned in sheet order, so stop there and ignore any stale tail rows.
+      if ((row[0] || '').trim() === '-1') break;
+      if (row[1]) chunks.push(row[1]);
+    }
+    const text = chunks.join('');
+    if (!text.trim()) {
+      const initial = createInitialSnapshot();
+      await this.write(initial);
+      return initial;
+    }
+    return JSON.parse(text) as LogicalSheetsSnapshot;
+  }
+
+  async write(snapshot: LogicalSheetsSnapshot): Promise<void> {
+    const token = await this.auth.getAccessToken();
+    await this.ensureStateSheet(token);
+    const sheetId = process.env.GOOGLE_SHEETS_ID;
+    const content = JSON.stringify(snapshot);
+    const chunks: string[] = [];
+    for (let i = 0; i < content.length; i += STATE_CHUNK_SIZE) {
+      chunks.push(content.slice(i, i + STATE_CHUNK_SIZE));
+    }
+    const values = chunks.map((chunk, index) => [String(index), chunk]);
+    // Terminator protects readers from stale chunks left by an earlier, longer snapshot.
+    values.push(['-1', '']);
+    const updateRange = encodeURIComponent(`${STATE_SHEET_NAME}!A1:B${values.length}`);
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${updateRange}?valueInputOption=RAW`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ values }),
+    });
+    if (!res.ok) throw new Error(`Google Sheets state write failed: ${res.status} ${await res.text()}`);
+    // Best-effort cleanup of rows after the terminator.
+    const tailRange = encodeURIComponent(`${STATE_SHEET_NAME}!A${values.length + 1}:B`);
+    try {
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${tailRange}:clear`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: '{}',
+      });
+    } catch {
+      // The terminator already prevents stale data from being read.
+    }
+  }
+}
+
+// Google Sheets & Drive Online Live Adapter
+export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
+  readonly mode: StorageMode = 'GOOGLE';
+  private readonly state: LocalOnlyMockFileAdapter;
+  private readonly auth: GoogleServiceAccountAuth;
+
+  constructor() {
+    this.auth = new GoogleServiceAccountAuth();
+    this.state = new LocalOnlyMockFileAdapter(
+      undefined,
+      new GoogleSheetSnapshotStore(this.auth),
+    );
+  }
+
+  private async getAccessToken(): Promise<string> {
+    return this.auth.getAccessToken();
   }
 
   private async appendRow(sheetName: string, rowValues: unknown[]): Promise<void> {
@@ -386,7 +534,7 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   }
 
   async createParticipantAndStudyRun(player: PlayerRecord, studyRun: StudyRunRecord) {
-    const res = await this.fallback.createParticipantAndStudyRun(player, studyRun);
+    const res = await this.state.createParticipantAndStudyRun(player, studyRun);
     await this.appendRow('hoc_sinh', [
       player.participant_id,
       studyRun.study_run_id,
@@ -401,7 +549,7 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   }
 
   async createSession(session: SessionRecord) {
-    const res = await this.fallback.createSession(session);
+    const res = await this.state.createSession(session);
     await this.appendRow('phien_choi', [
       session.session_id,
       session.participant_id,
@@ -416,19 +564,19 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   }
 
   async getSession(sessionId: string) {
-    return this.fallback.getSession(sessionId);
+    return this.state.getSession(sessionId);
   }
 
   async getStudyRun(studyRunId: string) {
-    return this.fallback.getStudyRun(studyRunId);
+    return this.state.getStudyRun(studyRunId);
   }
 
   async saveStudyRun(studyRun: StudyRunRecord) {
-    return this.fallback.saveStudyRun(studyRun);
+    return this.state.saveStudyRun(studyRun);
   }
 
   async appendEventBatch(batchId: string, sessionId: string, events: TelemetryEvent[]) {
-    const res = await this.fallback.appendEventBatch(batchId, sessionId, events);
+    const res = await this.state.appendEventBatch(batchId, sessionId, events);
     for (const ev of events) {
       const payload = ev.payload || {};
       await this.appendRow('su_kien_hanh_vi', [
@@ -445,11 +593,11 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   }
 
   async getSessionEvents(sessionId: string) {
-    return this.fallback.getSessionEvents(sessionId);
+    return this.state.getSessionEvents(sessionId);
   }
 
   async recordAttempt(result: ScenarioResultRecord) {
-    const res = await this.fallback.recordAttempt(result);
+    const res = await this.state.recordAttempt(result);
     const outcomeLabel = result.outcome === 'SAFE'
       ? 'ĐÚNG'
       : result.outcome === 'SUBOPTIMAL'
@@ -473,11 +621,11 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   }
 
   async getStudyRunAttempts(studyRunId: string) {
-    return this.fallback.getStudyRunAttempts(studyRunId);
+    return this.state.getStudyRunAttempts(studyRunId);
   }
 
   async recordAssessment(assessment: AssessmentRecord) {
-    const res = await this.fallback.recordAssessment(assessment);
+    const res = await this.state.recordAssessment(assessment);
     const rows = await this.readSheetRows('so_sanh_truoc_sau');
     const existingIndex = rows.findIndex((row, index) => index > 0 && row[0] === assessment.study_run_id);
     const toNumber = (value: string | undefined) => {
@@ -509,7 +657,7 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   }
 
   async recordAIAnalysis(analysis: AIAnalysisRecord) {
-    const res = await this.fallback.recordAIAnalysis(analysis);
+    const res = await this.state.recordAIAnalysis(analysis);
     await this.appendRow('nhat_ky_ai', [
       analysis.analysis_id,
       analysis.pseudonymous_ref,
@@ -522,11 +670,11 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   }
 
   async appendSystemLog(entry: Omit<SystemLogRecord, 'log_id' | 'created_at'>) {
-    return this.fallback.appendSystemLog(entry);
+    return this.state.appendSystemLog(entry);
   }
 
   async getAdminOverview() {
-    const overview = await this.fallback.getAdminOverview();
+    const overview = await this.state.getAdminOverview();
     return {
       ...overview,
       storage_mode: 'GOOGLE' as StorageMode,
@@ -536,14 +684,22 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   }
 
   async getSnapshot() {
-    return this.fallback.getSnapshot();
+    const snapshot = await this.state.getSnapshot();
+    return {
+      ...snapshot,
+      storage_mode: 'GOOGLE' as StorageMode,
+      demo_banner: null,
+    };
   }
 }
+
+let googleAdapter: GoogleSheetsDriveLiveAdapter | null = null;
 
 export function getStorageAdapter(customMockPath?: string): SafeRideStorageAdapter {
   assertProductionStorageReady();
   if (hasVerifiedGoogleCredentials() && process.env.SAFERIDE_FORCE_LOCAL_MOCK !== 'true') {
-    return new GoogleSheetsDriveLiveAdapter();
+    googleAdapter ??= new GoogleSheetsDriveLiveAdapter();
+    return googleAdapter;
   }
   return new LocalOnlyMockFileAdapter(customMockPath);
 }

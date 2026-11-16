@@ -1,42 +1,8 @@
-﻿import type { Phase, Scenario } from './types';
+﻿import { CANONICAL_PROVINCES } from '../lib/data/provinces.ts';
+import type { Phase, Scenario } from './types';
 
-// Danh sách 34 Đơn vị Hành chính Tỉnh / Thành phố mới nhất Việt Nam (sắp xếp khoa học, dễ tìm kiếm và chọn nhanh nhất)
-export const DEMO_PROVINCES = [
-  'Thành phố Cần Thơ',
-  'Thành phố Hồ Chí Minh',
-  'Thành phố Hà Nội',
-  'Thành phố Đà Nẵng',
-  'Thành phố Hải Phòng',
-  'Thành phố Huế',
-  'Tỉnh Hậu Giang',
-  'Tỉnh Sóc Trăng',
-  'Tỉnh An Giang',
-  'Tỉnh Đồng Tháp',
-  'Tỉnh Tiền Giang',
-  'Tỉnh Vĩnh Long',
-  'Tỉnh Bến Tre',
-  'Tỉnh Trà Vinh',
-  'Tỉnh Kiên Giang',
-  'Tỉnh Bạc Liêu',
-  'Tỉnh Cà Mau',
-  'Tỉnh Bình Dương',
-  'Tỉnh Đồng Nai',
-  'Tỉnh Bà Rịa - Vũng Tàu',
-  'Tỉnh Tây Ninh',
-  'Tỉnh Bình Phước',
-  'Tỉnh Long An',
-  'Tỉnh Lâm Đồng',
-  'Tỉnh Đắk Lắk',
-  'Tỉnh Khánh Hòa',
-  'Tỉnh Bình Định',
-  'Tỉnh Quảng Nam',
-  'Tỉnh Quảng Ngãi',
-  'Tỉnh Nghệ An',
-  'Tỉnh Thanh Hóa',
-  'Tỉnh Quảng Ninh',
-  'Tỉnh Bắc Ninh',
-  'Tỉnh / Thành phố khác'
-];
+// Danh sách 34 Đơn vị Hành chính Tỉnh / Thành phố mới nhất Việt Nam
+export const DEMO_PROVINCES = [...CANONICAL_PROVINCES];
 
 export const FALLBACK: Record<Phase, Scenario[]> = {
   PRE: [{

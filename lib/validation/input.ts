@@ -1,5 +1,8 @@
 import type { ParticipantInput, TelemetryEvent } from '../types.ts';
 import { isHostedEnvironment } from '../auth/session.ts';
+import { CANONICAL_PROVINCES } from '../data/provinces.ts';
+
+const CANONICAL_PROVINCE_SET = new Set<string>(CANONICAL_PROVINCES);
 
 export class DomainError extends Error {
   readonly status: number;
@@ -40,7 +43,10 @@ export function participantInput(value: unknown): ParticipantInput {
   if (!expected) throw new DomainError(503, 'PRIVACY_CONFIG_MISSING', 'Privacy notice is not configured');
   if ((input.privacy_notice_version ?? (!isHostedEnvironment() ? expected : '')) !== expected) throw new DomainError(400, 'PRIVACY_NOTICE_OUTDATED', 'Privacy notice version mismatch');
   const province = text(input.province_city, 'province_city', 2, 100);
-  const catalog = (process.env.PROVINCE_CATALOG || '').split('|').map(item => item.trim()).filter(Boolean);
+  const configuredCatalog = (process.env.PROVINCE_CATALOG || '').split('|').map(item => item.trim()).filter(Boolean);
+  const catalog = configuredCatalog.length && !configuredCatalog.some(item => CANONICAL_PROVINCE_SET.has(item))
+    ? [...CANONICAL_PROVINCES]
+    : configuredCatalog;
   if (isHostedEnvironment() && (!process.env.PROVINCE_CATALOG_VERSION || !catalog.length)) throw new DomainError(503, 'PROVINCE_CATALOG_MISSING', 'Verified province catalog is not configured');
   const matched = catalog.find(item => item.normalize('NFC').toLocaleLowerCase('vi') === province.toLocaleLowerCase('vi'));
   if (catalog.length && !matched) throw new DomainError(400, 'INVALID_PROVINCE', 'Province is not in the configured catalog');
