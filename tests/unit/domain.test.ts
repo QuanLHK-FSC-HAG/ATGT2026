@@ -150,14 +150,16 @@ describe('SafeRide Domain Unit Tests', () => {
     const prevNodeEnv = process.env.NODE_ENV;
     const prevSheets = process.env.GOOGLE_SHEETS_ID;
     try {
-      process.env.NODE_ENV = 'production';
+      (process.env as Record<string, string | undefined>).NODE_ENV = 'production';
       delete process.env.GOOGLE_SHEETS_ID;
       assert.throws(
         () => assertProductionStorageReady(),
         (err: unknown) => err instanceof DomainError && err.code === 'GOOGLE_STORAGE_CREDENTIALS_MISSING',
       );
     } finally {
-      process.env.NODE_ENV = prevNodeEnv;
+      const env = process.env as Record<string, string | undefined>;
+      if (prevNodeEnv === undefined) delete env.NODE_ENV;
+      else env.NODE_ENV = prevNodeEnv;
       if (prevSheets !== undefined) process.env.GOOGLE_SHEETS_ID = prevSheets;
     }
   });

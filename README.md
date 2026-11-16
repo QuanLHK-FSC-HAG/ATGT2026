@@ -105,8 +105,14 @@ npm run dev
 ### Chạy Bộ Kiểm Thử QA Toàn Diện
 ```bash
 npx tsx --test tests/unit/*.test.ts tests/integration/*.test.ts
-# Kết quả: 13/13 tests PASS 100%
+# Kết quả: 29/29 tests PASS 100%
 ```
+
+### Cấu hình Đăng nhập Quản trị bằng Google
+Xem hướng dẫn chi tiết tại [`docs/GOOGLE_AUTH_SETUP.md`](docs/GOOGLE_AUTH_SETUP.md):
+tạo OAuth Client ID (Web application), thêm Authorized JavaScript origins,
+đặt `GOOGLE_OAUTH_CLIENT_ID` và `ADMIN_SESSION_SECRET` (>= 32 ký tự) trên môi
+trường triển khai.
 
 ---
 

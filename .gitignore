@@ -25,7 +25,9 @@ next-env.d.ts
 *.key
 
 # Local runtime / test / mock data
+.npm-cache/
 .runtime/
+ATGT2026/.obsidian/workspace*.json
 .local-storage/
 data/runtime/
 tmp/

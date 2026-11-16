@@ -1,0 +1,44 @@
+{
+  "collapse-filter": true,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": true,
+  "colorGroups": [
+    {
+      "query": "tag:#kien-truc",
+      "color": {
+        "a": 1,
+        "rgb": 16348182
+      }
+    },
+    {
+      "query": "tag:#nghien-cuu",
+      "color": {
+        "a": 1,
+        "rgb": 165063
+      }
+    },
+    {
+      "query": "tag:#van-hanh",
+      "color": {
+        "a": 1,
+        "rgb": 1483594
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": true,
+  "textFadeMultiplier": -2.2,
+  "nodeSizeMultiplier": 1.62447835565244,
+  "lineSizeMultiplier": 1.96630333229523,
+  "collapse-forces": false,
+  "centerStrength": 0.550295857988166,
+  "repelStrength": 16.2227287528492,
+  "linkStrength": 0.729679227654936,
+  "linkDistance": 180,
+  "scale": 0.5087618855792579,
+  "close": true
+}

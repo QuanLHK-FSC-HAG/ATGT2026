@@ -2,9 +2,6 @@
 
 const config: NextConfig = {
   poweredByHeader: false,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   async headers() {
     return [{ source: '/:path*', headers: [
       { key: 'X-Content-Type-Options', value: 'nosniff' },

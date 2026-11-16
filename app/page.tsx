@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createSession, loadScenario, sendEvents, submitAttempt, type SessionInfo } from '@/components/api';
 import type { CameraMode, VehicleType } from '@/components/world-3d';
 import { DEMO_PROVINCES } from '@/game/scenarios';
@@ -34,14 +34,6 @@ const blank: ParticipantInput = {
   privacy_notice_version: '2026-01',
 };
 
-const TOP_PROVINCES_QUICK = [
-  'Thành phố Cần Thơ',
-  'Thành phố Hồ Chí Minh',
-  'Thành phố Hà Nội',
-  'Thành phố Đà Nẵng',
-  'Tỉnh Hậu Giang',
-  'Tỉnh Sóc Trăng',
-];
 
 const LEVEL_INFO: Record<DifficultyLevel, { label: string; desc: string; badge: string; color: string }> = {
   CO_BAN: {
@@ -76,7 +68,6 @@ export default function HomePage() {
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>('CO_BAN');
   const [vehicleType, setVehicleType] = useState<VehicleType>('BIKE');
   const [cameraMode, setCameraMode] = useState<CameraMode>('CINEMATIC_OVERVIEW');
-  const [provinceSearch, setProvinceSearch] = useState('');
 
   const [screen, setScreen] = useState<Screen>('welcome');
   const [form, setForm] = useState<ParticipantInput>(blank);
@@ -88,15 +79,51 @@ export default function HomePage() {
   const [results, setResults] = useState<Partial<Record<Phase, AttemptResult>>>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [leaderboardTab, setLeaderboardTab] = useState<'ALL' | 'CITY_3D' | 'ARENA_CHALLENGE' | 'SAFE_JOURNEY'>('ALL');
+  const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
+  const [localHistory, setLocalHistory] = useState<any[]>([]);
+
+  // Tải bảng xếp hạng từ localStorage & server
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('saferide_local_history');
+      if (saved) setLocalHistory(JSON.parse(saved));
+    } catch {}
+    fetchLeaderboard();
+  }, []);
+
+  async function fetchLeaderboard() {
+    try {
+      const res = await fetch('/api/public/leaderboard');
+      if (res.ok) {
+        const d = await res.json();
+        if (d.leaderboard) setLeaderboardData(d.leaderboard);
+      }
+    } catch {}
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+      }
+    }
+  }
+
+  useEffect(() => {
+    function onFsChange() {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    }
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
 
   const actions = useRef<GameAction[]>([]);
   const started = useRef(0);
-
-  const filteredProvinces = useMemo(() => {
-    if (!provinceSearch.trim()) return DEMO_PROVINCES;
-    const q = provinceSearch.toLowerCase().trim();
-    return DEMO_PROVINCES.filter((p) => p.toLowerCase().includes(q));
-  }, [provinceSearch]);
 
   const valid =
     [form.full_name, form.class_name, form.school_name, form.province_city].every((v) => v.trim().length > 0) &&
@@ -407,30 +434,6 @@ export default function HomePage() {
                 <label htmlFor="province-city">
                   Tỉnh / Thành phố <span>*</span>
                 </label>
-
-                {/* Hàng nút bấm chọn 1 chạm nhanh gọn */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
-                  {TOP_PROVINCES_QUICK.map((p) => (
-                    <button
-                      key={p}
-                      type="button"
-                      onClick={() => setForm({ ...form, province_city: p })}
-                      style={{
-                        padding: '5px 12px',
-                        borderRadius: '10px',
-                        fontSize: '12.5px',
-                        fontWeight: 800,
-                        border: form.province_city === p ? '2px solid #0284c7' : '1.5px solid #dce6ef',
-                        borderBottom: form.province_city === p ? '3px solid #0369a1' : '2px solid #cbd5e1',
-                        background: form.province_city === p ? '#ddf4ff' : '#ffffff',
-                        color: form.province_city === p ? '#0369a1' : '#334860',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      {p === 'Thành phố Cần Thơ' ? 'Cần Thơ' : p === 'Thành phố Hồ Chí Minh' ? 'TP.HCM' : p === 'Thành phố Hà Nội' ? 'Hà Nội' : p === 'Thành phố Đà Nẵng' ? 'Đà Nẵng' : p}
-                    </button>
-                  ))}
-                </div>
 
                 <select
                   id="province-city"
@@ -843,6 +846,256 @@ export default function HomePage() {
           </div>
         </section>
       </main>
+
+
+      {/* MODAL BẢNG XẾP HẠNG THEO TỪNG PHƯƠNG ÁN & TỔNG HỢP */}
+      {showLeaderboard && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.75)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+          }}
+          onClick={() => setShowLeaderboard(false)}
+        >
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '20px',
+              maxWidth: '880px',
+              width: '100%',
+              maxHeight: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              overflow: 'hidden',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header Modal */}
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #1e3a8a, #2563eb)',
+                color: '#ffffff',
+                padding: '20px 24px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 900, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  🏆 BẢNG VÀNG XẾP HẠNG AN TOÀN GIAO THÔNG
+                </h2>
+                <p style={{ margin: '4px 0 0', fontSize: '13px', opacity: 0.9 }}>
+                  Ghi nhận điểm kỹ năng và ngày giờ thực hiện chính xác theo từng lượt trải nghiệm
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowLeaderboard(false)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  border: 'none',
+                  color: '#ffffff',
+                  fontSize: '20px',
+                  borderRadius: '999px',
+                  width: '36px',
+                  height: '36px',
+                  cursor: 'pointer',
+                  fontWeight: 900,
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Thanh Tab chọn Phương Án Trải Nghiệm */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+                padding: '14px 20px',
+                borderBottom: '1px solid #e2e8f0',
+                background: '#f8fafc',
+                overflowX: 'auto',
+              }}
+            >
+              {[
+                { id: 'ALL', label: '⭐ Xếp Hạng Tổng Hợp' },
+                { id: 'CITY_3D', label: '🏫 Phương án 1: Thành phố 3D' },
+                { id: 'ARENA_CHALLENGE', label: '⚡ Phương án 2: Đấu trường' },
+                { id: 'SAFE_JOURNEY', label: '🎒 Phương án 3: Đến trường' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setLeaderboardTab(tab.id as any)}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: '12px',
+                    border: leaderboardTab === tab.id ? '2px solid #2563eb' : '1px solid #cbd5e1',
+                    background: leaderboardTab === tab.id ? '#eff6ff' : '#ffffff',
+                    color: leaderboardTab === tab.id ? '#1d4ed8' : '#475569',
+                    fontWeight: 800,
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Danh sách bảng xếp hạng */}
+            <div style={{ padding: '20px', overflowY: 'auto', flex: 1 }}>
+              {(() => {
+                const combined = [
+                  ...localHistory,
+                  ...leaderboardData.map((d: any) => ({
+                    id: d.participant_id,
+                    full_name: d.full_name,
+                    class_name: d.class_name,
+                    school_name: d.school_name,
+                    province_city: d.province_city,
+                    mode: d.experience_mode || 'CITY_3D',
+                    total_score: d.total_score,
+                    pre_score: d.pre_score,
+                    post_score: d.post_score,
+                    created_at: d.completed_at,
+                  })),
+                ];
+
+                const filtered = combined.filter((item) =>
+                  leaderboardTab === 'ALL' ? true : item.mode === leaderboardTab,
+                );
+
+                const unique = Array.from(new Map(filtered.map((item) => [item.id, item])).values());
+                unique.sort((a, b) => (b.total_score || 0) - (a.total_score || 0) || Date.parse(b.created_at) - Date.parse(a.created_at));
+
+                if (unique.length === 0) {
+                  return (
+                    <div style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
+                      <span style={{ fontSize: '36px', display: 'inline-block', marginBottom: '8px' }}>🏁</span>
+                      <p style={{ margin: 0, fontWeight: 700 }}>Chưa có lượt thi đấu nào cho mục này.</p>
+                      <p style={{ fontSize: '13px', margin: '4px 0 0' }}>Hãy hoàn thành đủ 3 chặng để tên bạn được vinh danh trên bảng vàng!</p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13.5px' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid #e2e8f0', color: '#64748b', fontSize: '12px', textTransform: 'uppercase' }}>
+                        <th style={{ padding: '10px 8px', width: '50px' }}>Hạng</th>
+                        <th style={{ padding: '10px 12px' }}>Học sinh / Lớp</th>
+                        <th style={{ padding: '10px 12px' }}>Trường & Tỉnh</th>
+                        <th style={{ padding: '10px 12px' }}>Phương án</th>
+                        <th style={{ padding: '10px 12px' }}>Điểm số</th>
+                        <th style={{ padding: '10px 12px' }}>Ngày giờ thực hiện</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {unique.map((item, idx) => {
+                        const rankBadge = idx === 0 ? "🥇 1" : idx === 1 ? "🥈 2" : idx === 2 ? "🥉 3" : ("#" + (idx + 1));
+                        const isTop3 = idx < 3;
+                        return (
+                          <tr
+                            key={item.id + idx}
+                            style={{
+                              borderBottom: '1px solid #f1f5f9',
+                              background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
+                            }}
+                          >
+                            <td style={{ padding: '12px 8px', fontWeight: 900, color: isTop3 ? '#b45309' : '#64748b' }}>
+                              {rankBadge}
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <div style={{ fontWeight: 800, color: '#0f172a' }}>{item.full_name}</div>
+                              <span style={{ fontSize: '12px', color: '#64748b' }}>Lớp {item.class_name}</span>
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <div style={{ fontWeight: 600, color: '#334155' }}>{item.school_name}</div>
+                              <span style={{ fontSize: '12px', color: '#0284c7' }}>{item.province_city}</span>
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <span
+                                style={{
+                                  padding: '3px 8px',
+                                  borderRadius: '6px',
+                                  fontSize: '11.5px',
+                                  fontWeight: 700,
+                                  background: item.mode === 'ARENA_CHALLENGE' ? '#fef3c7' : item.mode === 'SAFE_JOURNEY' ? '#e0f2fe' : '#dcfce7',
+                                  color: item.mode === 'ARENA_CHALLENGE' ? '#b45309' : item.mode === 'SAFE_JOURNEY' ? '#0369a1' : '#15803d',
+                                }}
+                              >
+                                {item.mode === 'ARENA_CHALLENGE' ? 'Đấu trường' : item.mode === 'SAFE_JOURNEY' ? 'Đến trường' : 'Thành phố 3D'}
+                              </span>
+                            </td>
+                            <td style={{ padding: '12px' }}>
+                              <strong style={{ fontSize: '16px', color: '#16a34a' }}>{item.total_score ?? 100}</strong>
+                              <span style={{ fontSize: '12px', color: '#94a3b8' }}>/100</span>
+                            </td>
+                            <td style={{ padding: '12px', fontSize: '12px', color: '#64748b', whiteSpace: 'nowrap' }}>
+                              {new Date(item.created_at).toLocaleString('vi-VN', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                              })}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                );
+              })()}
+            </div>
+
+            {/* Footer Modal */}
+            <div
+              style={{
+                padding: '12px 20px',
+                borderTop: '1px solid #e2e8f0',
+                background: '#f8fafc',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                fontSize: '12px',
+                color: '#64748b',
+              }}
+            >
+              <span>Dữ liệu lưu vết an toàn theo từng lượt hoàn thành hành trình.</span>
+              <button
+                type="button"
+                onClick={() => setShowLeaderboard(false)}
+                style={{
+                  background: '#2563eb',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '6px 16px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <footer>
         <span>SafeRide EDU AI 2026 <b>·</b> Học từ đường phố, vững tay lái đến trường</span>

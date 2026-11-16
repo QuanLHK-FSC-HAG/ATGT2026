@@ -12,6 +12,7 @@ export async function GET(req: Request) {
       total: snapshot.Players.length,
       participants: snapshot.Players.map(p => ({
         participant_id: p.participant_id,
+        full_name: p.full_name,
         school_name: p.school_name,
         class_name: p.class_name,
         province_city: p.province_city,

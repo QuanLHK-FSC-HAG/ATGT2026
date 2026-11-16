@@ -11,6 +11,9 @@ export async function GET(req: Request) {
       admin_email: admin.email,
       total: snapshot.Sessions.length,
       sessions: snapshot.Sessions,
+      event_batches: snapshot.EventsIndex,
+      ai_logs: snapshot.AIAnalysis,
+      system_logs: snapshot.SystemLogs,
     });
   } catch (error) {
     return errorResponse(error);

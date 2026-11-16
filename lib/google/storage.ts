@@ -1,4 +1,4 @@
-﻿import { createHash, randomUUID, createSign } from 'node:crypto';
+import { createHash, randomUUID, createSign } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { isHostedEnvironment } from '../auth/session.ts';
@@ -353,6 +353,21 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
     }
   }
 
+  async readSheetRows(sheetName: string): Promise<string[][]> {
+    try {
+      const token = await this.getAccessToken();
+      const sheetId = process.env.GOOGLE_SHEETS_ID;
+      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}!A:Z`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return [];
+      const data = (await res.json()) as { values?: string[][] };
+      return data.values || [];
+    } catch {
+      return [];
+    }
+  }
+
   async createParticipantAndStudyRun(player: PlayerRecord, studyRun: StudyRunRecord) {
     const res = await this.fallback.createParticipantAndStudyRun(player, studyRun);
     await this.appendRow('hoc_sinh', [
@@ -437,9 +452,9 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
     await this.appendRow('so_sanh_truoc_sau', [
       assessment.study_run_id,
       assessment.phase,
-      assessment.score,
-      assessment.reaction_p50_ms,
-      assessment.completed_at,
+      assessment.raw_score,
+      assessment.completion_time_ms,
+      assessment.created_at,
     ]);
     return res;
   }
@@ -448,9 +463,9 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
     const res = await this.fallback.recordAIAnalysis(analysis);
     await this.appendRow('nhat_ky_ai', [
       analysis.analysis_id,
-      analysis.study_run_id,
+      analysis.pseudonymous_ref,
       analysis.scenario_id,
-      analysis.feedback_text,
+      analysis.suggested_practice,
       analysis.created_at,
     ]);
     return res;
