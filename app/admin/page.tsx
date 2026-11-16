@@ -53,6 +53,53 @@ interface ParticipantRow {
   status: string;
 }
 
+interface SheetsData {
+  source: string;
+  sheet_id: string | null;
+  updated_at: string;
+  sheets: Record<string, string[][]>;
+  counts: Record<string, number>;
+}
+
+const VISIBLE_SHEET_LABELS = [
+  { key: 'hoc_sinh', label: 'hoc_sinh' },
+  { key: 'phien_choi', label: 'phien_choi' },
+  { key: 'luot_xu_ly', label: 'luot_xu_ly' },
+  { key: 'su_kien_hanh_vi', label: 'su_kien_hanh_vi' },
+  { key: 'nhat_ky_ai', label: 'nhat_ky_ai' },
+  { key: 'so_sanh_truoc_sau', label: 'so_sanh_truoc_sau' },
+  { key: 'kich_ban_goc', label: 'kich_ban_goc' },
+] as const;
+
+function SheetTable({ rows, emptyText, maxHeight = 520 }: { rows: string[][]; emptyText: string; maxHeight?: number }) {
+  if (!rows.length) {
+    return <div className="notice" style={{ background: '#f8fafc', color: '#64748b', marginTop: '12px' }}>{emptyText}</div>;
+  }
+  const [header, ...body] = rows;
+  return (
+    <div style={{ overflow: 'auto', maxHeight, marginTop: '12px', border: '1px solid #e2e8f0', borderRadius: '10px' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12.5px', whiteSpace: 'nowrap' }}>
+        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+          <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
+            {header.map((cell, index) => (
+              <th key={`${cell}-${index}`} style={{ padding: '9px 12px', color: '#334155' }}>{cell}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {body.map((row, rowIndex) => (
+            <tr key={rowIndex} style={{ borderBottom: '1px solid #e2e8f0' }}>
+              {header.map((_, cellIndex) => (
+                <td key={cellIndex} style={{ padding: '8px 12px', color: '#475569' }}>{row[cellIndex] ?? ''}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 declare global {
   interface Window {
     google?: {
@@ -109,6 +156,7 @@ export default function AdminPage() {
   const [sessionsCount, setSessionsCount] = useState(0);
   const [resultsData, setResultsData] = useState<{ total_attempts: number; total_assessments: number } | null>(null);
   const [systemHealth, setSystemHealth] = useState<Record<string, unknown> | null>(null);
+  const [sheetsData, setSheetsData] = useState<SheetsData | null>(null);
   const [loadingData, setLoadingData] = useState(false);
 
   const tabs: { id: AdminTab; label: string }[] = [
@@ -189,12 +237,13 @@ export default function AdminPage() {
     async function fetchDashboardData() {
       setLoadingData(true);
       try {
-        const [ovRes, ptRes, ssRes, rsRes, hlRes] = await Promise.allSettled([
+        const [ovRes, ptRes, ssRes, rsRes, hlRes, shRes] = await Promise.allSettled([
           fetch('/api/admin/overview').then(r => r.ok ? r.json() : null),
           fetch('/api/admin/participants').then(r => r.ok ? r.json() : null),
           fetch('/api/admin/sessions').then(r => r.ok ? r.json() : null),
           fetch('/api/admin/results').then(r => r.ok ? r.json() : null),
           fetch('/api/admin/system-health').then(r => r.ok ? r.json() : null),
+          fetch('/api/admin/sheets', { cache: 'no-store' }).then(r => r.ok ? r.json() : null),
         ]);
 
         if (ovRes.status === 'fulfilled' && ovRes.value) setOverview(ovRes.value);
@@ -202,6 +251,7 @@ export default function AdminPage() {
         if (ssRes.status === 'fulfilled' && ssRes.value?.total) setSessionsCount(ssRes.value.total);
         if (rsRes.status === 'fulfilled' && rsRes.value) setResultsData(rsRes.value);
         if (hlRes.status === 'fulfilled' && hlRes.value) setSystemHealth(hlRes.value);
+        if (shRes.status === 'fulfilled' && shRes.value?.sheets) setSheetsData(shRes.value);
       } catch (err) {
         console.error('Lỗi tải dữ liệu dashboard:', err);
       } finally {
@@ -430,6 +480,12 @@ export default function AdminPage() {
   }
 
   // MÀN HÌNH DASHBOARD KHI ĐÃ ĐĂNG NHẬP THÀNH CÔNG
+  const liveCounts = sheetsData?.counts;
+  const participantCount = liveCounts?.hoc_sinh ?? overview?.totals.participants ?? participants.length;
+  const sessionCount = liveCounts?.phien_choi ?? overview?.totals.study_runs ?? sessionsCount;
+  const pairedCount = liveCounts?.so_sanh_truoc_sau ?? overview?.totals.paired_completed ?? 0;
+  const attemptCount = liveCounts?.luot_xu_ly ?? overview?.totals.attempts ?? resultsData?.total_attempts ?? 0;
+
   return (
     <main className="reading-page" style={{ maxWidth: '1180px', margin: '0 auto', padding: '24px' }}>
       {/* Header Quản trị */}
@@ -459,8 +515,8 @@ export default function AdminPage() {
 
       <h1>Bảng Điều Khiển Quản Trị SafeRide EDU AI 2026</h1>
       <p style={{ color: '#475569', marginBottom: '20px' }}>
-        Đồng bộ trực tuyến với Google Sheets ID: <code>1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8</code> (Thư mục Google Drive: <code>ATGT2026</code>).
-        {loadingData ? ' (Đang cập nhật số liệu mới nhất…)' : ' Dữ liệu thực tế ghi nhận trực tiếp khi học sinh tham gia.'}
+        Đồng bộ trực tuyến với Google Sheets ID: <code>{sheetsData?.sheet_id || '1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8'}</code> (Thư mục Google Drive: <code>ATGT2026</code>).
+        {loadingData ? ' (Đang cập nhật số liệu mới nhất…)' : ` Nguồn dữ liệu: ${sheetsData?.source === 'GOOGLE_SHEETS' ? 'Google Sheets Live' : 'Snapshot cục bộ'} · cập nhật lúc ${sheetsData ? new Date(sheetsData.updated_at).toLocaleTimeString('vi-VN') : '—'}.`}
       </p>
 
       {/* 4 Thẻ Chỉ số Nổi bật trích xuất từ Sheets */}
@@ -468,7 +524,7 @@ export default function AdminPage() {
         <div style={{ background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: '12px', padding: '16px' }}>
           <span style={{ fontSize: '12px', fontWeight: 800, color: '#166534', textTransform: 'uppercase' }}>Tổng học sinh tham gia</span>
           <div style={{ fontSize: '28px', fontWeight: 900, color: '#15803d', marginTop: '4px' }}>
-            {overview?.totals.participants ?? participants.length}
+            {participantCount}
           </div>
           <span style={{ fontSize: '12px', color: '#16a34a' }}>Đồng bộ từ Sheet <code>hoc_sinh</code></span>
         </div>
@@ -476,7 +532,7 @@ export default function AdminPage() {
         <div style={{ background: '#eff6ff', border: '1.5px solid #93c5fd', borderRadius: '12px', padding: '16px' }}>
           <span style={{ fontSize: '12px', fontWeight: 800, color: '#1e40af', textTransform: 'uppercase' }}>Phiên trải nghiệm</span>
           <div style={{ fontSize: '28px', fontWeight: 900, color: '#1d4ed8', marginTop: '4px' }}>
-            {overview?.totals.study_runs ?? sessionsCount}
+            {sessionCount}
           </div>
           <span style={{ fontSize: '12px', color: '#2563eb' }}>Đồng bộ từ Sheet <code>phien_choi</code></span>
         </div>
@@ -484,7 +540,7 @@ export default function AdminPage() {
         <div style={{ background: '#fefce8', border: '1.5px solid #fde047', borderRadius: '12px', padding: '16px' }}>
           <span style={{ fontSize: '12px', fontWeight: 800, color: '#854d0e', textTransform: 'uppercase' }}>Hoàn thành Cặp Chặng</span>
           <div style={{ fontSize: '28px', fontWeight: 900, color: '#a16207', marginTop: '4px' }}>
-            {overview?.totals.paired_completed ?? 0}
+            {pairedCount}
           </div>
           <span style={{ fontSize: '12px', color: '#ca8a04' }}>Đồng bộ từ Sheet <code>so_sanh_truoc_sau</code></span>
         </div>
@@ -492,7 +548,7 @@ export default function AdminPage() {
         <div style={{ background: '#fdf2f8', border: '1.5px solid #f472b6', borderRadius: '12px', padding: '16px' }}>
           <span style={{ fontSize: '12px', fontWeight: 800, color: '#9d174d', textTransform: 'uppercase' }}>Lượt xử lý tình huống</span>
           <div style={{ fontSize: '28px', fontWeight: 900, color: '#be185d', marginTop: '4px' }}>
-            {overview?.totals.attempts ?? resultsData?.total_attempts ?? 0}
+            {attemptCount}
           </div>
           <span style={{ fontSize: '12px', color: '#db2777' }}>Đồng bộ từ Sheet <code>luot_xu_ly</code></span>
         </div>
@@ -526,6 +582,10 @@ export default function AdminPage() {
             <div className="notice"><strong>Cấu trúc 8 Sheet không dấu:</strong> <code>bieu_do_thong_ke</code>, <code>hoc_sinh</code>, <code>phien_choi</code>, <code>luot_xu_ly</code>, <code>su_kien_hanh_vi</code>, <code>nhat_ky_ai</code>, <code>so_sanh_truoc_sau</code>, <code>kich_ban_goc</code></div>
             <div className="notice"><strong>Cơ chế Cấp độ chơi:</strong> Học sinh chọn cấp độ (Cơ bản / Nâng cao / Thử thách) theo từng lượt chơi tại <code>phien_choi</code></div>
             <div className="notice"><strong>Chế độ kết nối:</strong> {overview?.storage_mode === 'GOOGLE' ? 'Google Sheets Live 100%' : 'Chế độ Cục bộ Live Adapter'}</div>
+            <div className="notice" style={{ gridColumn: '1 / -1' }}>
+              <strong>Số dòng thực tế trong Google Sheets:</strong>{' '}
+              {sheetsData ? VISIBLE_SHEET_LABELS.map(({ key, label }) => `${label}: ${sheetsData.counts[key] ?? 0}`).join(' · ') : 'Đang tải…'}
+            </div>
           </div>
         </section>
       )}
@@ -560,7 +620,9 @@ export default function AdminPage() {
         <section aria-labelledby="heading-participants">
           <h2 id="heading-participants">3. Danh sách Học sinh Tham gia Trực tiếp (Bảng hoc_sinh)</h2>
           <p style={{ color: '#475569' }}>Dữ liệu ghi nhận trực tuyến theo thời gian thực khi học sinh tham gia.</p>
-          {participants.length === 0 ? (
+          {sheetsData?.sheets.hoc_sinh?.length ? (
+            <SheetTable rows={sheetsData.sheets.hoc_sinh} emptyText="Chưa có học sinh trong Sheet hoc_sinh." />
+          ) : participants.length === 0 ? (
             <div className="notice" style={{ background: '#f8fafc', color: '#64748b' }}>
               Chưa có học sinh mới thực hiện bài học trong phiên này. Dữ liệu sẽ tự động xuất hiện tại đây khi học sinh làm bài tập 3D.
             </div>
@@ -598,29 +660,36 @@ export default function AdminPage() {
           <h2 id="heading-research">4. So sánh Kết quả Trước & Sau khi học (Bảng so_sanh_truoc_sau)</h2>
           <p>Tự động đối chiếu điểm số chặng Trước khi học (PRE), Luyện tập (TRAINING) và Đánh giá sau học (POST) theo từng phiên chơi trực tuyến trên Google Sheets ID: <code>1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8</code>.</p>
           <div className="notice" style={{ marginTop: '12px' }}>
-            Tổng số bản ghi đánh giá hoàn tất: <strong>{resultsData?.total_assessments ?? 0}</strong> cặp mẫu.
+            Tổng số bản ghi đánh giá hoàn tất: <strong>{pairedCount}</strong> cặp mẫu (Sheet <code>so_sanh_truoc_sau</code>).
           </div>
+          <SheetTable rows={sheetsData?.sheets.so_sanh_truoc_sau ?? []} emptyText="Chưa có bản ghi so sánh trước/sau trong Google Sheets." />
         </section>
       )}
 
       {activeTab === 'scenarios' && (
         <section aria-labelledby="heading-scenarios">
           <h2 id="heading-scenarios">5. Kho 160 Kịch bản An toàn Giao thông (Bảng kich_ban_goc)</h2>
-          <p>Bao gồm 160 tình huống giao thông học đường Việt Nam thực tế, phân bố đều cho cấp THCS và THPT (8 chủ đề kỹ năng × 20 kịch bản).</p>
+          <p>
+            Bao gồm {sheetsData?.counts.kich_ban_goc ?? 160} tình huống giao thông học đường Việt Nam thực tế, phân bố đều cho cấp THCS và THPT (8 chủ đề kỹ năng × 20 kịch bản).
+            {sheetsData?.source === 'GOOGLE_SHEETS' ? ' Dữ liệu được tải trực tiếp từ Google Sheets.' : ''}
+          </p>
+          <SheetTable rows={sheetsData?.sheets.kich_ban_goc ?? []} emptyText="Không đọc được dữ liệu kich_ban_goc từ Google Sheets." maxHeight={640} />
         </section>
       )}
 
       {activeTab === 'logs' && (
         <section aria-labelledby="heading-logs">
           <h2 id="heading-logs">6. Nhật ký Sự kiện Hành vi 3D (Bảng su_kien_hanh_vi)</h2>
-          <p>Ghi nhận thao tác phanh, bật xi-nhan, nhường đường và thời gian phản xạ trong không gian mô phỏng 3D theo từng mili-giây.</p>
+          <p>Ghi nhận thao tác phanh, bật xi-nhan, nhường đường và thời gian phản xạ trong không gian mô phỏng 3D theo từng mili-giây. Hiện có <strong>{liveCounts?.su_kien_hanh_vi ?? 0}</strong> sự kiện trong Sheet.</p>
+          <SheetTable rows={sheetsData?.sheets.su_kien_hanh_vi ?? []} emptyText="Chưa có sự kiện hành vi trong Google Sheets." />
         </section>
       )}
 
       {activeTab === 'ai' && (
         <section aria-labelledby="heading-ai">
           <h2 id="heading-ai">7. Nhật ký Phản hồi Sư phạm AI (Bảng nhat_ky_ai)</h2>
-          <p>Toàn bộ thông tin cá nhân của học sinh được ẩn danh hoàn toàn trước khi tạo lời khuyên hướng dẫn luật giao thông đường bộ Việt Nam.</p>
+          <p>Toàn bộ thông tin cá nhân của học sinh được ẩn danh hoàn toàn trước khi tạo lời khuyên hướng dẫn luật giao thông đường bộ Việt Nam. Hiện có <strong>{liveCounts?.nhat_ky_ai ?? 0}</strong> bản ghi trong Sheet.</p>
+          <SheetTable rows={sheetsData?.sheets.nhat_ky_ai ?? []} emptyText="Chưa có nhật ký AI trong Google Sheets." />
         </section>
       )}
 
@@ -629,7 +698,9 @@ export default function AdminPage() {
           <h2 id="heading-health">8. Trạng thái Hoạt động Hệ thống</h2>
           <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid #e2e8f0', fontFamily: 'monospace', fontSize: '13px' }}>
             <div>Admin đăng nhập: {currentUser.name} ({currentUser.email})</div>
-            <div>Google Sheets: 1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8</div>
+            <div>Google Sheets: {sheetsData?.sheet_id || '1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8'}</div>
+            <div>Nguồn dữ liệu: {sheetsData?.source || 'Đang tải…'}</div>
+            <div>Cập nhật Sheets lần cuối: {sheetsData ? new Date(sheetsData.updated_at).toLocaleString('vi-VN') : '—'}</div>
             <div>Trạng thái hệ thống: {String(systemHealth?.status || 'SẴN SÀNG HOẠT ĐỘNG')}</div>
           </div>
         </section>

@@ -108,7 +108,17 @@ export default function World3D({
     let fpsTimer = performance.now();
 
     const keys: Record<string, boolean> = {};
+    const isEditableTarget = (target: EventTarget | null) => {
+      const element = target as HTMLElement | null;
+      return Boolean(
+        element &&
+        (element.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)),
+      );
+    };
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Không chặn phím khi người dùng đang nhập vào form (dấu cách, mũi tên, w/q/e...).
+      if (isEditableTarget(e.target)) return;
+      if (!stateRef.current.interactive) return;
       keys[e.key.toLowerCase()] = true;
       if (['arrowup', 'w'].includes(e.key.toLowerCase())) handleAction('ACCEL');
       if ([' ', 'spacebar'].includes(e.key.toLowerCase())) {
@@ -120,6 +130,7 @@ export default function World3D({
     };
     const handleKeyUp = (e: KeyboardEvent) => {
       keys[e.key.toLowerCase()] = false;
+      if (isEditableTarget(e.target)) return;
       if (['arrowup', 'w'].includes(e.key.toLowerCase()) && !keys['arrowup'] && !keys['w']) {
         stateRef.current.targetSpeed = 0;
       }

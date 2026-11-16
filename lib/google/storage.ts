@@ -48,6 +48,7 @@ export interface SafeRideStorageAdapter {
   recordAssessment(assessment: AssessmentRecord): Promise<AssessmentRecord>;
   recordAIAnalysis(analysis: AIAnalysisRecord): Promise<AIAnalysisRecord>;
   appendSystemLog(entry: Omit<SystemLogRecord, 'log_id' | 'created_at'>): Promise<SystemLogRecord>;
+  readSheetRows(sheetName: string): Promise<string[][]>;
   getAdminOverview(): Promise<{
     storage_mode: StorageMode;
     is_demo_data: boolean;
@@ -308,6 +309,11 @@ export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
 
   async getSnapshot() {
     return this.readStore();
+  }
+
+  async readSheetRows(_sheetName: string): Promise<string[][]> {
+    // Chế độ local không có Google Sheets live; trả về rỗng để UI dùng dữ liệu snapshot.
+    return [];
   }
 }
 
