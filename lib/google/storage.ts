@@ -340,8 +340,25 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
     try {
       const token = await this.getAccessToken();
       const sheetId = process.env.GOOGLE_SHEETS_ID;
-      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}!A:Z:append?valueInputOption=USER_ENTERED`, {
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}!A:Z:append?valueInputOption=RAW`, {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ values: [rowValues] }),
+      });
+    } catch {
+      // Non-blocking write to avoid student disruption
+    }
+  }
+
+  private async updateRow(sheetName: string, rowNumber: number, rowValues: unknown[]): Promise<void> {
+    try {
+      const token = await this.getAccessToken();
+      const sheetId = process.env.GOOGLE_SHEETS_ID;
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}!A${rowNumber}:Z${rowNumber}?valueInputOption=RAW`, {
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -372,27 +389,30 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
     const res = await this.fallback.createParticipantAndStudyRun(player, studyRun);
     await this.appendRow('hoc_sinh', [
       player.participant_id,
+      studyRun.study_run_id,
       player.full_name,
       player.class_name,
       player.school_name,
       player.province_city,
       player.privacy_notice_version,
       player.created_at,
-      player.status,
-    ]);
-    await this.appendRow('phien_choi', [
-      studyRun.study_run_id,
-      studyRun.participant_id,
-      studyRun.current_phase,
-      studyRun.state,
-      'CO_BAN',
-      studyRun.created_at,
     ]);
     return res;
   }
 
   async createSession(session: SessionRecord) {
-    return this.fallback.createSession(session);
+    const res = await this.fallback.createSession(session);
+    await this.appendRow('phien_choi', [
+      session.session_id,
+      session.participant_id,
+      'Cơ bản',
+      '3D',
+      'CO_BAN',
+      session.device_class,
+      session.started_at,
+      session.state,
+    ]);
+    return res;
   }
 
   async getSession(sessionId: string) {
@@ -410,14 +430,15 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
   async appendEventBatch(batchId: string, sessionId: string, events: TelemetryEvent[]) {
     const res = await this.fallback.appendEventBatch(batchId, sessionId, events);
     for (const ev of events) {
+      const payload = ev.payload || {};
       await this.appendRow('su_kien_hanh_vi', [
         ev.event_id,
+        payload.attempt_id ?? '',
         ev.session_id,
-        ev.seq,
-        ev.timestamp,
         ev.type,
-        ev.scenario_id,
-        JSON.stringify(ev.payload || {}),
+        Date.parse(ev.timestamp) || '',
+        payload.speed_kmh ?? '',
+        payload.distance_to_hazard_m ?? payload.distance_m ?? '',
       ]);
     }
     return res;
@@ -429,15 +450,23 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
 
   async recordAttempt(result: ScenarioResultRecord) {
     const res = await this.fallback.recordAttempt(result);
+    const outcomeLabel = result.outcome === 'SAFE'
+      ? 'ĐÚNG'
+      : result.outcome === 'SUBOPTIMAL'
+        ? 'TẠM ĐƯỢC'
+        : result.outcome === 'HAZARDOUS'
+          ? 'SAI'
+          : 'KHÔNG HỢP LỆ';
     await this.appendRow('luot_xu_ly', [
       result.attempt_id,
-      result.study_run_id,
+      result.session_id,
+      result.participant_id,
       result.scenario_id,
       result.phase,
       result.selected_decision,
+      outcomeLabel,
+      result.reaction_ms ?? '',
       result.rule_score,
-      result.outcome,
-      result.reaction_ms,
       result.created_at,
     ]);
     return res;
@@ -449,13 +478,33 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
 
   async recordAssessment(assessment: AssessmentRecord) {
     const res = await this.fallback.recordAssessment(assessment);
-    await this.appendRow('so_sanh_truoc_sau', [
+    const rows = await this.readSheetRows('so_sanh_truoc_sau');
+    const existingIndex = rows.findIndex((row, index) => index > 0 && row[0] === assessment.study_run_id);
+    const toNumber = (value: string | undefined) => {
+      if (value === undefined || value === '') return null;
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : null;
+    };
+    const existing = existingIndex > 0 ? rows[existingIndex] : undefined;
+    const preScore = assessment.phase === 'PRE' ? assessment.raw_score : toNumber(existing?.[2]);
+    const postScore = assessment.phase === 'POST' ? assessment.raw_score : toNumber(existing?.[3]);
+    const preReaction = assessment.phase === 'PRE' ? assessment.completion_time_ms : toNumber(existing?.[5]);
+    const postReaction = assessment.phase === 'POST' ? assessment.completion_time_ms : toNumber(existing?.[6]);
+    const delta = preScore !== null && postScore !== null ? postScore - preScore : '';
+    const values = [
       assessment.study_run_id,
-      assessment.phase,
-      assessment.raw_score,
-      assessment.completion_time_ms,
-      assessment.created_at,
-    ]);
+      assessment.participant_id,
+      preScore ?? '',
+      postScore ?? '',
+      delta,
+      preReaction ?? '',
+      postReaction ?? '',
+    ];
+    if (existingIndex > 0) {
+      await this.updateRow('so_sanh_truoc_sau', existingIndex + 1, values);
+    } else {
+      await this.appendRow('so_sanh_truoc_sau', values);
+    }
     return res;
   }
 
@@ -465,7 +514,8 @@ export class GoogleSheetsDriveLiveAdapter implements SafeRideStorageAdapter {
       analysis.analysis_id,
       analysis.pseudonymous_ref,
       analysis.scenario_id,
-      analysis.suggested_practice,
+      `${analysis.error_explanation}\n\nGợi ý: ${analysis.suggested_practice}`,
+      analysis.safety_principle,
       analysis.created_at,
     ]);
     return res;
