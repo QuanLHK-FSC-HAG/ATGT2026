@@ -78,6 +78,12 @@ export interface ScenarioDefinition {
   hazard_cue_vi: string;
   options: ScenarioDecisionOption[];
   rubric: ScenarioRuleRubric;
+  // Mỗi dòng kich_ban_goc là một cảnh tương tác riêng biệt.
+  npc_element?: string;
+  trigger_event?: string;
+  correct_action?: string;
+  target_grade?: string;
+  skill_group?: string;
 }
 
 export interface PublicScenarioView {
@@ -90,6 +96,11 @@ export interface PublicScenarioView {
   prompt_vi: string;
   hazard_cue_vi: string;
   options: ScenarioDecisionOption[];
+  npc_element?: string;
+  trigger_event?: string;
+  correct_action?: string;
+  target_grade?: string;
+  skill_group?: string;
 }
 
 export interface TelemetryEvent {

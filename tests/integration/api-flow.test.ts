@@ -12,6 +12,7 @@ import { GET as getProgress } from '../../app/api/public/progress/route.ts';
 import { POST as postAIFeedback } from '../../app/api/public/ai-feedback/route.ts';
 import { GET as getAdminOverview } from '../../app/api/admin/overview/route.ts';
 import { GET as getAdminExports } from '../../app/api/admin/exports/route.ts';
+import { getStorageAdapter } from '../../lib/google/storage.ts';
 
 const testMockFile = resolve(process.cwd(), '.local-mock-data', `integration-test-${Date.now()}.json`);
 
@@ -40,7 +41,13 @@ describe('SafeRide End-to-End API Integration Flow (Pre -> Training -> Post + Ad
       }),
     );
     assert.equal(pRes.status, 201);
-    const pData = (await pRes.json()) as { participant_id: string; study_run_id: string; phase: string };
+    const pData = (await pRes.json()) as {
+      participant_id: string;
+      study_run_id: string;
+      phase: string;
+      storage_mode: string;
+    };
+    assert.equal(pData.storage_mode, 'LOCAL_DEMO_MOCK');
     assert.equal(pData.phase, 'PRE');
 
     // 2. Create session with registration intent header & capture signed HttpOnly cookie
@@ -125,6 +132,11 @@ describe('SafeRide End-to-End API Integration Flow (Pre -> Training -> Post + Ad
     assert.equal(ebResDup.status, 200);
     const ebDupData = (await ebResDup.json()) as { duplicate: boolean };
     assert.equal(ebDupData.duplicate, true);
+
+    const storedEvents = await getStorageAdapter().getSessionEvents(sData.session_id);
+    assert.equal(storedEvents.length, 2);
+    assert.equal(storedEvents[0].scenario_id, 'blind-spot-truck-right-turn');
+    assert.equal(storedEvents[1].payload.decision_id, 'opt_brake_wait');
 
     // 5. Submit PRE attempt (client sends fake score=0, server must compute real deterministic score=100)
     const preAttemptRes = await submitAttempt(

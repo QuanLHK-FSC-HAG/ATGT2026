@@ -144,7 +144,9 @@ export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
     if (!store && isHostedEnvironment()) {
       throw new DomainError(503, 'MOCK_STORAGE_FORBIDDEN_IN_PROD', 'Local mock file adapter is explicitly local-only and forbidden in production.');
     }
-    this.store = store || new FileSnapshotStore(customPath || resolve(process.cwd(), '.runtime', 'logical_store.json'));
+    this.store = store || new FileSnapshotStore(
+      customPath || process.env.SAFERIDE_LOCAL_MOCK_FILE || resolve(process.cwd(), '.runtime', 'logical_store.json'),
+    );
   }
 
   private async readStore(): Promise<LogicalSheetsSnapshot> {

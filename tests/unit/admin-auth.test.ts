@@ -2,6 +2,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { isAllowedAdminEmail, issueAdminToken, verifyAdminToken, requireAdmin } from '../../lib/auth/session.ts';
 import { POST as adminLogin } from '../../app/api/auth/admin/login/route.ts';
+import { GET as getAdminSheets } from '../../app/api/admin/sheets/route.ts';
 import { DomainError } from '../../lib/validation/input.ts';
 
 describe('Admin Authentication & Allowlist Guard Tests', () => {
@@ -62,6 +63,31 @@ describe('Admin Authentication & Allowlist Guard Tests', () => {
     });
     const reqAdmin = requireAdmin(req);
     assert.equal(reqAdmin.email, 'quanlhk.01@gmail.com');
+  });
+
+  it('returns the 160 local scenarios when kich_ban_goc is unavailable', async () => {
+    const issued = issueAdminToken({
+      email: 'quanlhk.01@gmail.com',
+      name: 'Lê Hữu Kỳ Quan',
+    });
+    const res = await getAdminSheets(
+      new Request('http://localhost/api/admin/sheets', {
+        headers: { cookie: issued.cookie.split(';')[0] },
+      }),
+    );
+    assert.equal(res.status, 200);
+    const data = (await res.json()) as {
+      source: string;
+      sheet_id: string | null;
+      sheets: Record<string, string[][]>;
+      counts: Record<string, number>;
+      sheet_sources: Record<string, string>;
+    };
+    assert.equal(data.source, 'LOCAL_SNAPSHOT');
+    assert.equal(data.sheet_id, null);
+    assert.equal(data.counts.kich_ban_goc, 160);
+    assert.equal(data.sheets.kich_ban_goc.length, 161);
+    assert.equal(data.sheet_sources.kich_ban_goc, 'LOCAL_SEED');
   });
 
   it('rejects unauthorized admin issue', () => {

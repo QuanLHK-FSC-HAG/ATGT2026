@@ -7,6 +7,7 @@ export type SessionInfo = {
   studyRunId: string;
   sessionId: string;
   mode: 'server' | 'local-demo';
+  storageMode: 'GOOGLE' | 'LOCAL_DEMO_MOCK' | 'BROWSER_FALLBACK';
 };
 
 const id = () =>
@@ -31,7 +32,11 @@ export async function createSession(input: ParticipantInput): Promise<SessionInf
       credentials: 'include',
     });
     if (regRes.ok) {
-      const regData = (await regRes.json()) as { participant_id?: string; study_run_id?: string };
+      const regData = (await regRes.json()) as {
+        participant_id?: string;
+        study_run_id?: string;
+        storage_mode?: 'GOOGLE' | 'LOCAL_DEMO_MOCK';
+      };
       const participantId = regData.participant_id || id();
       const studyRunId = regData.study_run_id || id();
       const sessRes = await fetch('/api/public/sessions', {
@@ -54,14 +59,27 @@ export async function createSession(input: ParticipantInput): Promise<SessionInf
           studyRunId,
           sessionId: sessData.session_id || id(),
           mode: 'server',
+          storageMode: regData.storage_mode || 'LOCAL_DEMO_MOCK',
         };
       }
-      return { participantId, studyRunId, sessionId: id(), mode: 'server' };
+      return {
+        participantId,
+        studyRunId,
+        sessionId: id(),
+        mode: 'server',
+        storageMode: regData.storage_mode || 'LOCAL_DEMO_MOCK',
+      };
     }
   } catch {
     // Offline local fallback if network or endpoint not reachable
   }
-  return { participantId: id(), studyRunId: id(), sessionId: id(), mode: 'local-demo' };
+  return {
+    participantId: id(),
+    studyRunId: id(),
+    sessionId: id(),
+    mode: 'local-demo',
+    storageMode: 'BROWSER_FALLBACK',
+  };
 }
 
 export async function loadScenario(phase: Phase): Promise<Scenario> {
@@ -73,14 +91,19 @@ export async function loadScenario(phase: Phase): Promise<Scenario> {
     if (res.ok) {
       const data = (await res.json()) as { scenarios?: Scenario[]; items?: Scenario[] };
       const list = data.scenarios || data.items || [];
-      if (list[0]?.options?.length) {
-        return list[0];
+      if (list.length) {
+        const pool = list.filter(item => item?.options?.length);
+        if (pool.length) {
+          // Mỗi lượt chơi dùng một cảnh kịch bản khác nhau từ kho 160 tình huống.
+          return pool[Math.floor(Math.random() * pool.length)];
+        }
       }
     }
   } catch {
     // Fallback to local scenarios
   }
-  return FALLBACK[phase][0];
+  const local = FALLBACK[phase];
+  return local[Math.floor(Math.random() * local.length)];
 }
 
 export async function sendEvents(
@@ -110,10 +133,10 @@ export async function sendEvents(
       session_id: session.sessionId,
       seq: seq++,
       timestamp: new Date(now - 1200).toISOString(),
-      schema_version: '1.0',
+      schema_version: '1',
       type: 'HAZARD_VISIBLE',
       scenario_id: scenarioId,
-      payload: { cue: 'pedestrian_crosswalk' },
+      payload: {},
     });
 
     for (const act of actions) {
@@ -125,10 +148,10 @@ export async function sendEvents(
         session_id: session.sessionId,
         seq: seq++,
         timestamp: new Date(now - 600).toISOString(),
-        schema_version: '1.0',
+        schema_version: '1',
         type: eventType,
         scenario_id: scenarioId,
-        payload: { action: act },
+        payload: {},
       });
     }
 
@@ -138,14 +161,14 @@ export async function sendEvents(
         session_id: session.sessionId,
         seq: seq++,
         timestamp: new Date(now).toISOString(),
-        schema_version: '1.0',
+        schema_version: '1',
         type: 'DECISION_INPUT',
         scenario_id: scenarioId,
         payload: { decision_id: selectedDecision },
       });
     }
 
-    await fetch('/api/public/events/batch', {
+    const response = await fetch('/api/public/events/batch', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -155,6 +178,9 @@ export async function sendEvents(
         events,
       }),
     });
+    if (!response.ok) {
+      throw new Error(`Telemetry batch rejected with HTTP ${response.status}`);
+    }
   } catch {
     // Non-blocking telemetry
   }

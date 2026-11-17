@@ -59,6 +59,7 @@ interface SheetsData {
   updated_at: string;
   sheets: Record<string, string[][]>;
   counts: Record<string, number>;
+  sheet_sources: Record<string, 'GOOGLE_SHEETS' | 'LOCAL_SNAPSHOT' | 'LOCAL_SEED'>;
 }
 
 const VISIBLE_SHEET_LABELS = [
@@ -71,26 +72,65 @@ const VISIBLE_SHEET_LABELS = [
   { key: 'kich_ban_goc', label: 'kich_ban_goc' },
 ] as const;
 
-function SheetTable({ rows, emptyText, maxHeight = 520 }: { rows: string[][]; emptyText: string; maxHeight?: number }) {
+interface SheetColumn {
+  index: number;
+  label: string;
+}
+
+function isTechnicalId(header: string): boolean {
+  return /^(ma_|id$|.*_id$|uuid|key|hash|checksum|session|participant|study_run)/i.test(header.trim());
+}
+
+function displayCell(raw: string): string {
+  const value = raw ?? '';
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
+    const date = new Date(value);
+    if (!Number.isNaN(date.getTime())) {
+      return date.toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    }
+  }
+  return value.length > 140 ? `${value.slice(0, 137)}…` : value;
+}
+
+function SheetTable({
+  rows,
+  emptyText,
+  maxHeight = 520,
+  columns,
+}: {
+  rows: string[][];
+  emptyText: string;
+  maxHeight?: number;
+  columns?: SheetColumn[];
+}) {
   if (!rows.length) {
     return <div className="notice" style={{ background: '#f8fafc', color: '#64748b', marginTop: '12px' }}>{emptyText}</div>;
   }
   const [header, ...body] = rows;
+  const visible = columns && columns.length
+    ? columns
+    : header
+        .map((title, index) => ({ index, label: title.replace(/_/g, ' ') }))
+        .filter(column => !isTechnicalId(header[column.index] || ''));
+  const active = visible.length ? visible : header.map((title, index) => ({ index, label: title.replace(/_/g, ' ') }));
+
   return (
     <div style={{ overflow: 'auto', maxHeight, marginTop: '12px', border: '1px solid #e2e8f0', borderRadius: '10px' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12.5px', whiteSpace: 'nowrap' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12.5px' }}>
         <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-          <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
-            {header.map((cell, index) => (
-              <th key={`${cell}-${index}`} style={{ padding: '9px 12px', color: '#334155' }}>{cell}</th>
+          <tr style={{ background: '#eef6ff', borderBottom: '2px solid #cbd5e1' }}>
+            <th style={{ padding: '9px 10px', color: '#64748b', width: 36 }}>STT</th>
+            {active.map(column => (
+              <th key={column.index} style={{ padding: '9px 12px', color: '#1e3a5f', fontWeight: 700 }}>{column.label}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {body.map((row, rowIndex) => (
-            <tr key={rowIndex} style={{ borderBottom: '1px solid #e2e8f0' }}>
-              {header.map((_, cellIndex) => (
-                <td key={cellIndex} style={{ padding: '8px 12px', color: '#475569' }}>{row[cellIndex] ?? ''}</td>
+            <tr key={rowIndex} style={{ borderBottom: '1px solid #e2e8f0', background: rowIndex % 2 ? '#fafcff' : '#ffffff' }}>
+              <td style={{ padding: '8px 10px', color: '#94a3b8' }}>{rowIndex + 1}</td>
+              {active.map(column => (
+                <td key={column.index} style={{ padding: '8px 12px', color: '#475569' }}>{displayCell(row[column.index] ?? '')}</td>
               ))}
             </tr>
           ))}
@@ -480,11 +520,16 @@ export default function AdminPage() {
   }
 
   // MÀN HÌNH DASHBOARD KHI ĐÃ ĐĂNG NHẬP THÀNH CÔNG
-  const liveCounts = sheetsData?.counts;
+  const isGoogleSource = sheetsData?.source === 'GOOGLE_SHEETS';
+  const liveCounts = isGoogleSource ? sheetsData.counts : undefined;
   const participantCount = liveCounts?.hoc_sinh ?? overview?.totals.participants ?? participants.length;
-  const sessionCount = liveCounts?.phien_choi ?? overview?.totals.study_runs ?? sessionsCount;
+  const sessionCount = liveCounts?.phien_choi ?? overview?.totals.sessions ?? sessionsCount;
   const pairedCount = liveCounts?.so_sanh_truoc_sau ?? overview?.totals.paired_completed ?? 0;
   const attemptCount = liveCounts?.luot_xu_ly ?? overview?.totals.attempts ?? resultsData?.total_attempts ?? 0;
+  const metricSourceLabel = isGoogleSource ? 'Đồng bộ từ Sheet' : 'Tổng hợp từ snapshot cục bộ';
+  const scenarioRows = sheetsData?.sheets.kich_ban_goc ?? [];
+  const scenarioCount = sheetsData?.counts.kich_ban_goc ?? 160;
+  const scenarioSource = sheetsData?.sheet_sources?.kich_ban_goc;
 
   return (
     <main className="reading-page" style={{ maxWidth: '1180px', margin: '0 auto', padding: '24px' }}>
@@ -493,7 +538,7 @@ export default function AdminPage() {
         <Link href="/" className="back-link">← Trở về Trang Học Sinh</Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span style={{ background: '#065f46', color: '#6ee7b7', padding: '5px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 700 }}>
-            🟢 ĐÃ XÁC THỰC GOOGLE ADMIN: {currentUser.name} ({currentUser.email})
+            🟢 {currentUser.auth_method === 'google_oidc' ? 'ĐÃ XÁC THỰC GOOGLE ADMIN' : 'ĐÃ XÁC THỰC ADMIN LOCAL'}: {currentUser.name} ({currentUser.email})
           </span>
           <button
             onClick={handleLogout}
@@ -515,7 +560,11 @@ export default function AdminPage() {
 
       <h1>Bảng Điều Khiển Quản Trị SafeRide EDU AI 2026</h1>
       <p style={{ color: '#475569', marginBottom: '20px' }}>
-        Đồng bộ trực tuyến với Google Sheets ID: <code>{sheetsData?.sheet_id || '1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8'}</code> (Thư mục Google Drive: <code>ATGT2026</code>).
+        {sheetsData?.source === 'GOOGLE_SHEETS' ? (
+          <>Đang đồng bộ trực tuyến với Google Sheets ID: <code>{sheetsData.sheet_id}</code> (Thư mục Google Drive: <code>ATGT2026</code>).</>
+        ) : (
+          <>Đang sử dụng snapshot cục bộ trên máy này; chưa đồng bộ Google Sheets/Drive.</>
+        )}
         {loadingData ? ' (Đang cập nhật số liệu mới nhất…)' : ` Nguồn dữ liệu: ${sheetsData?.source === 'GOOGLE_SHEETS' ? 'Google Sheets Live' : 'Snapshot cục bộ'} · cập nhật lúc ${sheetsData ? new Date(sheetsData.updated_at).toLocaleTimeString('vi-VN') : '—'}.`}
       </p>
 
@@ -526,7 +575,7 @@ export default function AdminPage() {
           <div style={{ fontSize: '28px', fontWeight: 900, color: '#15803d', marginTop: '4px' }}>
             {participantCount}
           </div>
-          <span style={{ fontSize: '12px', color: '#16a34a' }}>Đồng bộ từ Sheet <code>hoc_sinh</code></span>
+          <span style={{ fontSize: '12px', color: '#16a34a' }}>{metricSourceLabel} {isGoogleSource && <code>hoc_sinh</code>}</span>
         </div>
 
         <div style={{ background: '#eff6ff', border: '1.5px solid #93c5fd', borderRadius: '12px', padding: '16px' }}>
@@ -534,7 +583,7 @@ export default function AdminPage() {
           <div style={{ fontSize: '28px', fontWeight: 900, color: '#1d4ed8', marginTop: '4px' }}>
             {sessionCount}
           </div>
-          <span style={{ fontSize: '12px', color: '#2563eb' }}>Đồng bộ từ Sheet <code>phien_choi</code></span>
+          <span style={{ fontSize: '12px', color: '#2563eb' }}>{metricSourceLabel} {isGoogleSource && <code>phien_choi</code>}</span>
         </div>
 
         <div style={{ background: '#fefce8', border: '1.5px solid #fde047', borderRadius: '12px', padding: '16px' }}>
@@ -542,7 +591,7 @@ export default function AdminPage() {
           <div style={{ fontSize: '28px', fontWeight: 900, color: '#a16207', marginTop: '4px' }}>
             {pairedCount}
           </div>
-          <span style={{ fontSize: '12px', color: '#ca8a04' }}>Đồng bộ từ Sheet <code>so_sanh_truoc_sau</code></span>
+          <span style={{ fontSize: '12px', color: '#ca8a04' }}>{metricSourceLabel} {isGoogleSource && <code>so_sanh_truoc_sau</code>}</span>
         </div>
 
         <div style={{ background: '#fdf2f8', border: '1.5px solid #f472b6', borderRadius: '12px', padding: '16px' }}>
@@ -550,7 +599,7 @@ export default function AdminPage() {
           <div style={{ fontSize: '28px', fontWeight: 900, color: '#be185d', marginTop: '4px' }}>
             {attemptCount}
           </div>
-          <span style={{ fontSize: '12px', color: '#db2777' }}>Đồng bộ từ Sheet <code>luot_xu_ly</code></span>
+          <span style={{ fontSize: '12px', color: '#db2777' }}>{metricSourceLabel} {isGoogleSource && <code>luot_xu_ly</code>}</span>
         </div>
       </div>
 
@@ -581,10 +630,10 @@ export default function AdminPage() {
             <div className="notice"><strong>Tổng số Kịch bản:</strong> 160 tình huống (8 chủ đề × 20)</div>
             <div className="notice"><strong>Cấu trúc 8 Sheet không dấu:</strong> <code>bieu_do_thong_ke</code>, <code>hoc_sinh</code>, <code>phien_choi</code>, <code>luot_xu_ly</code>, <code>su_kien_hanh_vi</code>, <code>nhat_ky_ai</code>, <code>so_sanh_truoc_sau</code>, <code>kich_ban_goc</code></div>
             <div className="notice"><strong>Cơ chế Cấp độ chơi:</strong> Học sinh chọn cấp độ (Cơ bản / Nâng cao / Thử thách) theo từng lượt chơi tại <code>phien_choi</code></div>
-            <div className="notice"><strong>Chế độ kết nối:</strong> {overview?.storage_mode === 'GOOGLE' ? 'Google Sheets Live 100%' : 'Chế độ Cục bộ Live Adapter'}</div>
+            <div className="notice"><strong>Chế độ kết nối:</strong> {overview?.storage_mode === 'GOOGLE' ? 'Google Sheets Live' : 'Kho dữ liệu cục bộ'}</div>
             <div className="notice" style={{ gridColumn: '1 / -1' }}>
-              <strong>Số dòng thực tế trong Google Sheets:</strong>{' '}
-              {sheetsData ? VISIBLE_SHEET_LABELS.map(({ key, label }) => `${label}: ${sheetsData.counts[key] ?? 0}`).join(' · ') : 'Đang tải…'}
+              <strong>{isGoogleSource ? 'Số dòng đọc từ Google Sheets' : 'Số bản ghi trong kho cục bộ'}:</strong>{' '}
+              {sheetsData ? VISIBLE_SHEET_LABELS.map(({ key, label }) => `${label}: ${key === 'kich_ban_goc' ? scenarioCount : sheetsData.counts[key] ?? 0}`).join(' · ') : 'Đang tải…'}
             </div>
           </div>
         </section>
@@ -619,7 +668,7 @@ export default function AdminPage() {
       {activeTab === 'participants' && (
         <section aria-labelledby="heading-participants">
           <h2 id="heading-participants">3. Danh sách Học sinh Tham gia Trực tiếp (Bảng hoc_sinh)</h2>
-          <p style={{ color: '#475569' }}>Dữ liệu ghi nhận trực tuyến theo thời gian thực khi học sinh tham gia.</p>
+          <p style={{ color: '#475569' }}>{isGoogleSource ? 'Dữ liệu ghi nhận trực tuyến theo thời gian thực khi học sinh tham gia.' : 'Dữ liệu được ghi vào snapshot cục bộ trên máy này.'}</p>
           {sheetsData?.sheets.hoc_sinh?.length ? (
             <SheetTable rows={sheetsData.sheets.hoc_sinh} emptyText="Chưa có học sinh trong Sheet hoc_sinh." />
           ) : participants.length === 0 ? (
@@ -658,7 +707,7 @@ export default function AdminPage() {
       {activeTab === 'research' && (
         <section aria-labelledby="heading-research">
           <h2 id="heading-research">4. So sánh Kết quả Trước & Sau khi học (Bảng so_sanh_truoc_sau)</h2>
-          <p>Tự động đối chiếu điểm số chặng Trước khi học (PRE), Luyện tập (TRAINING) và Đánh giá sau học (POST) theo từng phiên chơi trực tuyến trên Google Sheets ID: <code>1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8</code>.</p>
+          <p>Tự động đối chiếu điểm số chặng Trước khi học (PRE), Luyện tập (TRAINING) và Đánh giá sau học (POST) theo từng phiên chơi. {isGoogleSource ? <>Nguồn trực tuyến: Google Sheets ID <code>{sheetsData?.sheet_id}</code>.</> : 'Nguồn hiện tại: snapshot cục bộ.'}</p>
           <div className="notice" style={{ marginTop: '12px' }}>
             Tổng số bản ghi đánh giá hoàn tất: <strong>{pairedCount}</strong> cặp mẫu (Sheet <code>so_sanh_truoc_sau</code>).
           </div>
@@ -670,10 +719,12 @@ export default function AdminPage() {
         <section aria-labelledby="heading-scenarios">
           <h2 id="heading-scenarios">5. Kho 160 Kịch bản An toàn Giao thông (Bảng kich_ban_goc)</h2>
           <p>
-            Bao gồm {sheetsData?.counts.kich_ban_goc ?? 160} tình huống giao thông học đường Việt Nam thực tế, phân bố đều cho cấp THCS và THPT (8 chủ đề kỹ năng × 20 kịch bản).
-            {sheetsData?.source === 'GOOGLE_SHEETS' ? ' Dữ liệu được tải trực tiếp từ Google Sheets.' : ''}
+            Bao gồm {scenarioCount} tình huống giao thông học đường Việt Nam thực tế, phân bố đều cho cấp THCS và THPT (8 chủ đề kỹ năng × 20 kịch bản).
+            {scenarioSource === 'GOOGLE_SHEETS'
+              ? ' Dữ liệu được tải trực tiếp từ Google Sheets.'
+              : ' Đang dùng kho 160 kịch bản tích hợp trong ứng dụng vì Sheet chưa có dữ liệu hoặc đang chạy local.'}
           </p>
-          <SheetTable rows={sheetsData?.sheets.kich_ban_goc ?? []} emptyText="Không đọc được dữ liệu kich_ban_goc từ Google Sheets." maxHeight={640} />
+          <SheetTable rows={scenarioRows} emptyText="Kho kịch bản chưa sẵn sàng." maxHeight={640} />
         </section>
       )}
 
@@ -698,9 +749,9 @@ export default function AdminPage() {
           <h2 id="heading-health">8. Trạng thái Hoạt động Hệ thống</h2>
           <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid #e2e8f0', fontFamily: 'monospace', fontSize: '13px' }}>
             <div>Admin đăng nhập: {currentUser.name} ({currentUser.email})</div>
-            <div>Google Sheets: {sheetsData?.sheet_id || '1cb1yNL0GlzktDg-88G-Q-POqCqPHnencAF5O-nC20J8'}</div>
+            <div>Google Sheets: {isGoogleSource ? sheetsData?.sheet_id : 'Chưa kết nối trong chế độ hiện tại'}</div>
             <div>Nguồn dữ liệu: {sheetsData?.source || 'Đang tải…'}</div>
-            <div>Cập nhật Sheets lần cuối: {sheetsData ? new Date(sheetsData.updated_at).toLocaleString('vi-VN') : '—'}</div>
+            <div>Cập nhật dữ liệu lần cuối: {sheetsData ? new Date(sheetsData.updated_at).toLocaleString('vi-VN') : '—'}</div>
             <div>Trạng thái hệ thống: {String(systemHealth?.status || 'SẴN SÀNG HOẠT ĐỘNG')}</div>
           </div>
         </section>

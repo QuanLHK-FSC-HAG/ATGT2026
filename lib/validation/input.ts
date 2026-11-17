@@ -90,7 +90,7 @@ export function eventBatch(value: unknown, sessionId: string): { batch_id: strin
     if (payload.decision_id !== undefined && (typeof payload.decision_id !== 'string' || !/^opt_[a-z_]{1,60}$/.test(payload.decision_id))) throw new DomainError(400, 'INVALID_EVENT', 'Invalid decision');
     for (const key of ['fps', 'latency_ms']) if (payload[key] !== undefined && (typeof payload[key] !== 'number' || !Number.isFinite(payload[key]) || (payload[key] as number) < 0 || (payload[key] as number) > 60000)) throw new DomainError(400, 'INVALID_EVENT', 'Invalid measurement');
     for (const key of ['tab_visible', 'network_online']) if (payload[key] !== undefined && typeof payload[key] !== 'boolean') throw new DomainError(400, 'INVALID_EVENT', 'Invalid boolean');
-    if (typeof item.scenario_id !== 'string' || !/^[a-z0-9_-]{1,64}$/.test(item.scenario_id)) throw new DomainError(400, 'INVALID_EVENT', 'Invalid scenario');
+    if (typeof item.scenario_id !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(item.scenario_id)) throw new DomainError(400, 'INVALID_EVENT', 'Invalid scenario');
     return { event_id: eventId, session_id: sessionId, seq: previousSeq, timestamp: item.timestamp, schema_version: '1', type: item.type, scenario_id: item.scenario_id, payload } as TelemetryEvent;
   });
   return { batch_id: batchId, events };

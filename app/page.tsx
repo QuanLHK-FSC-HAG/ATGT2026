@@ -1,18 +1,12 @@
 ﻿'use client';
 
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { createSession, loadScenario, sendEvents, submitAttempt, type SessionInfo } from '@/components/api';
-import type { CameraMode, VehicleType } from '@/components/world-3d';
+import World3D, { type CameraMode, type VehicleType } from '@/components/world-3d';
 import { DEMO_PROVINCES } from '@/game/scenarios';
 import type { AttemptResult, GameAction, Phase, Scenario } from '@/game/types';
 import type { ParticipantInput } from '@/lib/types';
-
-const World3D = dynamic(() => import('@/components/world-3d'), {
-  ssr: false,
-  loading: () => <div className="game-loading">Đang tải thế giới thực tế ảo 3D học đường…</div>,
-});
 
 const phases: Phase[] = ['PRE', 'TRAINING', 'POST'];
 const phaseNames: Record<Phase, string> = {
@@ -74,6 +68,9 @@ export default function HomePage() {
   const [session, setSession] = useState<SessionInfo | null>(null);
   const [phase, setPhase] = useState<Phase>('PRE');
   const [scenario, setScenario] = useState<Scenario | null>(null);
+  const [demoMode, setDemoMode] = useState(false);
+  const [demoCount, setDemoCount] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
   const [selected, setSelected] = useState('');
   const [result, setResult] = useState<AttemptResult | null>(null);
   const [results, setResults] = useState<Partial<Record<Phase, AttemptResult>>>({});
@@ -143,13 +140,6 @@ export default function HomePage() {
     actions.current = [];
   }
 
-  function handle3DAction(act: string) {
-    if (actions.current.length < 200) {
-      const validAct: GameAction = act === 'SIGNAL_LEFT' || act === 'SIGNAL_RIGHT' ? 'SIGNAL' : 'BRAKE';
-      actions.current.push(validAct);
-    }
-  }
-
   async function start() {
     if (busy) return;
     setBusy(true);
@@ -170,12 +160,49 @@ export default function HomePage() {
     }
   }
 
-  async function submit() {
-    if (!session || !scenario || !selected || busy) return;
+  async function startDemo() {
     setBusy(true);
     setError('');
     try {
-      const durationMs = Math.max(1200, Math.round(performance.now() - started.current));
+      const first = await loadScenario('PRE');
+      setScenario(first);
+      setPhase('PRE');
+      setSelected('');
+      setResult(null);
+      setSession(null);
+      setDemoMode(true);
+      setDemoCount(1);
+      setShowTutorial(true);
+      setCameraMode('FOLLOW_VEHICLE');
+      actions.current = [];
+      started.current = performance.now();
+      setScreen('play');
+    } catch {
+      setError('Chưa tải được cảnh chơi thử. Vui lòng thử lại.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function submit() {
+    if (!scenario || !selected || busy) return;
+    if (demoMode) {
+      const safe = selected === scenario.options[0]?.id;
+      const feedback: AttemptResult = {
+        rule_score: safe ? 100 : 40,
+        outcome: safe ? 'SAFE' : 'HAZARDOUS',
+        feedback: safe ? 'Đúng! Em đã quan sát và xử lý an toàn.' : 'Chưa an toàn. Hãy nhìn kỹ dấu hiệu rủi ro rồi thử cảnh khác.',
+      };
+      setResult(feedback);
+      setResults(prev => ({ ...prev, [phase]: feedback }));
+      return;
+    }
+    if (!session) return;
+    setBusy(true);
+    setError('');
+    try {
+      const durationMs = Math.min(300_000, Math.max(1200, Math.round(performance.now() - started.current)));
+      actions.current = [selected === scenario.options[0]?.id ? 'BRAKE' : 'SIGNAL'];
       await sendEvents(session, scenario.scenario_id, actions.current, selected);
       const nextResult = await submitAttempt(session, phase, scenario, selected, durationMs);
       setResult(nextResult);
@@ -188,6 +215,30 @@ export default function HomePage() {
   }
 
   async function next() {
+    if (demoMode) {
+      if (demoCount >= 3) {
+        setDemoMode(false);
+        setShowTutorial(false);
+        setScreen('welcome');
+        return;
+      }
+      setBusy(true);
+      try {
+        const nextDemo = await loadScenario('PRE');
+        setScenario(nextDemo);
+        setSelected('');
+        setResult(null);
+        setShowTutorial(false);
+        setDemoCount(value => value + 1);
+        actions.current = [];
+        started.current = performance.now();
+      } catch {
+        setError('Chưa mở được cảnh tiếp theo.');
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
     if (phase === 'POST') {
       setCameraMode('CINEMATIC_OVERVIEW');
       setScreen('results');
@@ -210,6 +261,30 @@ export default function HomePage() {
       setBusy(false);
     }
   }
+
+  const selectedDecision = scenario && selected
+    ? selected === scenario.options[0]?.id ? 'safe' : selected === scenario.options[1]?.id ? 'rush' : 'ignore'
+    : '';
+
+  useEffect(() => {
+    if (screen !== 'play' || !scenario) return;
+    const onKey = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
+      const index = ['1', '2', '3'].indexOf(event.key);
+      if (index >= 0) {
+        setSelected(scenario.options[index]?.id || '');
+      } else if (event.key === ' ') {
+        event.preventDefault();
+        setSelected(scenario.options[0]?.id || '');
+      } else if (event.key === 'Enter' && selected && !busy && !result) {
+        submit();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [screen, scenario, selected, busy, result]);
+
   return (
     <div className="site-shell">
       {/* Thanh Thông Báo Phong Cách Biển Báo Giao Thông */}
@@ -356,7 +431,6 @@ export default function HomePage() {
                 cameraMode={cameraMode}
                 vehicleType={vehicleType}
                 isDriving={true}
-                interactive={true}
                 weather={difficultyLevel === 'THU_THACH' ? 'rain' : 'sunny'}
                 hazardActive={difficultyLevel !== 'CO_BAN'}
               />
@@ -539,6 +613,9 @@ export default function HomePage() {
                   Bắt đầu hành trình <span>↗</span>
                 </button>
                 <p className="form-footnote">Một quyết định đúng luật giúp hành trình đến trường luôn an toàn.</p>
+                <button type="button" className="text-button" onClick={startDemo} disabled={busy} style={{ width: 'fit-content', marginTop: '8px' }}>
+                  🎮 Chơi thử ngay · không cần đăng nhập
+                </button>
               </form>
             </section>
           </div>
@@ -603,19 +680,17 @@ export default function HomePage() {
                 </div>
 
                 <div className="instruction-right">
-                  <h2>Hướng dẫn điều khiển 3D</h2>
+                  <h2>Hướng dẫn chơi</h2>
                   <div className="control-guide">
-                    <kbd>W A S D / Phím Mũi tên</kbd>
-                    <span>Lái xe di chuyển và giữ làn đường</span>
+                    <kbd>1 / 2 / 3</kbd>
+                    <span>Chọn một trong ba phương án xử lý</span>
                     <kbd>Phím Cách (Space)</kbd>
-                    <span>Phanh xe, dừng trước vạch trắng</span>
-                    <kbd>Phím Q / Phím E</kbd>
-                    <span>Bật tín hiệu xi-nhan Trái / Phải</span>
-                    <kbd>Nút bấm cảm ứng</kbd>
-                    <span>Điều khiển trực tiếp trên màn hình cảm ứng điện thoại</span>
+                    <span>Chọn nhanh phương án an toàn (phanh)</span>
+                    <kbd>Enter</kbd>
+                    <span>Xác nhận quyết định</span>
                   </div>
                   <p className="muted">
-                    Sau khi điều khiển và quan sát hiện trường 3D, hãy chọn đáp án đúng luật nhất phía dưới.
+                    Cảnh 3D chỉ là hiện trường quan sát. Em chọn phương án, xe sẽ phản ứng theo lựa chọn đó.
                   </p>
                   <button className="primary" onClick={start} disabled={busy}>
                     {busy ? 'Đang chuẩn bị sân tập 3D…' : 'Sẵn sàng · Vào chặng đầu tiên ↗'}
@@ -626,17 +701,31 @@ export default function HomePage() {
 
             {screen === 'play' && scenario && (
               <>
+                {demoMode && showTutorial && (
+                  <div style={{ background: '#fffbeb', border: '2px solid #fcd34d', borderRadius: 12, padding: '12px 16px', marginBottom: 12, fontSize: 13.5 }}>
+                    <strong>Hướng dẫn (1 màn đầu):</strong> ① Quan sát hiện trường 3D · ② Nhấn <kbd>1</kbd>/<kbd>2</kbd>/<kbd>3</kbd> chọn phương án · ③ Xem xe phản ứng và đọc nhận xét.
+                    <button type="button" className="text-button" onClick={() => setShowTutorial(false)} style={{ marginLeft: 8 }}>Đã hiểu ✕</button>
+                  </div>
+                )}
+                {demoMode && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, fontSize: 12.5, color: '#64748b' }}>
+                    <span>🎮 Chơi thử · cảnh {demoCount}/3 (ngẫu nhiên)</span>
+                    <button type="button" className="text-button" onClick={() => { setDemoMode(false); setShowTutorial(false); setScreen('welcome'); }}>Thoát chơi thử</button>
+                  </div>
+                )}
                 <div className="play-heading">
                   <div>
                     <span className="eyebrow">
-                      CHẶNG {phases.indexOf(phase) + 1} / 3 · {LEVEL_INFO[difficultyLevel].badge}
+                      {demoMode ? 'CHƠI THỬ' : `CHẶNG ${phases.indexOf(phase) + 1} / 3`} · {LEVEL_INFO[difficultyLevel].badge}
                     </span>
                     <h1>{phaseNames[phase]}</h1>
                   </div>
                   <span className="mode-tag">
-                    {session?.mode === 'server'
+                    {session?.storageMode === 'GOOGLE'
                       ? '✓ Đã đồng bộ Google Sheets trực tuyến'
-                      : 'Trải nghiệm trực tiếp tại trình duyệt'}
+                      : session?.storageMode === 'LOCAL_DEMO_MOCK'
+                        ? '✓ Đã lưu cục bộ trên máy này'
+                        : 'Trải nghiệm dự phòng trong trình duyệt'}
                   </span>
                 </div>
 
@@ -713,10 +802,11 @@ export default function HomePage() {
                       cameraMode={cameraMode}
                       vehicleType={vehicleType}
                       isDriving={!result}
-                      interactive={true}
                       weather={phase === 'POST' || difficultyLevel === 'THU_THACH' ? 'rain' : 'sunny'}
                       hazardActive={true}
-                      onAction={handle3DAction}
+                      sceneKind={scenario.npc_element}
+                      sceneEvent={scenario.trigger_event}
+                      selectedDecision={selectedDecision}
                     />
                   </div>
 
@@ -730,25 +820,21 @@ export default function HomePage() {
                       <p>{scenario.hazard_cue_vi}</p>
                     </div>
 
-                    <fieldset disabled={busy || !!result}>
-                      <legend>Quyết định xử lý an toàn của em là gì?</legend>
+                    <div style={{ display: 'grid', gap: '8px', margin: '12px 0' }}>
                       {scenario.options.map((option, index) => (
-                        <label
-                          className={`answer-option ${selected === option.id ? 'selected' : ''}`}
+                        <button
+                          type="button"
                           key={option.id}
+                          disabled={busy || !!result}
+                          onClick={() => setSelected(option.id)}
+                          className={`answer-option ${selected === option.id ? 'selected' : ''}`}
+                          style={{ width: '100%', textAlign: 'left', cursor: 'pointer', background: 'transparent' }}
                         >
-                          <input
-                            type="radio"
-                            name="decision"
-                            value={option.id}
-                            checked={selected === option.id}
-                            onChange={() => setSelected(option.id)}
-                          />
-                          <span className="option-letter">{String.fromCharCode(65 + index)}</span>
+                          <span className="option-letter">{index + 1}</span>
                           <span>{option.label_vi}</span>
-                        </label>
+                        </button>
                       ))}
-                    </fieldset>
+                    </div>
 
                     {result ? (
                       <div className="feedback" role="status">
@@ -774,7 +860,7 @@ export default function HomePage() {
                     )}
 
                     <p className="small muted" style={{ marginTop: '10px' }}>
-                      Em có thể điều khiển xe trên không gian 3D bên cạnh để kiểm tra góc nhìn trước khi đưa ra quyết định.
+                      Nhấn 1 / 2 / 3 (hoặc bấm phương án). Phím Space = phanh. Cảnh 3D sẽ phản ứng theo lựa chọn của em.
                     </p>
                   </section>
                 </div>
@@ -809,7 +895,12 @@ export default function HomePage() {
 
                 <div className="notice" style={{ background: '#d7ffb8', borderColor: '#46a302', color: '#14532d' }}>
                   <strong>Huy hiệu đạt được:</strong> {LEVEL_INFO[difficultyLevel].badge} · Phương tiện:{' '}
-                  {VEHICLE_INFO[vehicleType].label}. Kết quả học tập đã được lưu và đồng bộ trực tuyến lên Google Sheets để phục vụ thống kê nghiên cứu.
+                  {VEHICLE_INFO[vehicleType].label}.{' '}
+                  {session?.storageMode === 'GOOGLE'
+                    ? 'Kết quả học tập đã được lưu và đồng bộ trực tuyến lên Google Sheets để phục vụ thống kê nghiên cứu.'
+                    : session?.storageMode === 'LOCAL_DEMO_MOCK'
+                      ? 'Kết quả học tập đã được lưu vào kho dữ liệu cục bộ trên máy này; chưa đồng bộ lên Google Sheets.'
+                      : 'Kết quả chỉ được giữ trong phiên trình duyệt dự phòng; chưa ghi vào kho dữ liệu máy chủ.'}
                 </div>
 
                 <div className="result-actions">

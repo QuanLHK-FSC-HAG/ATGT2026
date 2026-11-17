@@ -15,6 +15,7 @@ export async function POST(req: Request) {
       study_run_id: studyRun.study_run_id,
       phase: studyRun.current_phase,
       state: studyRun.state,
+      storage_mode: storage.mode,
       created_at: player.created_at,
     }, { status: 201 });
   } catch (error) {
