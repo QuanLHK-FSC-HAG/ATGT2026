@@ -304,6 +304,7 @@ export default function AdminPage() {
   // Login handler
   async function submitLogin(payload: any) {
     setLoginBusy(true);
+    setLoginError('');
     try {
       const res = await fetch('/api/auth/admin/login', {
         method: 'POST',
@@ -320,6 +321,39 @@ export default function AdminPage() {
     }
   }
 
+  useEffect(() => {
+    if (
+      currentUser ||
+      !googleClientReady ||
+      !authConfig?.configured ||
+      !authConfig.client_id ||
+      !window.google?.accounts?.id ||
+      !googleBtnContainerRef.current
+    ) return;
+
+    const container = googleBtnContainerRef.current;
+    const googleIdentity = window.google.accounts.id;
+    googleIdentity.initialize({
+      client_id: authConfig.client_id,
+      auto_select: false,
+      callback: response => {
+        if (!response.credential) {
+          setLoginError('Google không trả về mã xác thực. Vui lòng thử đăng nhập lại.');
+          return;
+        }
+        void submitLogin({ id_token: response.credential });
+      },
+    });
+    container.innerHTML = '';
+    googleIdentity.renderButton(container, {
+      theme: 'filled_blue',
+      size: 'large',
+      text: 'signin_with',
+      shape: 'rectangular',
+      width: 320,
+    });
+  }, [authConfig, currentUser, googleClientReady]);
+
   // School options from data
   const schools = useMemo(() => {
     const set = new Set(participants.map(p => p.school_name).filter(Boolean));
@@ -331,7 +365,14 @@ export default function AdminPage() {
   if (!currentUser) {
     return (
       <div className="admin-shell" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-        {authConfig?.configured && <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive" onLoad={() => setGoogleClientReady(true)} />}
+        {authConfig?.configured && (
+          <Script
+            src="https://accounts.google.com/gsi/client"
+            strategy="afterInteractive"
+            onLoad={() => setGoogleClientReady(true)}
+            onError={() => setLoginError('Không tải được cổng đăng nhập Google. Vui lòng kiểm tra kết nối hoặc chính sách chặn nội dung.')}
+          />
+        )}
         <div style={{ maxWidth: 420, width: '100%', background: '#fff', padding: 32, borderRadius: 24, border: '2px solid #e2e8f0', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)', textAlign: 'center' }}>
           <div className="brand-mark" style={{ margin: '0 auto 16px', width: 64, height: 64, fontSize: 32 }}>S</div>
           <h1 style={{ fontSize: 24, fontWeight: 900 }}>SafeRide Admin</h1>
@@ -339,6 +380,12 @@ export default function AdminPage() {
 
           {authConfig?.configured && (
             <div ref={googleBtnContainerRef} style={{ display: 'inline-block', marginBottom: 16 }} />
+          )}
+
+          {authConfig && !authConfig.configured && (
+            <p style={{ color: '#b45309', fontWeight: 700 }}>
+              Máy chủ chưa cấu hình Google OAuth Client ID.
+            </p>
           )}
 
           {authConfig?.allow_local_login && (
