@@ -66,6 +66,53 @@ export interface ScenarioRuleRubric {
   suggested_practice_vi: string;
 }
 
+export type ScenarioSceneType =
+  | 'INTERSECTION_SIGNAL'
+  | 'PEDESTRIAN_CROSSING'
+  | 'SCHOOL_GATE'
+  | 'OPENING_DOOR'
+  | 'LARGE_VEHICLE_BLIND_SPOT'
+  | 'BUS_STOP'
+  | 'MERGE_LANE_CHANGE'
+  | 'OVERTAKING'
+  | 'LOW_VISIBILITY'
+  | 'SLIPPERY_ROAD'
+  | 'RAILWAY_CROSSING'
+  | 'ROUNDABOUT'
+  | 'OBSTACLE_CONSTRUCTION'
+  | 'EMERGENCY_VEHICLE'
+  | 'NARROW_ROAD';
+
+export type ScenarioHazardType =
+  | 'SIGNAL_CONFLICT'
+  | 'CROSSING_PEDESTRIAN'
+  | 'OPENING_DOOR'
+  | 'BLIND_SPOT'
+  | 'VEHICLE_CONFLICT'
+  | 'REDUCED_VISIBILITY'
+  | 'LOW_GRIP'
+  | 'BLOCKED_PATH'
+  | 'RAIL_APPROACH'
+  | 'PRIORITY_VEHICLE';
+
+export interface ScenarioVisualDecisionEffect {
+  action: 'STOP' | 'BRAKE' | 'YIELD' | 'SIGNAL' | 'PROCEED' | 'ACCELERATE' | 'SWERVE';
+  outcome: 'SAFE_CLEARANCE' | 'CONTROLLED_STOP' | 'CONFLICT' | 'NEAR_MISS';
+}
+
+export interface ScenarioVisualSpec {
+  scene_type: ScenarioSceneType;
+  road_layout: 'STRAIGHT' | 'T_INTERSECTION' | 'CROSS_INTERSECTION' | 'ROUNDABOUT' | 'RAIL_CROSSING' | 'NARROW_ROAD';
+  hazards: ScenarioHazardType[];
+  actors: Array<'STUDENT' | 'PEDESTRIAN' | 'CAR' | 'BUS' | 'TRUCK' | 'TRAFFIC_OFFICER' | 'TRAIN' | 'EMERGENCY_VEHICLE'>;
+  traffic_control: 'NONE' | 'RED' | 'YELLOW' | 'GREEN' | 'PEDESTRIAN_RED' | 'PEDESTRIAN_GREEN' | 'YIELD_SIGN' | 'STOP_SIGN' | 'OFFICER_STOP' | 'RAIL_BARRIER';
+  weather: 'SUNNY' | 'RAIN' | 'FOG';
+  surface: 'DRY' | 'WET' | 'MUDDY' | 'GRAVEL';
+  time_of_day: 'MORNING' | 'AFTERNOON' | 'EVENING' | 'NIGHT';
+  camera: 'INTERSECTION' | 'FOLLOW_VEHICLE' | 'TOP_DOWN' | 'CINEMATIC_OVERVIEW';
+  decision_effects: Record<string, ScenarioVisualDecisionEffect>;
+}
+
 export interface ScenarioDefinition {
   scenario_id: string;
   version: string;
@@ -84,6 +131,7 @@ export interface ScenarioDefinition {
   correct_action?: string;
   target_grade?: string;
   skill_group?: string;
+  visual_spec: ScenarioVisualSpec;
 }
 
 export interface PublicScenarioView {
@@ -101,6 +149,7 @@ export interface PublicScenarioView {
   correct_action?: string;
   target_grade?: string;
   skill_group?: string;
+  visual_spec: ScenarioVisualSpec;
 }
 
 export interface TelemetryEvent {

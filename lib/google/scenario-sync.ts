@@ -1,3 +1,5 @@
+import { externalProvidersAreDisabled } from '../runtime/local-acceptance.ts';
+import { DomainError } from '../validation/input.ts';
 import { createSign } from 'node:crypto';
 import { SEED_PLAYABLE_SCENARIOS } from '../rules/engine.ts';
 
@@ -97,6 +99,7 @@ export function buildScenarioRows(): string[][] {
 }
 
 export async function syncScenariosToSheets(): Promise<{ count: number; columns: number; sheet_id: string; updated_at: string }> {
+  if (externalProvidersAreDisabled()) throw new DomainError(403, 'EXTERNAL_SYNC_DISABLED', 'Google sync is disabled during local acceptance.');
   const sheetId = process.env.GOOGLE_SHEETS_ID;
   if (!sheetId) throw new Error('GOOGLE_SHEETS_ID is missing');
   const token = await getAccessToken();

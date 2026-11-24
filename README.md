@@ -3,8 +3,8 @@
 <div align="center">
 
 ![SafeRide EDU AI Banner](https://img.shields.io/badge/SafeRide-EDU%20AI%202026-brightgreen?style=for-the-badge&logo=googlechrome&logoColor=white)
-![Build Status](https://img.shields.io/badge/Build-Passing%20(20%20Routes)-success?style=for-the-badge)
-![Unit QA Tests](https://img.shields.io/badge/QA%20Tests-13%2F13%20PASS-blue?style=for-the-badge)
+![Build Status](https://img.shields.io/badge/Build-Local%20verified-success?style=for-the-badge)
+![Unit QA Tests](https://img.shields.io/badge/QA%20Tests-33%2F33%20PASS-blue?style=for-the-badge)
 
 ![License](https://img.shields.io/badge/License-MIT-blueviolet?style=for-the-badge)
 ![Google Sheets Online](https://img.shields.io/badge/Google%20Sheets-Live%20Sync%20(8%20Sheets)-yellow?style=for-the-badge&logo=googlesheets)
@@ -86,6 +86,14 @@ Toàn bộ kết quả thực nghiệm được đồng bộ trực tuyến th�
 
 ## 🚀 Hướng Dẫn Chạy Ứng Dụng
 
+**Hiện tại chỉ nghiệm thu local — không public cho đến khi chủ dự án chấp nhận.** Xem [báo cáo nghiệm thu local](docs/LOCAL_ACCEPTANCE.md).
+
+```bash
+npm run dev:acceptance -- --store .runtime/local-preview/logical_store.json
+```
+
+Mở `http://127.0.0.1:3001`. Chế độ này cách ly Google/Gemini, dùng kho dữ liệu local riêng và tài khoản admin synthetic `local-admin@example.test`.
+
 ### Yêu cầu môi trường
 - Node.js 18+ (Đã kiểm nghiệm hoàn hảo trên Node 24.18)
 - Trình duyệt Chrome / Edge / Safari / Firefox hiện đại
@@ -105,7 +113,7 @@ npm run dev
 ### Chạy Bộ Kiểm Thử QA Toàn Diện
 ```bash
 npx tsx --test tests/unit/*.test.ts tests/integration/*.test.ts
-# Kết quả: 29/29 tests PASS 100%
+# Kiểm chứng local: 33/33 unit + integration; xem docs/LOCAL_ACCEPTANCE.md
 ```
 
 ### Cấu hình Đăng nhập Quản trị bằng Google

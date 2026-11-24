@@ -84,8 +84,9 @@ describe('SafeRide End-to-End API Integration Flow (Pre -> Training -> Post + Ad
 
     // 4. Send telemetry batch & verify idempotency
     const batchId = randomUUID();
-    const t0 = new Date(Date.now() - 2000).toISOString();
-    const t1 = new Date(Date.now() - 1100).toISOString();
+    const telemetryNow = Date.now();
+    const t0 = new Date(telemetryNow - 2000).toISOString();
+    const t1 = new Date(telemetryNow - 1100).toISOString();
     const batchPayload = {
       batch_id: batchId,
       session_id: sData.session_id,
@@ -139,12 +140,13 @@ describe('SafeRide End-to-End API Integration Flow (Pre -> Training -> Post + Ad
     assert.equal(storedEvents[1].payload.decision_id, 'opt_brake_wait');
 
     // 5. Submit PRE attempt (client sends fake score=0, server must compute real deterministic score=100)
+    const preAttemptId = randomUUID();
     const preAttemptRes = await submitAttempt(
       new Request('http://localhost/api/public/attempts/submit', {
         method: 'POST',
         headers: { 'content-type': 'application/json', cookie: cookieHeader },
         body: JSON.stringify({
-          attempt_id: randomUUID(),
+          attempt_id: preAttemptId,
           scenario_id: 'blind-spot-truck-right-turn',
           selected_decision: 'opt_brake_wait',
           phase: 'PRE',
@@ -162,6 +164,14 @@ describe('SafeRide End-to-End API Integration Flow (Pre -> Training -> Post + Ad
     assert.equal(preAttemptData.result.outcome, 'SAFE');
     assert.equal(preAttemptData.result.reaction_ms, 900);
     assert.equal(preAttemptData.study_run.current_phase, 'TRAINING');
+
+    const retry = await submitAttempt(new Request('http://localhost/api/public/attempts/submit', {
+      method: 'POST', headers: { 'content-type': 'application/json', cookie: cookieHeader },
+      body: JSON.stringify({ attempt_id: preAttemptId, scenario_id: 'blind-spot-truck-right-turn', selected_decision: 'opt_brake_wait', phase: 'PRE', reaction_ms: 900 }),
+    }));
+    assert.ok(retry.ok);
+    assert.equal((await retry.json()).duplicate, true);
+    assert.equal((await getStorageAdapter().getStudyRunAttempts(pData.study_run_id)).filter(a => a.phase === 'PRE').length, 1);
 
     // 6. Submit TRAINING attempt -> transitions to POST
     const trainAttemptRes = await submitAttempt(

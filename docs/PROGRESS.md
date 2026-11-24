@@ -1,5 +1,15 @@
 # Báo cáo tiến độ (Progress Report)
 
+## Cập nhật nghiệm thu local — 18/11/2026
+
+- Chỉ làm local; chưa được phép public/deploy/push hoặc đồng bộ Google.
+- Đã thêm launcher cách ly tại `127.0.0.1:3001`, kho local riêng, chặn Google/Gemini khi nghiệm thu.
+- Đã sửa consent mặc định, session giả khi API lỗi, điểm giả khi lưu thất bại và reset cookie khi đổi người chơi.
+- Kiểm chứng: typecheck sạch, 33/33 unit/integration, 6/6 browser E2E desktop/mobile và build đạt.
+- Phạm vi và giới hạn: [LOCAL_ACCEPTANCE.md](LOCAL_ACCEPTANCE.md). Các GATE bên dưới là ghi chép lịch sử, không phải trạng thái nghiệm thu hiện tại; không sử dụng các số test hoặc đường dẫn cũ làm bằng chứng mới.
+- Còn tiếp tục hoàn thiện: telemetry thời gian thực, retry/idempotency sau mất phản hồi, khôi phục khi refresh, kiểm thử export/filter và tài liệu checklist toàn bộ. Chưa nghiệm thu production, pháp lý hoặc tải HTTP.
+
+
 ## GATE 0 — Environment & Access Audit
 - **Status:** `PARTIAL` (Đã hoàn tất toàn bộ audit local; chờ credentials thật để kết nối Google/Vercel)
 - **Đã làm:**

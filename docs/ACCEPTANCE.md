@@ -1,5 +1,8 @@
 # Tiêu chí nghiệm thu và Trạng thái kiểm chứng
 
+> **Trạng thái local 18/11/2026:** typecheck, 33/33 unit/integration, 6/6 E2E Chromium desktop/mobile và build đạt trên máy local. Bảng bên dưới là checklist lịch sử chưa được kiểm chứng đồng bộ từng dòng; không dùng trạng thái “Đang thực hiện” bên dưới để suy ra phần nào đã sẵn sàng public. Xem [LOCAL_ACCEPTANCE.md](LOCAL_ACCEPTANCE.md) để biết bằng chứng mới nhất và giới hạn chưa kiểm chứng. Chưa có chấp thuận public/thu dữ liệu thật.
+
+
 | Tiêu chí bắt buộc | Trạng thái kỹ thuật | Bằng chứng thực tế |
 |---|---|---|
 | Học sinh nhập đúng 4 trường và bắt đầu chơi, không Google login | Đang thực hiện | Form 4 trường và token phiên đang được hoàn thiện |

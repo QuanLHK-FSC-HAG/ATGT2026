@@ -1,7 +1,8 @@
 import { createHash, randomUUID, createSign } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { isHostedEnvironment } from '../auth/session.ts';
+import { externalProvidersAreDisabled } from '../runtime/local-acceptance.ts';
 import { CANONICAL_SCENARIOS } from '../rules/engine.ts';
 import { DomainError } from '../validation/input.ts';
 import type {
@@ -91,12 +92,20 @@ function createInitialSnapshot(): LogicalSheetsSnapshot {
       fail_closed_enabled: true,
       scoring_model: '2026.1-deterministic',
       offline_capable: true,
+      ...(process.env.SAFERIDE_SYNTHETIC_RUN_ID ? {
+        synthetic: true,
+        research_evidence: false,
+        simulation_run_id: process.env.SAFERIDE_SYNTHETIC_RUN_ID,
+        school_source: process.env.SAFERIDE_SYNTHETIC_SCHOOL_SOURCE || 'public school names; synthetic students',
+        school_disclaimer: 'Tên học sinh là dữ liệu tổng hợp; tên trường chỉ tham chiếu công khai cho kiểm thử local, không phải dữ liệu hoặc xác nhận của trường.',
+      } : {}),
     },
     DriveEventBatches: {},
   };
 }
 
 class FileSnapshotStore implements SnapshotStore {
+  private static readonly cache = new Map<string, LogicalSheetsSnapshot>();
   private readonly filePath: string;
 
   constructor(filePath: string) {
@@ -104,21 +113,29 @@ class FileSnapshotStore implements SnapshotStore {
   }
 
   async read(): Promise<LogicalSheetsSnapshot> {
+    const cached = FileSnapshotStore.cache.get(this.filePath);
+    if (cached) return cached;
     if (!existsSync(this.filePath)) {
       const initial = createInitialSnapshot();
       await this.write(initial);
       return initial;
     }
-    return JSON.parse(readFileSync(this.filePath, 'utf8')) as LogicalSheetsSnapshot;
+    const snapshot = JSON.parse(readFileSync(this.filePath, 'utf8')) as LogicalSheetsSnapshot;
+    FileSnapshotStore.cache.set(this.filePath, snapshot);
+    return snapshot;
   }
 
   async write(snapshot: LogicalSheetsSnapshot): Promise<void> {
     mkdirSync(dirname(this.filePath), { recursive: true });
-    writeFileSync(this.filePath, JSON.stringify(snapshot, null, 2), 'utf8');
+    const temporaryPath = `${this.filePath}.${randomUUID()}.next`;
+    writeFileSync(temporaryPath, JSON.stringify(snapshot), 'utf8');
+    renameSync(temporaryPath, this.filePath);
+    FileSnapshotStore.cache.set(this.filePath, snapshot);
   }
 }
 
 export function hasVerifiedGoogleCredentials(): boolean {
+  if (externalProvidersAreDisabled()) return false;
   return Boolean(
     process.env.GOOGLE_SHEETS_ID?.trim() &&
     process.env.GOOGLE_DRIVE_FOLDER_ID?.trim() &&
@@ -199,7 +216,11 @@ export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
       return { index: existing, duplicate: true };
     }
     const existingEventIds = new Set<string>();
-    for (const batch of Object.values(store.DriveEventBatches)) {
+    const sessionBatchFiles = new Set(store.EventsIndex
+      .filter(index => index.session_id === sessionId)
+      .map(index => index.drive_file_id));
+    for (const [driveFileId, batch] of Object.entries(store.DriveEventBatches)) {
+      if (!sessionBatchFiles.has(driveFileId)) continue;
       for (const line of batch.jsonl.split('\n').filter(Boolean)) {
         const parsed = JSON.parse(line) as TelemetryEvent;
         if (parsed.session_id === sessionId) existingEventIds.add(parsed.event_id);

@@ -8,12 +8,9 @@ import { evaluateAttempt, CANONICAL_SCENARIOS } from '../../lib/rules/engine.ts'
 import { generatePedagogicalFeedback } from '../../lib/gemini/engine.ts';
 
 test('SafeRide Gate 3 & Gate 4 Comprehensive QA Suite (Security, Load, Research & Secret Audit)', async (t) => {
-  await t.test('G3-03 / G3-04 / G3-05 / G3-06: Audits 160 Scenarios coverage, Bloom taxonomy, FSchool & Cần Thơ merged schools (0 Chuyên)', () => {
-    const jsonlPath = path.resolve(process.cwd(), '../SafeRide_EDU_AI_Master_Package_2026/scenarios.jsonl');
+  await t.test('G3-03 / G3-04 / G3-05 / G3-06: Audits 160 anonymized scenarios and Bloom coverage', () => {
     const seedPath = path.resolve(process.cwd(), 'data/scenarios.seed.json');
-    const scenarios = fs.existsSync(jsonlPath)
-      ? fs.readFileSync(jsonlPath, 'utf8').trim().split('\n').map(l => JSON.parse(l))
-      : JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+    const scenarios = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
     assert.equal(scenarios.length, 160, 'Must have exactly 160 scenarios');
 
     const ids = new Set(scenarios.map((s: { scenario_id: string }) => s.scenario_id));
@@ -26,18 +23,13 @@ test('SafeRide Gate 3 & Gate 4 Comprehensive QA Suite (Security, Load, Research 
     );
     assert.equal(hasChuyen, false, 'Must contain 0 Chuyên schools');
 
-    // Verify required Cần Thơ schools exist
+    // Scenario narratives must use neutral labels rather than real school identities.
     const schools = new Set(scenarios.map((s: { school_zone: string }) => s.school_zone));
-    for (const reqSchool of [
-      'FSchool Cần Thơ',
-      'FSchool Hậu Giang',
-      'FSchool Sóc Trăng',
-      'THCS Long Mỹ',
-      'THCS Lê Quí Đôn',
-      'THCS Châu Văn Liêm (Vị Tân)',
-      'FSchool Hòa Lạc'
-    ]) {
-      assert.equal(schools.has(reqSchool), true, `Must include school: ${reqSchool}`);
+    assert.deepEqual([...schools].sort(), ['Trường THCS & THPT A', 'Trường THCS & THPT B', 'Trường THCS & THPT C']);
+    for (const scenario of scenarios as Array<{ school_zone: string; scenario_setup?: string; trigger_condition?: { school_zone?: string } }>) {
+      assert.match(scenario.school_zone, /^Trường THCS & THPT [ABC]$/);
+      assert.match(scenario.trigger_condition?.school_zone || '', /^Trường THCS & THPT [ABC]$/);
+      assert.doesNotMatch(scenario.scenario_setup || '', /\([^)]*(?:tỉnh|thành phố|TP\.?)[^)]*\)/i);
     }
 
     // Verify 8 skill groups x 20 scenarios

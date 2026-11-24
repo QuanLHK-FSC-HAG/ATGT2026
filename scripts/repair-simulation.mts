@@ -1,0 +1,46 @@
+import { readFileSync, writeFileSync, copyFileSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { CANONICAL_SCENARIOS, evaluateAttempt, buildAssessmentRecord, RULE_ENGINE_VERSION } from '../lib/rules/engine.ts';
+import type { LogicalSheetsSnapshot } from '../lib/google/storage.ts';
+import type { StudyPhase, TelemetryEvent } from '../lib/types.ts';
+const path = '.runtime/simulation/logical_store.json';
+const s: LogicalSheetsSnapshot = JSON.parse(readFileSync(path, 'utf8'));
+if (s.Settings.synthetic !== true) throw Error('Refusing non-synthetic snapshot');
+if (!existsSync(path + '.draft-backup')) copyFileSync(path, path + '.draft-backup');
+const id = (key: string) => { const h = createHash('sha256').update('simulation-v2:' + key).digest('hex'); return `${h.slice(0,8)}-${h.slice(8,12)}-4${h.slice(13,16)}-a${h.slice(17,20)}-${h.slice(20,32)}`; };
+const iso = (time: number) => new Date(time).toISOString();
+const start = Date.parse('2026-11-14T07:30:00+07:00');
+s.Assessments=[];s.ScenarioResults=[];s.EventsIndex=[];s.DriveEventBatches={};s.AIAnalysis=[];s.SystemLogs=[];
+s.Players.forEach((player, i) => {
+  player.participant_id=id(`player:${i}`);
+  const time=start+(i%31)*86400000+(i%8)*3600000+(i%20)*60000;
+  player.created_at=iso(time);player.privacy_notice_version='SIMULATED_NO_CONSENT';
+  const runId=id(`run:${i}`), sid=id(`session:${i}`), complete=i%10!==0;
+  const phases: StudyPhase[]=complete?['PRE','TRAINING','POST']:['PRE','TRAINING'];
+  const scores: Partial<Record<StudyPhase,number>>={};let seq=0;
+  phases.forEach((phase,p) => {
+    const grade=/^(10|11|12)/.test(player.class_name)?'THPT':'THCS';
+    const pool=CANONICAL_SCENARIOS.filter(c=>c.scenario_id.startsWith('SCN-') && c.phase_eligibility.includes(phase) && c.target_grade===grade);
+    if (!pool.length) throw Error('Empty eligible scenario pool');
+    const scenario=pool[(i*7+p)%pool.length];
+    const safe=(i+p*3)%5!==0;
+    const decision=safe?scenario.rubric.safe_decisions[0]:scenario.rubric.critical_hazard_decisions[0];
+    const reaction=500+(i*137+p*97)%8000;
+    const t=time+(p+1)*600000, aid=id(`attempt:${i}:${p}`);
+    const result=evaluateAttempt({scenario,selected_decision:decision,reaction_ms:reaction,phase});
+    scores[phase]=result.rule_score;
+    const flags=['SIMULATED_RECORD','SIMULATED_TIME_WINDOW',...(t>Date.parse('2026-11-17T23:59:59+07:00')?['SIMULATED_FUTURE_TIME']:[]),...result.flags];
+    const events:TelemetryEvent[]=[['SCENARIO_START',t],['HAZARD_VISIBLE',t+1000],['DECISION_INPUT',t+1000+reaction],['SCENARIO_END',t+2000+reaction]].map(([type,at])=>({event_id:id(`event:${i}:${p}:${type}`),session_id:sid,seq:++seq,timestamp:iso(Number(at)),schema_version:'1',type:type as TelemetryEvent['type'],scenario_id:scenario.scenario_id,payload:{attempt_id:aid,phase,input_type:i%2?'TOUCH':'KEYBOARD',...(type==='DECISION_INPUT'?{decision_id:decision}:{})}}));
+    const end=t+2000+reaction;
+    s.ScenarioResults.push({attempt_id:aid,participant_id:player.participant_id,study_run_id:runId,session_id:sid,phase,scenario_id:scenario.scenario_id,scenario_version:scenario.version,selected_decision:decision,outcome:result.outcome,rule_score:result.rule_score,rule_engine_version:RULE_ENGINE_VERSION,reaction_ms:reaction,flags,created_at:iso(end)});
+    if(phase!=='TRAINING') { const a=buildAssessmentRecord({study_run_id:runId,participant_id:player.participant_id,phase,scores:[result.rule_score],completion_time_ms:end-t,flags});a.assessment_id=id(`assessment:${i}:${phase}`);a.created_at=iso(end);s.Assessments.push(a); }
+    const batch=id(`batch:${i}:${p}`),jsonl=events.map(e=>JSON.stringify(e)).join('\n'),checksum=createHash('sha256').update(jsonl).digest('hex');
+    s.DriveEventBatches[batch]={jsonl,checksum,created_at:iso(end)};
+    s.EventsIndex.push({batch_id:batch,session_id:sid,event_count:events.length,first_seq:events[0].seq,last_seq:seq,drive_file_id:`SIMULATED-${batch}`,checksum,created_at:iso(end),write_status:'COMMITTED',storage_mode:'LOCAL_DEMO_MOCK'});
+  });
+  s.StudyRuns[i]={study_run_id:runId,participant_id:player.participant_id,current_phase:'POST',state:complete?'COMPLETED':'POST_IN_PROGRESS',pre_completed:true,training_completed_count:1,post_completed:complete,pre_score:scores.PRE,...(complete?{post_score:scores.POST}:{}),created_at:iso(time),updated_at:iso(time+35*60000)};
+  s.Sessions[i]={session_id:sid,participant_id:player.participant_id,study_run_id:runId,device_class:i%2?'MOBILE':'DESKTOP',started_at:iso(time),ended_at:complete?iso(time+35*60000):null,expires_at:iso(time+6*3600000),state:complete?'COMPLETED':'EXPIRED'};
+});
+s.Scenarios=CANONICAL_SCENARIOS;s.Settings.generator_version='validated-v2';
+writeFileSync(path,JSON.stringify(s,null,2));
+console.log(JSON.stringify({players:s.Players.length,attempts:s.ScenarioResults.length,assessments:s.Assessments.length,synthetic:true}));

@@ -24,9 +24,16 @@ next-env.d.ts
 *.pem
 *.key
 
+# Private student source: local only, never publish
+/data hs.xls
+
 # Local runtime / test / mock data
 .npm-cache/
 .runtime/
+.local-mock-data/
+.claude/settings.local.json
+TPCT-DS*.xlsx
+SKATGT-*.zip
 ATGT2026/.obsidian/workspace*.json
 .local-storage/
 data/runtime/

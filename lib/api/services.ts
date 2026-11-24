@@ -33,6 +33,15 @@ export async function submitAttempt(req: Request, raw: unknown) {
   }
   const studyRun = await storage.getStudyRun(claims.srid);
   if (!studyRun) throw new DomainError(404, 'STUDY_RUN_NOT_FOUND', 'Study run missing');
+  // A response can be lost after a successful write and phase transition.
+  // Resolve retries before checking the new phase, without accepting payload changes.
+  const existing = (await storage.getStudyRunAttempts(claims.srid)).find(a => a.attempt_id === attempt_id);
+  if (existing) {
+    if (existing.session_id !== session.session_id || existing.scenario_id !== scenario_id || existing.phase !== phase || existing.selected_decision !== selected_decision) {
+      throw new DomainError(409, 'ATTEMPT_ID_CONFLICT', 'Attempt identifier was already used for another payload');
+    }
+    return { result: existing, duplicate: true, study_run: studyRun };
+  }
   if (studyRun.current_phase !== phase) throw new DomainError(409, 'PHASE_OUT_OF_ORDER', 'Attempt phase does not match study run state');
   const scenario = getScenario(scenario_id);
   if (!scenario.approved || !scenario.phase_eligibility.includes(phase)) throw new DomainError(403, 'SCENARIO_NOT_ELIGIBLE', 'Scenario not available for this phase');

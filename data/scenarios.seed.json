@@ -19,16 +19,14 @@
       "event": "red_light",
       "decision_window_m": 4,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Đèn đỏ vừa bật ở vạch dừng trước cổng trường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Đèn đỏ vừa bật ở vạch dừng trước cổng trường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do red_light; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-102A",
@@ -50,16 +48,14 @@
       "event": "pedestrian_red",
       "decision_window_m": 2,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Lê Quí Đôn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quí Đôn (Thành phố Cần Thơ - Ngã tư trung tâm đông đúc, vạch qua đường trước cổng trường): Đèn người đi bộ đỏ khi em định qua ngã tư. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đèn người đi bộ đỏ khi em định qua ngã tư. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do pedestrian_red; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Lê Quí Đôn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-103A",
@@ -81,16 +77,14 @@
       "event": "yellow_light",
       "decision_window_m": 5,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Đèn vàng xuất hiện khi còn cách vạch dừng. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đèn vàng xuất hiện khi còn cách vạch dừng. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do yellow_light; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-104A",
@@ -112,16 +106,14 @@
       "event": "left_arrow_red",
       "decision_window_m": 4,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Vị Thanh"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Vị Thanh (Thành phố Cần Thơ - Trục giao thông chính, nhiều phương tiện hỗn hợp giờ cao điểm): Mũi tên xanh đi thẳng nhưng mũi tên rẽ trái đỏ. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Mũi tên xanh đi thẳng nhưng mũi tên rẽ trái đỏ. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do left_arrow_red; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Vị Thanh"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-105A",
@@ -143,16 +135,14 @@
       "event": "officer_stop",
       "decision_window_m": 5,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Cảnh sát điều khiển giao thông ra hiệu dừng. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Cảnh sát điều khiển giao thông ra hiệu dừng. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do officer_stop; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-106A",
@@ -174,16 +164,14 @@
       "event": "blocked_box",
       "decision_window_m": 6,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Hoàng Diệu"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Hoàng Diệu (Thành phố Cần Thơ - Tuyến đường nội thị đông học sinh và phụ huynh dừng đỗ đón con): Đèn xanh còn ít giây nhưng phía trước ùn xe. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đèn xanh còn ít giây nhưng phía trước ùn xe. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do blocked_box; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Hoàng Diệu"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-107A",
@@ -205,16 +193,14 @@
       "event": "children_warning",
       "decision_window_m": 9,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Biển cảnh báo trẻ em đặt trước khu vực trường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Biển cảnh báo trẻ em đặt trước khu vực trường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do children_warning; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-108A",
@@ -236,16 +222,14 @@
       "event": "no_left_turn",
       "decision_window_m": 10,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Hòa Lạc"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hòa Lạc (Thành phố Hà Nội - Khu công nghệ cao Hòa Lạc, đường gom đại lộ, xe buýt đưa đón học sinh): Biển cấm rẽ trái trên đường đến thư viện. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Biển cấm rẽ trái trên đường đến thư viện. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do no_left_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Hòa Lạc"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-109A",
@@ -267,16 +251,14 @@
       "event": "faded_crosswalk",
       "decision_window_m": 2,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Vạch qua đường đã mờ và xe đang đến gần. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Vạch qua đường đã mờ và xe đang đến gần. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do faded_crosswalk; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-110A",
@@ -298,16 +280,14 @@
       "event": "yield_sign",
       "decision_window_m": 7,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Lê Quí Đôn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quí Đôn (Thành phố Cần Thơ - Ngã tư trung tâm đông đúc, vạch qua đường trước cổng trường): Biển nhường đường trước đường nhánh có xe đi tới. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Biển nhường đường trước đường nhánh có xe đi tới. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do yield_sign; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Lê Quí Đôn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-111A",
@@ -329,16 +309,14 @@
       "event": "mandatory_direction",
       "decision_window_m": 8,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "FSchool Đà Nẵng"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Đà Nẵng (Thành phố Đà Nẵng - Khu đô thị FPT City Đà Nẵng, ngã tư đường lớn tốc độ cao): Biển bắt buộc đi vòng theo mũi tên ở đảo dẫn hướng. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Biển bắt buộc đi vòng theo mũi tên ở đảo dẫn hướng. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do mandatory_direction; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "FSchool Đà Nẵng"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-112A",
@@ -360,16 +338,14 @@
       "event": "rail_barrier",
       "decision_window_m": 6,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Cầu Giấy"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cầu Giấy (Thành phố Hà Nội - Phố nội đô mật độ cao, nhiều ô tô cá nhân và xe buýt): Thanh chắn đường sắt hạ xuống phía trước. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Thanh chắn đường sắt hạ xuống phía trước. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do rail_barrier; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Cầu Giấy"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-113A",
@@ -391,16 +367,14 @@
       "event": "work_zone_sign",
       "decision_window_m": 13,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THPT Nguyễn Thị Minh Khai"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Nguyễn Thị Minh Khai (TP. Hồ Chí Minh - Giao lộ lớn trung tâm TP.HCM, mật độ xe buýt và xe máy dày đặc): Biển giới hạn tốc độ ở đoạn đường đang sửa. Thời điểm afternoon, mặt đường dusty; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Biển giới hạn tốc độ ở đoạn đường đang sửa. Thời điểm afternoon, mặt đường dusty; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do work_zone_sign; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THPT Nguyễn Thị Minh Khai"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-114A",
@@ -422,16 +396,14 @@
       "event": "flashing_yellow",
       "decision_window_m": 2,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THCS Nguyễn Huệ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Nguyễn Huệ (Thành phố Đà Nẵng - Nút giao nội đô giờ tan học, lưu lượng xe máy lớn): Đèn vàng nhấp nháy tại lối qua đường không tín hiệu. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đèn vàng nhấp nháy tại lối qua đường không tín hiệu. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do flashing_yellow; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THCS Nguyễn Huệ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-115A",
@@ -453,16 +425,14 @@
       "event": "lane_arrow",
       "decision_window_m": 7,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Hải Phòng",
-      "school_zone": "FSchool Hải Phòng"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hải Phòng (Thành phố Hải Phòng - Tuyến đường ven đô rộng, lưu lượng xe tải nhẹ và xe máy điện): Vạch mũi tên yêu cầu rẽ phải, bạn rủ đi thẳng. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Vạch mũi tên yêu cầu rẽ phải, bạn rủ đi thẳng. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do lane_arrow; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hải Phòng",
-    "school_zone": "FSchool Hải Phòng"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-116A",
@@ -484,16 +454,14 @@
       "event": "one_way",
       "decision_window_m": 8,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-      "school_zone": "FSchool Hà Nam"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hà Nam (Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình) - Khu đô thị giáo dục, cổng trường giờ xe tuyến đưa đón cập bến): Biển đường một chiều xuất hiện sau góc cua. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Biển đường một chiều xuất hiện sau góc cua. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do one_way; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-    "school_zone": "FSchool Hà Nam"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-117A",
@@ -515,16 +483,14 @@
       "event": "conditional_right_turn",
       "decision_window_m": 3,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-      "school_zone": "FSchool Quy Nhơn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Quy Nhơn (Tỉnh Gia Lai (Bình Định - Gia Lai) - Tuyến đường ven biển gió mạnh, mặt đường thoáng dễ chạy nhanh): Đèn đỏ kèm biển cho phép rẽ phải có điều kiện. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đèn đỏ kèm biển cho phép rẽ phải có điều kiện. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do conditional_right_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-    "school_zone": "FSchool Quy Nhơn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-118A",
@@ -546,16 +512,14 @@
       "event": "speed_hump",
       "decision_window_m": 5,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Lê Quí Đôn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quí Đôn (Thành phố Cần Thơ - Ngã tư trung tâm đông đúc, vạch qua đường trước cổng trường): Biển gờ giảm tốc ngay sau hàng cây che khuất. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Biển gờ giảm tốc ngay sau hàng cây che khuất. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do speed_hump; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Lê Quí Đôn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-119A",
@@ -577,16 +541,14 @@
       "event": "lane_signal_off",
       "decision_window_m": 4,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Hậu Giang"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hậu Giang (Thành phố Cần Thơ - Tuyến đường kết nối khu hành chính, giao cắt đường tỉnh lộ): Đèn điều tiết làn rẽ trái tắt khi em đến gần. Thời điểm rush_hour, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Đèn điều tiết làn rẽ trái tắt khi em đến gần. Thời điểm rush_hour, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do lane_signal_off; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Hậu Giang"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-120A",
@@ -608,16 +570,14 @@
       "event": "sidewalk_construction",
       "decision_window_m": 2,
       "group_theme": "Báo hiệu và tín hiệu đường bộ",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Cầu Giấy"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cầu Giấy (Thành phố Hà Nội - Phố nội đô mật độ cao, nhiều ô tô cá nhân và xe buýt): Biển công trường và rào chắn chiếm một phần vỉa hè. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Biển công trường và rào chắn chiếm một phần vỉa hè. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do sidewalk_construction; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Cầu Giấy"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-201A",
@@ -639,16 +599,14 @@
       "event": "students_spill_out",
       "decision_window_m": 3,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Bạn cùng lớp đi hàng ba tràn ra đường lúc tan học. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Bạn cùng lớp đi hàng ba tràn ra đường lúc tan học. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do students_spill_out; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-202A",
@@ -670,16 +628,14 @@
       "event": "car_door",
       "decision_window_m": 2,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THCS Nguyễn Huệ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Nguyễn Huệ (Thành phố Đà Nẵng - Nút giao nội đô giờ tan học, lưu lượng xe máy lớn): Ô tô phụ huynh đỗ sát cổng mở cửa về phía lòng đường. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Ô tô phụ huynh đỗ sát cổng mở cửa về phía lòng đường. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do car_door; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THCS Nguyễn Huệ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-203A",
@@ -701,16 +657,14 @@
       "event": "school_bus_reversing",
       "decision_window_m": 6,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Hoàng Diệu"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Hoàng Diệu (Thành phố Cần Thơ - Tuyến đường nội thị đông học sinh và phụ huynh dừng đỗ đón con): Xe đưa đón trường đang lùi vào điểm đón. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe đưa đón trường đang lùi vào điểm đón. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do school_bus_reversing; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Hoàng Diệu"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-204A",
@@ -732,16 +686,14 @@
       "event": "bus_blocks_view",
       "decision_window_m": 4,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-      "school_zone": "FSchool Hà Nam"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hà Nam (Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình) - Khu đô thị giáo dục, cổng trường giờ xe tuyến đưa đón cập bến): Xe hợp đồng dừng che khuất lối qua đường trước cổng. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe hợp đồng dừng che khuất lối qua đường trước cổng. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_blocks_view; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-    "school_zone": "FSchool Hà Nam"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-205A",
@@ -763,16 +715,14 @@
       "event": "ball_chase",
       "decision_window_m": 3,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Hòa Lạc"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hòa Lạc (Thành phố Hà Nội - Khu công nghệ cao Hòa Lạc, đường gom đại lộ, xe buýt đưa đón học sinh): Quả bóng từ sân trường lăn ra và em nhỏ chạy theo. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Quả bóng từ sân trường lăn ra và em nhỏ chạy theo. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do ball_chase; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Hòa Lạc"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-206A",
@@ -794,16 +744,14 @@
       "event": "front_of_bus",
       "decision_window_m": 2,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Lê Quí Đôn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quí Đôn (Thành phố Cần Thơ - Ngã tư trung tâm đông đúc, vạch qua đường trước cổng trường): Học sinh xuống xe đưa đón nhưng đi vòng trước đầu xe. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Học sinh xuống xe đưa đón nhưng đi vòng trước đầu xe. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do front_of_bus; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Lê Quí Đôn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-207A",
@@ -825,16 +773,14 @@
       "event": "stop_go_cars",
       "decision_window_m": 5,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THPT Phan Đình Phùng"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Phan Đình Phùng (Thành phố Hà Nội - Đường hai chiều có hàng cây lớn, khu vực cổng trường giờ vào học): Dòng ô tô phụ huynh dừng rồi nhích liên tục. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Dòng ô tô phụ huynh dừng rồi nhích liên tục. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do stop_go_cars; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THPT Phan Đình Phùng"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-208A",
@@ -856,16 +802,14 @@
       "event": "umbrella_student",
       "decision_window_m": 4,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Cầu Giấy"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cầu Giấy (Thành phố Hà Nội - Phố nội đô mật độ cao, nhiều ô tô cá nhân và xe buýt): Học sinh cầm ô che tầm nhìn bước khỏi cổng. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Học sinh cầm ô che tầm nhìn bước khỏi cổng. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do umbrella_student; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Cầu Giấy"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-209A",
@@ -887,16 +831,14 @@
       "event": "delivery_van",
       "decision_window_m": 8,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THPT Phan Châu Trinh"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Phan Châu Trinh (Thành phố Đà Nẵng - Trục đường trung tâm Đà Nẵng, giao cắt nhiều tuyến phố): Xe giao hàng đỗ bên phải làm hẹp làn trước cổng. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe giao hàng đỗ bên phải làm hẹp làn trước cổng. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do delivery_van; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THPT Phan Châu Trinh"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-210A",
@@ -918,16 +860,14 @@
       "event": "between_parked_cars",
       "decision_window_m": 2,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THCS Nguyễn Huệ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Nguyễn Huệ (Thành phố Đà Nẵng - Nút giao nội đô giờ tan học, lưu lượng xe máy lớn): Phụ huynh gọi em băng qua giữa hai ô tô đỗ. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Phụ huynh gọi em băng qua giữa hai ô tô đỗ. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do between_parked_cars; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THCS Nguyễn Huệ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-211A",
@@ -949,16 +889,14 @@
       "event": "bus_at_stop",
       "decision_window_m": 5,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Tỉnh Bắc Ninh",
-      "school_zone": "FSchool Bắc Ninh"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Bắc Ninh (Tỉnh Bắc Ninh - Trục đường đô thị kết nối khu công nghiệp, nhiều xe đưa đón và xe tải): Xe buýt tấp trạm ngay cạnh cổng trường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe buýt tấp trạm ngay cạnh cổng trường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_at_stop; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Bắc Ninh",
-    "school_zone": "FSchool Bắc Ninh"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-212A",
@@ -980,16 +918,14 @@
       "event": "bus_hazard_lights",
       "decision_window_m": 6,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-      "school_zone": "FSchool Hà Nam"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hà Nam (Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình) - Khu đô thị giáo dục, cổng trường giờ xe tuyến đưa đón cập bến): Xe đưa đón phía trước bật đèn cảnh báo khi đón học sinh. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe đưa đón phía trước bật đèn cảnh báo khi đón học sinh. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_hazard_lights; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-    "school_zone": "FSchool Hà Nam"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-213A",
@@ -1011,16 +947,14 @@
       "event": "school_light_red",
       "decision_window_m": 4,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Tỉnh Thanh Hóa",
-      "school_zone": "FSchool Thanh Hóa"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Thanh Hóa (Tỉnh Thanh Hóa - Đại lộ mới mở, học sinh đi xe máy điện và xe 50cc qua nút giao): Đèn đỏ đặt ngay sau biển khu vực trường học. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đèn đỏ đặt ngay sau biển khu vực trường học. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do school_light_red; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Thanh Hóa",
-    "school_zone": "FSchool Thanh Hóa"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-214A",
@@ -1042,16 +976,14 @@
       "event": "parking_exit",
       "decision_window_m": 2,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Lê Quí Đôn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quí Đôn (Thành phố Cần Thơ - Ngã tư trung tâm đông đúc, vạch qua đường trước cổng trường): Bạn chạy vội qua lối xe ra vào bãi trường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Bạn chạy vội qua lối xe ra vào bãi trường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do parking_exit; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Lê Quí Đôn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-215A",
@@ -1073,16 +1005,14 @@
       "event": "sudden_door",
       "decision_window_m": 2,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Cần Thơ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cần Thơ (Thành phố Cần Thơ - Khu đô thị Nam Cần Thơ, lưu lượng xe đưa đón học sinh và xe tải lớn): Cửa xe mở bất ngờ từ hàng ô tô đón con. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Cửa xe mở bất ngờ từ hàng ô tô đón con. Thời điểm school_exit, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do sudden_door; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Cần Thơ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-216A",
@@ -1104,16 +1034,14 @@
       "event": "photo_group",
       "decision_window_m": 3,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Cầu Giấy"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cầu Giấy (Thành phố Hà Nội - Phố nội đô mật độ cao, nhiều ô tô cá nhân và xe buýt): Nhóm học sinh đứng chụp ảnh sát mép đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Nhóm học sinh đứng chụp ảnh sát mép đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do photo_group; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Cầu Giấy"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-217A",
@@ -1135,16 +1063,14 @@
       "event": "contract_bus_pullover",
       "decision_window_m": 7,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Sóc Trăng"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Sóc Trăng (Thành phố Cần Thơ - Trục đường chính nội đô, mật độ xe máy và xe đạp điện cao giờ tan tầm): Xe hợp đồng phía trước bật xi-nhan tấp vào đón học sinh. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe hợp đồng phía trước bật xi-nhan tấp vào đón học sinh. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do contract_bus_pullover; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Sóc Trăng"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-218A",
@@ -1166,16 +1092,14 @@
       "event": "canteen_truck_reverse",
       "decision_window_m": 3,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THCS Nguyễn Huệ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Nguyễn Huệ (Thành phố Đà Nẵng - Nút giao nội đô giờ tan học, lưu lượng xe máy lớn): Xe chở hàng lùi từ cổng căng tin ra lối đi. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe chở hàng lùi từ cổng căng tin ra lối đi. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do canteen_truck_reverse; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THCS Nguyễn Huệ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-219A",
@@ -1197,16 +1121,14 @@
       "event": "distracted_student",
       "decision_window_m": 5,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Châu Văn Liêm"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Châu Văn Liêm (Thành phố Cần Thơ - Giao lộ trung tâm thành phố, có đèn tín hiệu và làn rẽ riêng): Một học sinh cúi xem điện thoại bước xuống lòng đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Một học sinh cúi xem điện thoại bước xuống lòng đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do distracted_student; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Châu Văn Liêm"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-220A",
@@ -1228,16 +1150,14 @@
       "event": "crossing_guard",
       "decision_window_m": 3,
       "group_theme": "Cổng trường và khu vực học sinh",
-      "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-      "school_zone": "FSchool Hà Nam"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hà Nam (Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình) - Khu đô thị giáo dục, cổng trường giờ xe tuyến đưa đón cập bến): Tình nguyện viên cầm biển dừng xe cho học sinh qua đường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Tình nguyện viên cầm biển dừng xe cho học sinh qua đường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do crossing_guard; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-    "school_zone": "FSchool Hà Nam"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-301A",
@@ -1259,16 +1179,14 @@
       "event": "adult_with_child",
       "decision_window_m": 5,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Người lớn dắt trẻ nhỏ đang qua vạch. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người lớn dắt trẻ nhỏ đang qua vạch. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do adult_with_child; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-302A",
@@ -1290,16 +1208,14 @@
       "event": "wheelchair_crossing",
       "decision_window_m": 2,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Lê Quí Đôn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quí Đôn (Thành phố Cần Thơ - Ngã tư trung tâm đông đúc, vạch qua đường trước cổng trường): Người khuyết tật đang di chuyển qua lối sang đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Người khuyết tật đang di chuyển qua lối sang đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do wheelchair_crossing; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Lê Quí Đôn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-303A",
@@ -1321,16 +1237,14 @@
       "event": "pedestrian_behind_bus",
       "decision_window_m": 3,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Bắc Từ Liêm"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Bắc Từ Liêm (Thành phố Hà Nội - Khu đô thị mới, đường rộng nhiều làn giao cắt): Người đi bộ bước ra từ sau xe buýt đỗ. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Người đi bộ bước ra từ sau xe buýt đỗ. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do pedestrian_behind_bus; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Bắc Từ Liêm"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-304A",
@@ -1352,16 +1266,14 @@
       "event": "vendor_cart",
       "decision_window_m": 4,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Cầu Giấy"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cầu Giấy (Thành phố Hà Nội - Phố nội đô mật độ cao, nhiều ô tô cá nhân và xe buýt): Người bán hàng đẩy xe qua đường tại chợ nhỏ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người bán hàng đẩy xe qua đường tại chợ nhỏ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do vendor_cart; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Cầu Giấy"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-305A",
@@ -1383,16 +1295,14 @@
       "event": "right_turn_crosswalk",
       "decision_window_m": 4,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "FSchool Đà Nẵng"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Đà Nẵng (Thành phố Đà Nẵng - Khu đô thị FPT City Đà Nẵng, ngã tư đường lớn tốc độ cao): Rẽ phải gặp người đi bộ đang có mặt trên vạch. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Rẽ phải gặp người đi bộ đang có mặt trên vạch. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do right_turn_crosswalk; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "FSchool Đà Nẵng"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-306A",
@@ -1414,16 +1324,14 @@
       "event": "partial_yield",
       "decision_window_m": 2,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THCS Nguyễn Huệ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Nguyễn Huệ (Thành phố Đà Nẵng - Nút giao nội đô giờ tan học, lưu lượng xe máy lớn): Tài xế ô tô nhường đường nhưng xe máy phía sau còn tới. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Tài xế ô tô nhường đường nhưng xe máy phía sau còn tới. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do partial_yield; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THCS Nguyễn Huệ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-307A",
@@ -1445,16 +1353,14 @@
       "event": "elderly_crossing",
       "decision_window_m": 6,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THPT Nguyễn Thị Minh Khai"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Nguyễn Thị Minh Khai (TP. Hồ Chí Minh - Giao lộ lớn trung tâm TP.HCM, mật độ xe buýt và xe máy dày đặc): Người cao tuổi qua đường chậm ở đoạn không đèn. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người cao tuổi qua đường chậm ở đoạn không đèn. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do elderly_crossing; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THPT Nguyễn Thị Minh Khai"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-308A",
@@ -1476,16 +1382,14 @@
       "event": "pedestrian_green",
       "decision_window_m": 3,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-      "school_zone": "FSchool Hà Nam"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hà Nam (Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình) - Khu đô thị giáo dục, cổng trường giờ xe tuyến đưa đón cập bến): Đèn người đi bộ xanh nhưng xe em có đèn đỏ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đèn người đi bộ xanh nhưng xe em có đèn đỏ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do pedestrian_green; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-    "school_zone": "FSchool Hà Nam"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-309A",
@@ -1507,16 +1411,14 @@
       "event": "child_and_pet",
       "decision_window_m": 2,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Hải Phòng",
-      "school_zone": "FSchool Hải Phòng"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hải Phòng (Thành phố Hải Phòng - Tuyến đường ven đô rộng, lưu lượng xe tải nhẹ và xe máy điện): Trẻ nhỏ chạy khỏi ki-ốt bên đường để đuổi thú cưng. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Trẻ nhỏ chạy khỏi ki-ốt bên đường để đuổi thú cưng. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do child_and_pet; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hải Phòng",
-    "school_zone": "FSchool Hải Phòng"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-310A",
@@ -1538,16 +1440,14 @@
       "event": "white_cane",
       "decision_window_m": 2,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Lê Quí Đôn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quí Đôn (Thành phố Cần Thơ - Ngã tư trung tâm đông đúc, vạch qua đường trước cổng trường): Người khiếm thị dùng gậy dò đường gần lối sang. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người khiếm thị dùng gậy dò đường gần lối sang. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do white_cane; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Lê Quí Đôn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-311A",
@@ -1569,16 +1469,14 @@
       "event": "broken_sidewalk",
       "decision_window_m": 5,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-      "school_zone": "FSchool Quy Nhơn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Quy Nhơn (Tỉnh Gia Lai (Bình Định - Gia Lai) - Tuyến đường ven biển gió mạnh, mặt đường thoáng dễ chạy nhanh): Người đi bộ đi ngược chiều ở làn hẹp do vỉa hè hỏng. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Người đi bộ đi ngược chiều ở làn hẹp do vỉa hè hỏng. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do broken_sidewalk; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-    "school_zone": "FSchool Quy Nhơn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-312A",
@@ -1600,16 +1498,14 @@
       "event": "alley_turn",
       "decision_window_m": 4,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Cầu Giấy"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cầu Giấy (Thành phố Hà Nội - Phố nội đô mật độ cao, nhiều ô tô cá nhân và xe buýt): Em muốn rẽ vào ngõ khi người đi bộ đang băng qua. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Em muốn rẽ vào ngõ khi người đi bộ đang băng qua. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do alley_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Cầu Giấy"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-313A",
@@ -1631,16 +1527,14 @@
       "event": "boxed_view",
       "decision_window_m": 4,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Hậu Giang"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hậu Giang (Thành phố Cần Thơ - Tuyến đường kết nối khu hành chính, giao cắt đường tỉnh lộ): Một người mang thùng giấy che kín tầm nhìn đi qua. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Một người mang thùng giấy che kín tầm nhìn đi qua. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do boxed_view; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Hậu Giang"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-314A",
@@ -1662,16 +1556,14 @@
       "event": "crosswalk_countdown",
       "decision_window_m": 2,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THCS Nguyễn Huệ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Nguyễn Huệ (Thành phố Đà Nẵng - Nút giao nội đô giờ tan học, lưu lượng xe máy lớn): Âm thanh đếm ngược cho người đi bộ sắp kết thúc. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Âm thanh đếm ngược cho người đi bộ sắp kết thúc. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do crosswalk_countdown; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THCS Nguyễn Huệ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-315A",
@@ -1693,16 +1585,14 @@
       "event": "workers_roadside",
       "decision_window_m": 6,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Vị Thanh"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Vị Thanh (Thành phố Cần Thơ - Trục giao thông chính, nhiều phương tiện hỗn hợp giờ cao điểm): Nhóm công nhân đi bộ sát mép đường sau xe tải. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Nhóm công nhân đi bộ sát mép đường sau xe tải. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do workers_roadside; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Vị Thanh"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-316A",
@@ -1724,16 +1614,14 @@
       "event": "phone_walker",
       "decision_window_m": 3,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-      "school_zone": "FSchool Hà Nam"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hà Nam (Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình) - Khu đô thị giáo dục, cổng trường giờ xe tuyến đưa đón cập bến): Người đi bộ cầm điện thoại vừa đi vừa đổi hướng. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người đi bộ cầm điện thoại vừa đi vừa đổi hướng. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do phone_walker; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Hà Nam Ninh (Hà Nam - Nam Định - Ninh Bình)",
-    "school_zone": "FSchool Hà Nam"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-317A",
@@ -1755,16 +1643,14 @@
       "event": "student_group_crossing",
       "decision_window_m": 5,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Hoàng Diệu"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Hoàng Diệu (Thành phố Cần Thơ - Tuyến đường nội thị đông học sinh và phụ huynh dừng đỗ đón con): Đoàn học sinh đang qua đường theo hướng dẫn viên. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đoàn học sinh đang qua đường theo hướng dẫn viên. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do student_group_crossing; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Hoàng Diệu"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-318A",
@@ -1786,16 +1672,14 @@
       "event": "bus_occlusion",
       "decision_window_m": 2,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Lê Quí Đôn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quí Đôn (Thành phố Cần Thơ - Ngã tư trung tâm đông đúc, vạch qua đường trước cổng trường): Xe buýt che khuất đoạn đường em định băng qua. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe buýt che khuất đoạn đường em định băng qua. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_occlusion; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Lê Quí Đôn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-319A",
@@ -1817,16 +1701,14 @@
       "event": "jogger_exit",
       "decision_window_m": 5,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Hòa Lạc"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hòa Lạc (Thành phố Hà Nội - Khu công nghệ cao Hòa Lạc, đường gom đại lộ, xe buýt đưa đón học sinh): Người chạy bộ từ công viên lao ra lối mở. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người chạy bộ từ công viên lao ra lối mở. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do jogger_exit; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Hòa Lạc"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-320A",
@@ -1848,16 +1730,14 @@
       "event": "parent_child_turn",
       "decision_window_m": 4,
       "group_theme": "Người đi bộ và nhường đường",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Cầu Giấy"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cầu Giấy (Thành phố Hà Nội - Phố nội đô mật độ cao, nhiều ô tô cá nhân và xe buýt): Rẽ trái vào sân trường gặp phụ huynh dắt bé. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Rẽ trái vào sân trường gặp phụ huynh dắt bé. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do parent_child_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Cầu Giấy"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-401A",
@@ -1879,16 +1759,14 @@
       "event": "uncontrolled_intersection",
       "decision_window_m": 6,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Rẽ phải tại ngã tư không đèn có xe từ bên trái. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Rẽ phải tại ngã tư không đèn có xe từ bên trái. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do uncontrolled_intersection; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-402A",
@@ -1910,16 +1788,14 @@
       "event": "oncoming_left_turn",
       "decision_window_m": 6,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "FSchool Đà Nẵng"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Đà Nẵng (Thành phố Đà Nẵng - Khu đô thị FPT City Đà Nẵng, ngã tư đường lớn tốc độ cao): Ô tô đối diện bật xi-nhan rẽ trái qua hướng đi của em. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Ô tô đối diện bật xi-nhan rẽ trái qua hướng đi của em. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do oncoming_left_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "FSchool Đà Nẵng"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-403A",
@@ -1941,16 +1817,14 @@
       "event": "multi_lane_red",
       "decision_window_m": 2,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Đèn đỏ tại nút giao nhiều làn. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đèn đỏ tại nút giao nhiều làn. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do multi_lane_red; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-404A",
@@ -1972,16 +1846,14 @@
       "event": "roundabout_bus",
       "decision_window_m": 7,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THPT Nguyễn Thị Minh Khai"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Nguyễn Thị Minh Khai (TP. Hồ Chí Minh - Giao lộ lớn trung tâm TP.HCM, mật độ xe buýt và xe máy dày đặc): Xe buýt phía trước chuẩn bị rẽ ở vòng xuyến. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe buýt phía trước chuẩn bị rẽ ở vòng xuyến. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do roundabout_bus; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THPT Nguyễn Thị Minh Khai"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-405A",
@@ -2003,16 +1875,14 @@
       "event": "roundabout_crosswalk",
       "decision_window_m": 4,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Người đi bộ đứng sát lối ra vòng xuyến. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người đi bộ đứng sát lối ra vòng xuyến. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do roundabout_crosswalk; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-406A",
@@ -2034,16 +1904,14 @@
       "event": "roundabout_truck",
       "decision_window_m": 5,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Hải Phòng",
-      "school_zone": "FSchool Hải Phòng"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hải Phòng (Thành phố Hải Phòng - Tuyến đường ven đô rộng, lưu lượng xe tải nhẹ và xe máy điện): Xe tải nhẹ đi chậm ở vòng xuyến che hướng ra. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe tải nhẹ đi chậm ở vòng xuyến che hướng ra. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do roundabout_truck; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hải Phòng",
-    "school_zone": "FSchool Hải Phòng"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-407A",
@@ -2065,16 +1933,14 @@
       "event": "straight_lane_red",
       "decision_window_m": 4,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Đèn đỏ khi em đang ở làn đi thẳng. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Đèn đỏ khi em đang ở làn đi thẳng. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do straight_lane_red; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-408A",
@@ -2096,16 +1962,14 @@
       "event": "alley_merge",
       "decision_window_m": 7,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-      "school_zone": "FSchool Quy Nhơn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Quy Nhơn (Tỉnh Gia Lai (Bình Định - Gia Lai) - Tuyến đường ven biển gió mạnh, mặt đường thoáng dễ chạy nhanh): Từ ngõ nhỏ nhập vào đường lớn có ô tô tới. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Từ ngõ nhỏ nhập vào đường lớn có ô tô tới. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do alley_merge; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-    "school_zone": "FSchool Quy Nhơn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-409A",
@@ -2127,16 +1991,14 @@
       "event": "late_crossing",
       "decision_window_m": 2,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Đèn xanh đã hết khi em còn ở mép đường. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đèn xanh đã hết khi em còn ở mép đường. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do late_crossing; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-410A",
@@ -2158,16 +2020,14 @@
       "event": "container_wide_turn",
       "decision_window_m": 8,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Hậu Giang"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hậu Giang (Thành phố Cần Thơ - Tuyến đường kết nối khu hành chính, giao cắt đường tỉnh lộ): Container đang ôm cua rộng tại giao lộ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Container đang ôm cua rộng tại giao lộ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do container_wide_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Hậu Giang"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-411A",
@@ -2189,16 +2049,14 @@
       "event": "roundabout_yield",
       "decision_window_m": 5,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Gặp biển nhường đường khi vào vòng xuyến. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Gặp biển nhường đường khi vào vòng xuyến. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do roundabout_yield; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-412A",
@@ -2220,16 +2078,14 @@
       "event": "turning_pedestrian",
       "decision_window_m": 3,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Vị Thanh"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Vị Thanh (Thành phố Cần Thơ - Trục giao thông chính, nhiều phương tiện hỗn hợp giờ cao điểm): Rẽ phải khi người đi bộ bắt đầu bước xuống vạch. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Rẽ phải khi người đi bộ bắt đầu bước xuống vạch. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do turning_pedestrian; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Vị Thanh"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-413A",
@@ -2251,16 +2107,14 @@
       "event": "car_waiting_left",
       "decision_window_m": 4,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Ô tô trước mặt dừng chờ rẽ trái tại ngã ba. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Ô tô trước mặt dừng chờ rẽ trái tại ngã ba. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do car_waiting_left; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-414A",
@@ -2282,16 +2136,14 @@
       "event": "bus_merge_intersection",
       "decision_window_m": 6,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Hoàng Diệu"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Hoàng Diệu (Thành phố Cần Thơ - Tuyến đường nội thị đông học sinh và phụ huynh dừng đỗ đón con): Xe buýt rời trạm nhập vào dòng xe gần ngã tư. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe buýt rời trạm nhập vào dòng xe gần ngã tư. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_merge_intersection; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Hoàng Diệu"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-415A",
@@ -2313,16 +2165,14 @@
       "event": "officer_block",
       "decision_window_m": 2,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Cảnh sát giơ tay chặn hướng em tại nút giao. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Cảnh sát giơ tay chặn hướng em tại nút giao. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do officer_block; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-416A",
@@ -2344,16 +2194,14 @@
       "event": "reversing_driveway",
       "decision_window_m": 5,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Hòa Lạc"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hòa Lạc (Thành phố Hà Nội - Khu công nghệ cao Hòa Lạc, đường gom đại lộ, xe buýt đưa đón học sinh): Ô tô lùi từ đường nhánh ra khi em chuẩn bị rẽ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Ô tô lùi từ đường nhánh ra khi em chuẩn bị rẽ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do reversing_driveway; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Hòa Lạc"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-417A",
@@ -2375,16 +2223,14 @@
       "event": "roundabout_yellow",
       "decision_window_m": 5,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Đèn vàng ở lối qua đường trước vòng xuyến. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đèn vàng ở lối qua đường trước vòng xuyến. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do roundabout_yellow; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-418A",
@@ -2406,16 +2252,14 @@
       "event": "lane_change_junction",
       "decision_window_m": 8,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THPT Phan Đình Phùng"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Phan Đình Phùng (Thành phố Hà Nội - Đường hai chiều có hàng cây lớn, khu vực cổng trường giờ vào học): Cần đổi làn trước giao lộ nhưng xe tải nhỏ ở phía sau. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Cần đổi làn trước giao lộ nhưng xe tải nhỏ ở phía sau. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do lane_change_junction; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THPT Phan Đình Phùng"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-419A",
@@ -2437,16 +2281,14 @@
       "event": "median_child",
       "decision_window_m": 3,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Trẻ em đứng ở dải phân cách chờ sang nốt phần đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Trẻ em đứng ở dải phân cách chờ sang nốt phần đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do median_child; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-420A",
@@ -2468,16 +2310,14 @@
       "event": "lane_split",
       "decision_window_m": 9,
       "group_theme": "Giao lộ và vòng xuyến",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THPT Phan Châu Trinh"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Phan Châu Trinh (Thành phố Đà Nẵng - Trục đường trung tâm Đà Nẵng, giao cắt nhiều tuyến phố): Biển chỉ dẫn tách làn trước ngã tư đông xe. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Biển chỉ dẫn tách làn trước ngã tư đông xe. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do lane_split; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THPT Phan Châu Trinh"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-501A",
@@ -2499,16 +2339,14 @@
       "event": "container_blind_spot",
       "decision_window_m": 4,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Xe container dừng đèn đỏ bên cạnh em. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe container dừng đèn đỏ bên cạnh em. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do container_blind_spot; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-502A",
@@ -2530,16 +2368,14 @@
       "event": "dump_truck_turn",
       "decision_window_m": 5,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Tỉnh Bắc Ninh",
-      "school_zone": "FSchool Bắc Ninh"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Bắc Ninh (Tỉnh Bắc Ninh - Trục đường đô thị kết nối khu công nghiệp, nhiều xe đưa đón và xe tải): Xe ben bật xi-nhan phải gần lối rẽ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe ben bật xi-nhan phải gần lối rẽ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do dump_truck_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Bắc Ninh",
-    "school_zone": "FSchool Bắc Ninh"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-503A",
@@ -2561,16 +2397,14 @@
       "event": "bus_front_blind_spot",
       "decision_window_m": 2,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Em định đi sát đầu xe đưa đón đang đỗ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Em định đi sát đầu xe đưa đón đang đỗ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_front_blind_spot; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-504A",
@@ -2592,16 +2426,14 @@
       "event": "bus_occludes_bike",
       "decision_window_m": 6,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Tỉnh Thanh Hóa",
-      "school_zone": "FSchool Thanh Hóa"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Thanh Hóa (Tỉnh Thanh Hóa - Đại lộ mới mở, học sinh đi xe máy điện và xe 50cc qua nút giao): Xe buýt che khuất xe đạp đang đi ở làn sát lề. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe buýt che khuất xe đạp đang đi ở làn sát lề. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_occludes_bike; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Thanh Hóa",
-    "school_zone": "FSchool Thanh Hóa"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-505A",
@@ -2623,16 +2455,14 @@
       "event": "truck_reverse",
       "decision_window_m": 5,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Xe tải giao hàng lùi ra từ cổng kho. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe tải giao hàng lùi ra từ cổng kho. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do truck_reverse; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-506A",
@@ -2654,16 +2484,14 @@
       "event": "container_startup",
       "decision_window_m": 4,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Cần Thơ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cần Thơ (Thành phố Cần Thơ - Khu đô thị Nam Cần Thơ, lưu lượng xe đưa đón học sinh và xe tải lớn): Đèn xanh nhưng container phía trước chưa khởi hành. Thời điểm rush_hour, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đèn xanh nhưng container phía trước chưa khởi hành. Thời điểm rush_hour, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do container_startup; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Cần Thơ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-507A",
@@ -2685,16 +2513,14 @@
       "event": "bus_leaving_stop",
       "decision_window_m": 6,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Xe buýt bật xi-nhan rời trạm, em ở phía sau. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe buýt bật xi-nhan rời trạm, em ở phía sau. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_leaving_stop; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-508A",
@@ -2716,16 +2542,14 @@
       "event": "truck_blocks_turn",
       "decision_window_m": 8,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Sóc Trăng"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Sóc Trăng (Thành phố Cần Thơ - Trục đường chính nội đô, mật độ xe máy và xe đạp điện cao giờ tan tầm): Xe tải nhỏ đỗ che lối rẽ phải của em. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe tải nhỏ đỗ che lối rẽ phải của em. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do truck_blocks_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Sóc Trăng"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-509A",
@@ -2747,16 +2571,14 @@
       "event": "reverse_alarm",
       "decision_window_m": 3,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Nghe tiếng cảnh báo lùi của xe ben gần cổng công trường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Nghe tiếng cảnh báo lùi của xe ben gần cổng công trường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do reverse_alarm; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-510A",
@@ -2778,16 +2600,14 @@
       "event": "bus_lane_change",
       "decision_window_m": 7,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Châu Văn Liêm"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Châu Văn Liêm (Thành phố Cần Thơ - Giao lộ trung tâm thành phố, có đèn tín hiệu và làn rẽ riêng): Xe buýt chuyển làn để vào trạm trước mặt. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe buýt chuyển làn để vào trạm trước mặt. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_lane_change; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Châu Văn Liêm"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-511A",
@@ -2809,16 +2629,14 @@
       "event": "crane_turnaround",
       "decision_window_m": 6,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Xe cẩu đang quay đầu chiếm phần lớn mặt đường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe cẩu đang quay đầu chiếm phần lớn mặt đường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do crane_turnaround; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-512A",
@@ -2840,16 +2658,14 @@
       "event": "school_bus_dropoff",
       "decision_window_m": 6,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Bùi Hữu Nghĩa"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Bùi Hữu Nghĩa (Thành phố Cần Thơ - Đoạn đường gần nút giao lớn và bến xe buýt nội đô): Xe đưa đón dừng trả học sinh ở làn phải. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe đưa đón dừng trả học sinh ở làn phải. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do school_bus_dropoff; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Bùi Hữu Nghĩa"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-513A",
@@ -2871,16 +2687,14 @@
       "event": "suv_door_zone",
       "decision_window_m": 3,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): SUV đỗ ven đường che khuất người mở cửa. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: SUV đỗ ven đường che khuất người mở cửa. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do suv_door_zone; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-514A",
@@ -2902,16 +2716,14 @@
       "event": "truck_opposite_turn",
       "decision_window_m": 7,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Bắc Từ Liêm"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Bắc Từ Liêm (Thành phố Hà Nội - Khu đô thị mới, đường rộng nhiều làn giao cắt): Cần rẽ trái khi xe tải lớn ở phía đối diện. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Cần rẽ trái khi xe tải lớn ở phía đối diện. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do truck_opposite_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Bắc Từ Liêm"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-515A",
@@ -2933,16 +2745,14 @@
       "event": "behind_bus_crossing",
       "decision_window_m": 2,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Em đứng sau xe buýt và muốn băng qua đường. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Em đứng sau xe buýt và muốn băng qua đường. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do behind_bus_crossing; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-516A",
@@ -2964,16 +2774,14 @@
       "event": "refrigerated_truck",
       "decision_window_m": 7,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "FSchool Đà Nẵng"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Đà Nẵng (Thành phố Đà Nẵng - Khu đô thị FPT City Đà Nẵng, ngã tư đường lớn tốc độ cao): Xe tải lạnh trước mặt có điểm mù sau lớn. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe tải lạnh trước mặt có điểm mù sau lớn. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do refrigerated_truck; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "FSchool Đà Nẵng"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-517A",
@@ -2995,16 +2803,14 @@
       "event": "bus_door_opening",
       "decision_window_m": 4,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Xe đưa đón bật đèn khẩn cấp, cửa sắp mở. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe đưa đón bật đèn khẩn cấp, cửa sắp mở. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_door_opening; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-518A",
@@ -3026,16 +2832,14 @@
       "event": "container_backing",
       "decision_window_m": 9,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THPT Nguyễn Thị Minh Khai"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Nguyễn Thị Minh Khai (TP. Hồ Chí Minh - Giao lộ lớn trung tâm TP.HCM, mật độ xe buýt và xe máy dày đặc): Xe container đang lùi vào bãi trên đường hẹp. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe container đang lùi vào bãi trên đường hẹp. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do container_backing; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THPT Nguyễn Thị Minh Khai"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-519A",
@@ -3057,16 +2861,14 @@
       "event": "garbage_truck",
       "decision_window_m": 5,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Xe rác dừng thu gom chiếm làn sát lề. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe rác dừng thu gom chiếm làn sát lề. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do garbage_truck; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-520A",
@@ -3088,16 +2890,14 @@
       "event": "bus_u_turn",
       "decision_window_m": 8,
       "group_theme": "Điểm mù và xe lớn",
-      "city": "Thành phố Hải Phòng",
-      "school_zone": "FSchool Hải Phòng"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hải Phòng (Thành phố Hải Phòng - Tuyến đường ven đô rộng, lưu lượng xe tải nhẹ và xe máy điện): Xe buýt quay đầu tại điểm cuối tuyến. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe buýt quay đầu tại điểm cuối tuyến. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_u_turn; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hải Phòng",
-    "school_zone": "FSchool Hải Phòng"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-601A",
@@ -3119,16 +2919,14 @@
       "event": "car_searching_parking",
       "decision_window_m": 4,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Ô tô trước mặt giảm tốc vì tìm chỗ đỗ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Ô tô trước mặt giảm tốc vì tìm chỗ đỗ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do car_searching_parking; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-602A",
@@ -3150,16 +2948,14 @@
       "event": "sudden_brake_pothole",
       "decision_window_m": 4,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-      "school_zone": "FSchool Quy Nhơn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Quy Nhơn (Tỉnh Gia Lai (Bình Định - Gia Lai) - Tuyến đường ven biển gió mạnh, mặt đường thoáng dễ chạy nhanh): Ô tô phía trước phanh gấp trước ổ gà. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Ô tô phía trước phanh gấp trước ổ gà. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do sudden_brake_pothole; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-    "school_zone": "FSchool Quy Nhơn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-603A",
@@ -3181,16 +2977,14 @@
       "event": "roadside_waiter",
       "decision_window_m": 3,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Người đi bộ đứng sát mép đường dưới gốc cây. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Người đi bộ đứng sát mép đường dưới gốc cây. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do roadside_waiter; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-604A",
@@ -3212,16 +3006,14 @@
       "event": "frequent_bus_stops",
       "decision_window_m": 6,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Hậu Giang"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hậu Giang (Thành phố Cần Thơ - Tuyến đường kết nối khu hành chính, giao cắt đường tỉnh lộ): Xe buýt trước mặt thường xuyên dừng đón khách. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe buýt trước mặt thường xuyên dừng đón khách. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do frequent_bus_stops; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Hậu Giang"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-605A",
@@ -3243,16 +3035,14 @@
       "event": "wet_yellow_light",
       "decision_window_m": 5,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Đèn phía trước chuyển vàng khi đường trơn. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đèn phía trước chuyển vàng khi đường trơn. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do wet_yellow_light; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-606A",
@@ -3274,16 +3064,14 @@
       "event": "loaded_truck_view",
       "decision_window_m": 8,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Vị Thanh"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Vị Thanh (Thành phố Cần Thơ - Trục giao thông chính, nhiều phương tiện hỗn hợp giờ cao điểm): Xe tải nhỏ chở hàng che tầm nhìn phía trước. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe tải nhỏ chở hàng che tầm nhìn phía trước. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do loaded_truck_view; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Vị Thanh"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-607A",
@@ -3305,16 +3093,14 @@
       "event": "walk_red_light",
       "decision_window_m": 2,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Đèn đỏ bật khi em gần vạch qua đường. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đèn đỏ bật khi em gần vạch qua đường. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do walk_red_light; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-608A",
@@ -3336,16 +3122,14 @@
       "event": "windy_umbrella",
       "decision_window_m": 4,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Hoàng Diệu"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Hoàng Diệu (Thành phố Cần Thơ - Tuyến đường nội thị đông học sinh và phụ huynh dừng đỗ đón con): Người đi bộ mở ô khi gió mạnh ven đường. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Người đi bộ mở ô khi gió mạnh ven đường. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do windy_umbrella; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Hoàng Diệu"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-609A",
@@ -3367,16 +3151,14 @@
       "event": "downhill_following",
       "decision_window_m": 5,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Ô tô trước đi chậm xuống dốc cổng hầm. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Ô tô trước đi chậm xuống dốc cổng hầm. Thời điểm morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do downhill_following; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-610A",
@@ -3398,16 +3180,14 @@
       "event": "dropped_item",
       "decision_window_m": 3,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Hòa Lạc"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hòa Lạc (Thành phố Hà Nội - Khu công nghệ cao Hòa Lạc, đường gom đại lộ, xe buýt đưa đón học sinh): Một người chạy ra nhặt đồ rơi trên đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Một người chạy ra nhặt đồ rơi trên đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do dropped_item; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Hòa Lạc"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-611A",
@@ -3429,16 +3209,14 @@
       "event": "puddle_at_light",
       "decision_window_m": 4,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Đèn đỏ phía trước khi có vũng nước ven đường. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đèn đỏ phía trước khi có vũng nước ven đường. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do puddle_at_light; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-612A",
@@ -3460,16 +3238,14 @@
       "event": "bus_searching_address",
       "decision_window_m": 6,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THPT Phan Đình Phùng"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Phan Đình Phùng (Thành phố Hà Nội - Đường hai chiều có hàng cây lớn, khu vực cổng trường giờ vào học): Xe hợp đồng chạy chậm tìm địa chỉ ở khu dân cư. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe hợp đồng chạy chậm tìm địa chỉ ở khu dân cư. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_searching_address; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THPT Phan Đình Phùng"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-613A",
@@ -3491,16 +3267,14 @@
       "event": "child_near_road",
       "decision_window_m": 5,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Trẻ nhỏ chơi gần mép đường có người lớn đứng xa. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Trẻ nhỏ chơi gần mép đường có người lớn đứng xa. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do child_near_road; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-614A",
@@ -3522,16 +3296,14 @@
       "event": "loose_cargo_car",
       "decision_window_m": 8,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THPT Phan Châu Trinh"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Phan Châu Trinh (Thành phố Đà Nẵng - Trục đường trung tâm Đà Nẵng, giao cắt nhiều tuyến phố): Xe trước chở đồ cồng kềnh có thể rơi xuống. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe trước chở đồ cồng kềnh có thể rơi xuống. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do loose_cargo_car; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THPT Phan Châu Trinh"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-615A",
@@ -3553,16 +3325,14 @@
       "event": "bus_stop_queue",
       "decision_window_m": 2,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Xe buýt phanh ở trạm khiến người xếp hàng dịch chuyển. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe buýt phanh ở trạm khiến người xếp hàng dịch chuyển. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_stop_queue; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-616A",
@@ -3584,16 +3354,14 @@
       "event": "downhill_yellow",
       "decision_window_m": 7,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Tỉnh Bắc Ninh",
-      "school_zone": "FSchool Bắc Ninh"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Bắc Ninh (Tỉnh Bắc Ninh - Trục đường đô thị kết nối khu công nghiệp, nhiều xe đưa đón và xe tải): Đèn vàng ở cuối dốc nhẹ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đèn vàng ở cuối dốc nhẹ. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do downhill_yellow; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Bắc Ninh",
-    "school_zone": "FSchool Bắc Ninh"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-617A",
@@ -3615,16 +3383,14 @@
       "event": "hidden_sign_following",
       "decision_window_m": 7,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Xe tải giao hàng phía trước che biển báo giảm tốc. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe tải giao hàng phía trước che biển báo giảm tốc. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do hidden_sign_following; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-618A",
@@ -3646,16 +3412,14 @@
       "event": "dog_and_owner",
       "decision_window_m": 3,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Tỉnh Thanh Hóa",
-      "school_zone": "FSchool Thanh Hóa"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Thanh Hóa (Tỉnh Thanh Hóa - Đại lộ mới mở, học sinh đi xe máy điện và xe 50cc qua nút giao): Chó chạy qua đường kéo theo người chủ. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Chó chạy qua đường kéo theo người chủ. Thời điểm evening, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do dog_and_owner; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Thanh Hóa",
-    "school_zone": "FSchool Thanh Hóa"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-619A",
@@ -3677,16 +3441,14 @@
       "event": "stop_go_brakes",
       "decision_window_m": 3,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Ô tô trước bật đèn phanh liên tục trong ùn tắc. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Ô tô trước bật đèn phanh liên tục trong ùn tắc. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do stop_go_brakes; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-620A",
@@ -3708,16 +3470,14 @@
       "event": "bus_speed_hump",
       "decision_window_m": 7,
       "group_theme": "Khoảng cách an toàn và phanh dừng",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Cần Thơ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cần Thơ (Thành phố Cần Thơ - Khu đô thị Nam Cần Thơ, lưu lượng xe đưa đón học sinh và xe tải lớn): Xe buýt chở học sinh đi chậm qua gờ giảm tốc. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe buýt chở học sinh đi chậm qua gờ giảm tốc. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_speed_hump; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Cần Thơ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-701A",
@@ -3739,16 +3499,14 @@
       "event": "drizzle_visibility",
       "decision_window_m": 4,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Mưa phùn làm kính người đi bộ mờ và họ bước chậm. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Mưa phùn làm kính người đi bộ mờ và họ bước chậm. Thời điểm rainy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do drizzle_visibility; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-702A",
@@ -3770,16 +3528,14 @@
       "event": "spray_from_car",
       "decision_window_m": 7,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Sóc Trăng"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Sóc Trăng (Thành phố Cần Thơ - Trục đường chính nội đô, mật độ xe máy và xe đạp điện cao giờ tan tầm): Mưa lớn làm ô tô trước bắn nước che tầm nhìn. Thời điểm heavy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Mưa lớn làm ô tô trước bắn nước che tầm nhìn. Thời điểm heavy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do spray_from_car; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Sóc Trăng"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-703A",
@@ -3801,16 +3557,14 @@
       "event": "foggy_light",
       "decision_window_m": 2,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Sương sớm làm khó thấy đèn tín hiệu từ xa. Thời điểm foggy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Sương sớm làm khó thấy đèn tín hiệu từ xa. Thời điểm foggy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do foggy_light; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-704A",
@@ -3832,16 +3586,14 @@
       "event": "fog_container",
       "decision_window_m": 9,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Châu Văn Liêm"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Châu Văn Liêm (Thành phố Cần Thơ - Giao lộ trung tâm thành phố, có đèn tín hiệu và làn rẽ riêng): Sương mù che một phần đuôi xe container. Thời điểm foggy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Sương mù che một phần đuôi xe container. Thời điểm foggy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do fog_container; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Châu Văn Liêm"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-705A",
@@ -3863,16 +3615,14 @@
       "event": "wet_braking",
       "decision_window_m": 6,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Mặt đường ướt sau mưa trước đèn vàng. Thời điểm after_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Mặt đường ướt sau mưa trước đèn vàng. Thời điểm after_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do wet_braking; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-706A",
@@ -3894,16 +3644,14 @@
       "event": "sun_glare_pedestrian",
       "decision_window_m": 3,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Bùi Hữu Nghĩa"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Bùi Hữu Nghĩa (Thành phố Cần Thơ - Đoạn đường gần nút giao lớn và bến xe buýt nội đô): Chói nắng chiều làm người đi bộ xuất hiện muộn trong tầm nhìn. Thời điểm sunset_glare, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Chói nắng chiều làm người đi bộ xuất hiện muộn trong tầm nhìn. Thời điểm sunset_glare, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do sun_glare_pedestrian; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Bùi Hữu Nghĩa"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-707A",
@@ -3925,16 +3673,14 @@
       "event": "dark_bus_occlusion",
       "decision_window_m": 2,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Trời tối, xe buýt che lối sang đường thiếu đèn. Thời điểm night, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Trời tối, xe buýt che lối sang đường thiếu đèn. Thời điểm night, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do dark_bus_occlusion; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-708A",
@@ -3956,16 +3702,14 @@
       "event": "loose_tarp",
       "decision_window_m": 6,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Bắc Từ Liêm"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Bắc Từ Liêm (Thành phố Hà Nội - Khu đô thị mới, đường rộng nhiều làn giao cắt): Gió mạnh thổi tấm bạt xe tải phấp phới sang làn. Thời điểm windy, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Gió mạnh thổi tấm bạt xe tải phấp phới sang làn. Thời điểm windy, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do loose_tarp; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Bắc Từ Liêm"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-709A",
@@ -3987,16 +3731,14 @@
       "event": "wet_leaves",
       "decision_window_m": 5,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Đường nhiều lá rụng ướt sau cơn mưa. Thời điểm after_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đường nhiều lá rụng ướt sau cơn mưa. Thời điểm after_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do wet_leaves; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-710A",
@@ -4018,16 +3760,14 @@
       "event": "raincoat_pedestrian",
       "decision_window_m": 5,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "FSchool Đà Nẵng"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Đà Nẵng (Thành phố Đà Nẵng - Khu đô thị FPT City Đà Nẵng, ngã tư đường lớn tốc độ cao): Mưa to làm người đi bộ đội áo mưa che tai. Thời điểm heavy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Mưa to làm người đi bộ đội áo mưa che tai. Thời điểm heavy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do raincoat_pedestrian; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "FSchool Đà Nẵng"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-711A",
@@ -4049,16 +3789,14 @@
       "event": "reflective_road",
       "decision_window_m": 4,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Đêm mưa phản chiếu khiến vạch dừng khó thấy. Thời điểm night_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đêm mưa phản chiếu khiến vạch dừng khó thấy. Thời điểm night_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do reflective_road; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-712A",
@@ -4080,16 +3818,14 @@
       "event": "silhouette_bus",
       "decision_window_m": 8,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THPT Nguyễn Thị Minh Khai"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THPT Nguyễn Thị Minh Khai (TP. Hồ Chí Minh - Giao lộ lớn trung tâm TP.HCM, mật độ xe buýt và xe máy dày đặc): Trời hoàng hôn, xe buýt trước chỉ còn thấy bóng đen. Thời điểm sunset_glare, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Trời hoàng hôn, xe buýt trước chỉ còn thấy bóng đen. Thời điểm sunset_glare, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do silhouette_bus; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THPT Nguyễn Thị Minh Khai"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-713A",
@@ -4111,16 +3847,14 @@
       "event": "flooded_sidewalk",
       "decision_window_m": 2,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Lối đi ngập nước khiến người khác né sang phần đường xe. Thời điểm heavy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Lối đi ngập nước khiến người khác né sang phần đường xe. Thời điểm heavy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do flooded_sidewalk; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-714A",
@@ -4142,16 +3876,14 @@
       "event": "headlight_glare_brake",
       "decision_window_m": 4,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Hải Phòng",
-      "school_zone": "FSchool Hải Phòng"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hải Phòng (Thành phố Hải Phòng - Tuyến đường ven đô rộng, lưu lượng xe tải nhẹ và xe máy điện): Ánh đèn pha đối diện chói, ô tô trước phanh vì ổ gà. Thời điểm night, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Ánh đèn pha đối diện chói, ô tô trước phanh vì ổ gà. Thời điểm night, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do headlight_glare_brake; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận diện tình huống bất ngờ và phanh khẩn cấp trong bài học mô phỏng.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hải Phòng",
-    "school_zone": "FSchool Hải Phòng"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-715A",
@@ -4173,16 +3905,14 @@
       "event": "foggy_students",
       "decision_window_m": 3,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Sương mù làm nhóm bạn chỉ hiện ra khi rất gần. Thời điểm foggy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Sương mù làm nhóm bạn chỉ hiện ra khi rất gần. Thời điểm foggy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do foggy_students; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-716A",
@@ -4204,16 +3934,14 @@
       "event": "mud_from_truck",
       "decision_window_m": 9,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-      "school_zone": "FSchool Quy Nhơn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Quy Nhơn (Tỉnh Gia Lai (Bình Định - Gia Lai) - Tuyến đường ven biển gió mạnh, mặt đường thoáng dễ chạy nhanh): Mưa làm bùn đất từ xe ben rơi xuống mặt đường. Thời điểm heavy_rain, mặt đường muddy; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Mưa làm bùn đất từ xe ben rơi xuống mặt đường. Thời điểm heavy_rain, mặt đường muddy; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do mud_from_truck; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Gia Lai (Bình Định - Gia Lai)",
-    "school_zone": "FSchool Quy Nhơn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-717A",
@@ -4235,16 +3963,14 @@
       "event": "raincoat_flap",
       "decision_window_m": 5,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Gió tạt làm áo mưa vướng vào tay lái khi gần ngã tư. Thời điểm windy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Gió tạt làm áo mưa vướng vào tay lái khi gần ngã tư. Thời điểm windy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do raincoat_flap; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-718A",
@@ -4266,16 +3992,14 @@
       "event": "blackout_walker",
       "decision_window_m": 5,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Hậu Giang"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hậu Giang (Thành phố Cần Thơ - Tuyến đường kết nối khu hành chính, giao cắt đường tỉnh lộ): Đường tối mất điện, người đi bộ cầm đèn pin đi sát lề. Thời điểm night, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đường tối mất điện, người đi bộ cầm đèn pin đi sát lề. Thời điểm night, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do blackout_walker; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Hậu Giang"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-719A",
@@ -4297,16 +4021,14 @@
       "event": "rain_noise",
       "decision_window_m": 2,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Mưa làm âm thanh xe đến gần khó nhận biết. Thời điểm heavy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Mưa làm âm thanh xe đến gần khó nhận biết. Thời điểm heavy_rain, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do rain_noise; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-720A",
@@ -4328,16 +4050,14 @@
       "event": "underpass_fog",
       "decision_window_m": 8,
       "group_theme": "Thời tiết và tầm nhìn",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Vị Thanh"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Vị Thanh (Thành phố Cần Thơ - Trục giao thông chính, nhiều phương tiện hỗn hợp giờ cao điểm): Sương mù dưới cầu vượt làm xe trước biến mất từng lúc. Thời điểm foggy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Sương mù dưới cầu vượt làm xe trước biến mất từng lúc. Thời điểm foggy_morning, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do underpass_fog; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Vị Thanh"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-801A",
@@ -4359,16 +4079,14 @@
       "event": "ambulance_behind",
       "decision_window_m": 8,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Nghe còi xe cứu thương từ phía sau trên đường hẹp. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Nghe còi xe cứu thương từ phía sau trên đường hẹp. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do ambulance_behind; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Tấp sát lề bên phải và nhường lối cho xe ưu tiên theo quy định.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-802A",
@@ -4390,16 +4108,14 @@
       "event": "fire_engine_green",
       "decision_window_m": 9,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Hoàng Diệu"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Hoàng Diệu (Thành phố Cần Thơ - Tuyến đường nội thị đông học sinh và phụ huynh dừng đỗ đón con): Xe cứu hỏa đến khi đèn xanh vừa bật. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe cứu hỏa đến khi đèn xanh vừa bật. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do fire_engine_green; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Tấp sát lề bên phải và nhường lối cho xe ưu tiên theo quy định.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Hoàng Diệu"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-803A",
@@ -4421,16 +4137,14 @@
       "event": "blocked_sidewalk",
       "decision_window_m": 2,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Nhóm bạn dừng nói chuyện chiếm hết vỉa hè. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Nhóm bạn dừng nói chuyện chiếm hết vỉa hè. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do blocked_sidewalk; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-804A",
@@ -4452,16 +4166,14 @@
       "event": "do_not_follow_ambulance",
       "decision_window_m": 9,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "FSchool Hòa Lạc"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Hòa Lạc (Thành phố Hà Nội - Khu công nghệ cao Hòa Lạc, đường gom đại lộ, xe buýt đưa đón học sinh): Bạn rủ bám sau xe cứu thương để đi nhanh. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Bạn rủ bám sau xe cứu thương để đi nhanh. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do do_not_follow_ambulance; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "FSchool Hòa Lạc"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-805A",
@@ -4483,16 +4195,14 @@
       "event": "bus_stop_courtesy",
       "decision_window_m": 4,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Xe buýt rời trạm, người xếp hàng còn sát mép đường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe buýt rời trạm, người xếp hàng còn sát mép đường. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_stop_courtesy; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-806A",
@@ -4514,16 +4224,14 @@
       "event": "patient_crossing",
       "decision_window_m": 4,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THPT Phan Đình Phùng"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Phan Đình Phùng (Thành phố Hà Nội - Đường hai chiều có hàng cây lớn, khu vực cổng trường giờ vào học): Người đi bộ đang sang đường dù em đang vội. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người đi bộ đang sang đường dù em đang vội. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do patient_crossing; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THPT Phan Đình Phùng"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-807A",
@@ -4545,16 +4253,14 @@
       "event": "courteous_avoidance",
       "decision_window_m": 6,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Muốn rẽ tránh ô tô đỗ sai, phía sau có xe khác. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Muốn rẽ tránh ô tô đỗ sai, phía sau có xe khác. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do courteous_avoidance; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-808A",
@@ -4576,16 +4282,14 @@
       "event": "police_priority",
       "decision_window_m": 7,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Đà Nẵng",
-      "school_zone": "THPT Phan Châu Trinh"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Phan Châu Trinh (Thành phố Đà Nẵng - Trục đường trung tâm Đà Nẵng, giao cắt nhiều tuyến phố): Xe cảnh sát phát tín hiệu ưu tiên phía sau. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe cảnh sát phát tín hiệu ưu tiên phía sau. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do police_priority; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Tấp sát lề bên phải và nhường lối cho xe ưu tiên theo quy định.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Đà Nẵng",
-    "school_zone": "THPT Phan Châu Trinh"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-809A",
@@ -4607,16 +4311,14 @@
       "event": "bus_alighting_courtesy",
       "decision_window_m": 2,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Xe đưa đón mở cửa, các bạn đang xuống xe. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Xe đưa đón mở cửa, các bạn đang xuống xe. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do bus_alighting_courtesy; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-810A",
@@ -4638,16 +4340,14 @@
       "event": "yield_to_bus_stop",
       "decision_window_m": 6,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Tỉnh Bắc Ninh",
-      "school_zone": "FSchool Bắc Ninh"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Bắc Ninh (Tỉnh Bắc Ninh - Trục đường đô thị kết nối khu công nghiệp, nhiều xe đưa đón và xe tải): Xe buýt bật xi-nhan vào trạm nơi có người chờ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Xe buýt bật xi-nhan vào trạm nơi có người chờ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do yield_to_bus_stop; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Duy trì khoảng trống an toàn để có thời gian phản xạ và quãng phanh.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Bắc Ninh",
-    "school_zone": "FSchool Bắc Ninh"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-811A",
@@ -4669,16 +4369,14 @@
       "event": "narrow_gate_courtesy",
       "decision_window_m": 3,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Người giao hàng đang dắt xe qua cổng hẹp. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Người giao hàng đang dắt xe qua cổng hẹp. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do narrow_gate_courtesy; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-812A",
@@ -4700,16 +4398,14 @@
       "event": "peer_pressure_red",
       "decision_window_m": 4,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Tỉnh Thanh Hóa",
-      "school_zone": "FSchool Thanh Hóa"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Thanh Hóa (Tỉnh Thanh Hóa - Đại lộ mới mở, học sinh đi xe máy điện và xe 50cc qua nút giao): Đèn đỏ nhưng bạn bên cạnh rủ vượt vì đường vắng. Thời điểm night, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Đèn đỏ nhưng bạn bên cạnh rủ vượt vì đường vắng. Thời điểm night, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do peer_pressure_red; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Tỉnh Thanh Hóa",
-    "school_zone": "FSchool Thanh Hóa"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-813A",
@@ -4731,16 +4427,14 @@
       "event": "do_not_pass_yielding_car",
       "decision_window_m": 5,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Long Mỹ"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Long Mỹ (Thành phố Cần Thơ - Khu vực cầu dốc và đường ven kênh rạch, học sinh đi xe đạp/xe đạp điện): Ô tô phía trước đang nhường người qua đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Ô tô phía trước đang nhường người qua đường. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do do_not_pass_yielding_car; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Long Mỹ"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-814A",
@@ -4762,16 +4456,14 @@
       "event": "alley_courtesy",
       "decision_window_m": 4,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Cần Thơ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Cần Thơ (Thành phố Cần Thơ - Khu đô thị Nam Cần Thơ, lưu lượng xe đưa đón học sinh và xe tải lớn): Rẽ vào hẻm có người đang dắt xe đạp ra. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Rẽ vào hẻm có người đang dắt xe đạp ra. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do alley_courtesy; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Bật tín hiệu chỉ báo sớm, kiểm tra gương và nhường luồng đi ưu tiên.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Cần Thơ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-815A",
@@ -4793,16 +4485,14 @@
       "event": "student_crossing_guard",
       "decision_window_m": 2,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THCS Châu Văn Liêm (Vị Tân) (Thành phố Cần Thơ - Tuyến đường liên phường Vị Tân, mặt đường thoáng dễ chủ quan tốc độ): Nhân viên điều tiết yêu cầu chờ để đoàn học sinh sang. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Nhân viên điều tiết yêu cầu chờ để đoàn học sinh sang. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do student_crossing_guard; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Nhận biết thời điểm dừng hẳn trước vạch và không tự ý vượt vùng xung đột.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THCS Châu Văn Liêm (Vị Tân)"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-816A",
@@ -4824,16 +4514,14 @@
       "event": "priority_convoy",
       "decision_window_m": 8,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "FSchool Sóc Trăng"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại FSchool Sóc Trăng (Thành phố Cần Thơ - Trục đường chính nội đô, mật độ xe máy và xe đạp điện cao giờ tan tầm): Đoàn xe ưu tiên tiếp nối nhau đi qua giao lộ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Đoàn xe ưu tiên tiếp nối nhau đi qua giao lộ. Thời điểm afternoon, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do priority_convoy; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Tấp sát lề bên phải và nhường lối cho xe ưu tiên theo quy định.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "FSchool Sóc Trăng"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-817A",
@@ -4855,16 +4543,14 @@
       "event": "dropped_books",
       "decision_window_m": 3,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Hà Nội",
-      "school_zone": "THCS Giảng Võ"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THCS Giảng Võ (Thành phố Hà Nội - Khu tập thể đông dân cư, học sinh đi bộ và đi xe đạp): Bạn làm rơi sách giữa lối đi đông người. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Bạn làm rơi sách giữa lối đi đông người. Thời điểm morning, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do dropped_books; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Hà Nội",
-    "school_zone": "THCS Giảng Võ"
+    "school_zone": "Trường THCS & THPT A"
   },
   {
     "scenario_id": "SCN-818A",
@@ -4886,16 +4572,14 @@
       "event": "elderly_alighting",
       "decision_window_m": 5,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Châu Văn Liêm"
+      "school_zone": "Trường THCS & THPT B"
     },
-    "scenario_setup": "Bối cảnh tại THPT Châu Văn Liêm (Thành phố Cần Thơ - Giao lộ trung tâm thành phố, có đèn tín hiệu và làn rẽ riêng): Người già chuẩn bị xuống xe buýt ở trạm. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT B: Người già chuẩn bị xuống xe buýt ở trạm. Thời điểm afternoon, mặt đường wet; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do elderly_alighting; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Châu Văn Liêm"
+    "school_zone": "Trường THCS & THPT B"
   },
   {
     "scenario_id": "SCN-819A",
@@ -4917,16 +4601,14 @@
       "event": "stroller_sidewalk",
       "decision_window_m": 2,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "TP. Hồ Chí Minh",
-      "school_zone": "THCS Lê Quý Đôn"
+      "school_zone": "Trường THCS & THPT C"
     },
-    "scenario_setup": "Bối cảnh tại THCS Lê Quý Đôn (TP. Hồ Chí Minh - Đường nội đô giờ cao điểm chiều, có mưa bất chợt làm đường trơn): Vỉa hè hẹp có người đẩy xe nôi đi ngược chiều. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT C: Vỉa hè hẹp có người đẩy xe nôi đi ngược chiều. Thời điểm evening, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do stroller_sidewalk; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Chủ động hạ tốc độ, quan sát kỹ và dừng an toàn khi điều kiện không bảo đảm.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "TP. Hồ Chí Minh",
-    "school_zone": "THCS Lê Quý Đôn"
+    "school_zone": "Trường THCS & THPT C"
   },
   {
     "scenario_id": "SCN-820A",
@@ -4948,15 +4630,13 @@
       "event": "fire_engine_traffic",
       "decision_window_m": 7,
       "group_theme": "Văn hóa giao thông và xe ưu tiên",
-      "city": "Thành phố Cần Thơ",
-      "school_zone": "THPT Bùi Hữu Nghĩa"
+      "school_zone": "Trường THCS & THPT A"
     },
-    "scenario_setup": "Bối cảnh tại THPT Bùi Hữu Nghĩa (Thành phố Cần Thơ - Đoạn đường gần nút giao lớn và bến xe buýt nội đô): Xe cứu hỏa bị kẹt sau xe tải và dòng xe nhỏ. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
+    "scenario_setup": "Bối cảnh tại Trường THCS & THPT A: Xe cứu hỏa bị kẹt sau xe tải và dòng xe nhỏ. Thời điểm rush_hour, mặt đường dry; học sinh cần xử lý an toàn đúng quy tắc giao thông.",
     "pedagogical_risk": "Rủi ro xung đột tại hiện trường do fire_engine_traffic; cần xử lý an toàn thay vì cố duy trì tốc độ.",
     "learning_objective": "Tấp sát lề bên phải và nhường lối cho xe ưu tiên theo quy định.",
     "content_review_status": "NEEDS_CONTENT_REVIEW",
     "generated_at": "2026-11-14T00:00:00+07:00",
-    "city": "Thành phố Cần Thơ",
-    "school_zone": "THPT Bùi Hữu Nghĩa"
+    "school_zone": "Trường THCS & THPT A"
   }
 ]

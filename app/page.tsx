@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { createSession, loadScenario, sendEvents, submitAttempt, type SessionInfo } from '@/components/api';
+import { clearLocalParticipantSession, createSession, loadScenario, sendEvents, submitAttempt, type SessionInfo } from '@/components/api';
 import World3D, { type CameraMode, type VehicleType } from '@/components/world-3d';
 import { DEMO_PROVINCES } from '@/game/scenarios';
 import type { AttemptResult, GameAction, Phase, Scenario } from '@/game/types';
@@ -23,8 +23,8 @@ const blank: ParticipantInput = {
   full_name: '',
   class_name: '',
   school_name: '',
-  province_city: 'Thành phố Cần Thơ',
-  privacy_notice_accepted: true,
+  province_city: 'TP Cần Thơ',
+  privacy_notice_accepted: false,
   privacy_notice_version: '2026-01',
 };
 
@@ -126,7 +126,20 @@ export default function HomePage() {
     [form.full_name, form.class_name, form.school_name, form.province_city].every((v) => v.trim().length > 0) &&
     form.privacy_notice_accepted;
 
-  function reset() {
+  async function reset() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await clearLocalParticipantSession();
+    } catch {
+      setError('Chưa thể kết thúc phiên. Vui lòng thử lại trước khi đổi người chơi.');
+      setBusy(false);
+      return;
+    }
+    setDemoMode(false);
+    setDemoCount(0);
+    setShowTutorial(false);
+    setBusy(false);
     setScreen('welcome');
     setForm({ ...blank });
     setSession(null);
@@ -164,7 +177,7 @@ export default function HomePage() {
     setBusy(true);
     setError('');
     try {
-      const first = await loadScenario('PRE');
+      const first = await loadScenario('PRE', true);
       setScenario(first);
       setPhase('PRE');
       setSelected('');
@@ -187,11 +200,10 @@ export default function HomePage() {
   async function submit() {
     if (!scenario || !selected || busy) return;
     if (demoMode) {
-      const safe = selected === scenario.options[0]?.id;
       const feedback: AttemptResult = {
-        rule_score: safe ? 100 : 40,
-        outcome: safe ? 'SAFE' : 'HAZARDOUS',
-        feedback: safe ? 'Đúng! Em đã quan sát và xử lý an toàn.' : 'Chưa an toàn. Hãy nhìn kỹ dấu hiệu rủi ro rồi thử cảnh khác.',
+        rule_score: 0,
+        outcome: 'DEMO_UNSCORED',
+        feedback: 'Đây là lượt làm quen điều khiển, không chấm điểm và không lưu kết quả nghiên cứu. Hãy quan sát dấu hiệu rủi ro; bắt đầu hành trình học để nhận đánh giá từ máy chủ.',
       };
       setResult(feedback);
       setResults(prev => ({ ...prev, [phase]: feedback }));
@@ -201,9 +213,9 @@ export default function HomePage() {
     setBusy(true);
     setError('');
     try {
-      const durationMs = Math.min(300_000, Math.max(1200, Math.round(performance.now() - started.current)));
-      actions.current = [selected === scenario.options[0]?.id ? 'BRAKE' : 'SIGNAL'];
-      await sendEvents(session, scenario.scenario_id, actions.current, selected);
+      const durationMs = Math.min(300_000, Math.max(0, Math.round(performance.now() - started.current)));
+      // Do not infer driving actions from the position of an answer option.
+      await sendEvents(session, scenario.scenario_id, [], selected, durationMs);
       const nextResult = await submitAttempt(session, phase, scenario, selected, durationMs);
       setResult(nextResult);
       setResults((prev) => ({ ...prev, [phase]: nextResult }));
@@ -224,7 +236,7 @@ export default function HomePage() {
       }
       setBusy(true);
       try {
-        const nextDemo = await loadScenario('PRE');
+        const nextDemo = await loadScenario('PRE', true);
         setScenario(nextDemo);
         setSelected('');
         setResult(null);
@@ -803,21 +815,20 @@ export default function HomePage() {
                       vehicleType={vehicleType}
                       isDriving={!result}
                       weather={phase === 'POST' || difficultyLevel === 'THU_THACH' ? 'rain' : 'sunny'}
-                      hazardActive={true}
                       sceneKind={scenario.npc_element}
                       sceneEvent={scenario.trigger_event}
                       selectedDecision={selectedDecision}
+                      visualSpec={scenario.visual_spec}
                     />
                   </div>
 
                   <section className="question-card">
                     <span className="eyebrow">TÌNH HUỐNG GIAO THÔNG THỰC TẾ</span>
                     <h2>{scenario.title_vi}</h2>
-                    <p style={{ fontWeight: 700, color: '#334860' }}>{scenario.prompt_vi}</p>
+                    <div dangerouslySetInnerHTML={{ __html: scenario.prompt_vi }} />
 
                     <div className="scenario-cue">
-                      <span>◎ DẤU HIỆU RỦI RO CẦN QUAN SÁT</span>
-                      <p>{scenario.hazard_cue_vi}</p>
+                      <div dangerouslySetInnerHTML={{ __html: scenario.hazard_cue_vi }} />
                     </div>
 
                     <div style={{ display: 'grid', gap: '8px', margin: '12px 0' }}>
@@ -831,7 +842,7 @@ export default function HomePage() {
                           style={{ width: '100%', textAlign: 'left', cursor: 'pointer', background: 'transparent' }}
                         >
                           <span className="option-letter">{index + 1}</span>
-                          <span>{option.label_vi}</span>
+                          <span dangerouslySetInnerHTML={{ __html: option.label_vi }} />
                         </button>
                       ))}
                     </div>
@@ -841,10 +852,13 @@ export default function HomePage() {
                         <strong>
                           {phase === 'TRAINING' ? 'Phân tích & Hướng dẫn kỹ năng an toàn' : 'Đã ghi nhận quyết định của em'}
                         </strong>
-                        <p>
-                          {result.feedback ||
-                            'Quan sát kỹ người đi bộ, giữ khoảng cách cẩn thận với điểm mù xe lớn và luôn phanh an toàn trước vạch dừng.'}
-                        </p>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              result.feedback ||
+                              'Quan sát kỹ người đi bộ, giữ khoảng cách cẩn thận với điểm mù xe lớn và luôn phanh an toàn trước vạch dừng.',
+                          }}
+                        />
                         <button className="primary" onClick={next} disabled={busy}>
                           {busy
                             ? 'Đang mở chặng…'

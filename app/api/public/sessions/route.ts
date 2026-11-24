@@ -1,10 +1,16 @@
 import { randomUUID } from 'node:crypto';
-import { issueParticipantToken, readParticipantFromRequest } from '../../../../lib/auth/session.ts';
+import { clearParticipantCookie, issueParticipantToken, readParticipantFromRequest } from '../../../../lib/auth/session.ts';
 import { getStorageAdapter } from '../../../../lib/google/storage.ts';
 import { errorResponse, json, readJson } from '../../../../lib/api/response.ts';
 import { deviceClass } from '../../../../lib/api/services.ts';
 import { DomainError, noUnexpectedKeys, object, uuid } from '../../../../lib/validation/input.ts';
 import type { SessionRecord } from '../../../../lib/types.ts';
+
+export async function DELETE() {
+  return json({ cleared: true }, {
+    headers: { 'set-cookie': clearParticipantCookie(), 'cache-control': 'no-store' },
+  });
+}
 
 export async function POST(req: Request) {
   try {

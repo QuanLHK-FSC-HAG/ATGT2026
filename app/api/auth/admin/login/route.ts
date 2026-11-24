@@ -3,6 +3,8 @@ import { verifyGoogleIdToken } from '../../../../../lib/auth/google.ts';
 import { errorResponse, json } from '../../../../../lib/api/response.ts';
 import { DomainError, object } from '../../../../../lib/validation/input.ts';
 
+import { externalProvidersAreDisabled } from '../../../../../lib/runtime/local-acceptance.ts';
+
 const ACCESS_TOKEN_INFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo';
 
 interface GoogleUserInfo {
@@ -24,6 +26,10 @@ export async function POST(req: Request) {
     const idToken = typeof input.id_token === 'string' ? input.id_token.trim() : '';
     const accessToken = typeof input.access_token === 'string' ? input.access_token.trim() : '';
     const directEmail = typeof input.email === 'string' ? input.email.trim().toLowerCase() : '';
+
+    if (externalProvidersAreDisabled() && (idToken || accessToken)) {
+      throw new DomainError(403, 'EXTERNAL_AUTH_DISABLED', 'Google authentication is disabled during local acceptance.');
+    }
 
     let verifiedEmail = '';
     let adminName = '';

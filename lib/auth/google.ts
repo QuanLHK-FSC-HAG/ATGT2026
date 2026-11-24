@@ -1,3 +1,4 @@
+import { externalProvidersAreDisabled } from '../runtime/local-acceptance.ts';
 import { createPublicKey, verify as verifySignature } from 'node:crypto';
 import { DomainError } from '../validation/input.ts';
 import { getAdminAllowlist, isHostedEnvironment } from './session.ts';
@@ -57,6 +58,7 @@ export interface GoogleAuthConfig {
  * sau đó tới biến public NEXT_PUBLIC_GOOGLE_CLIENT_ID.
  */
 export function getGoogleClientId(): string {
+  if (externalProvidersAreDisabled()) return '';
   return (
     process.env.GOOGLE_OAUTH_CLIENT_ID ||
     process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||

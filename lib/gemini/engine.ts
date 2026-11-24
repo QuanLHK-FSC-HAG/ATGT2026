@@ -1,3 +1,4 @@
+import { externalProvidersAreDisabled } from '../runtime/local-acceptance.ts';
 import { createHash, randomUUID } from 'node:crypto';
 import { getScenario } from '../rules/engine.ts';
 import { DomainError, noUnexpectedKeys, object } from '../validation/input.ts';
@@ -93,6 +94,7 @@ export async function generatePedagogicalFeedback(
   const { sanitized, scenario } = sanitizeAIInput(rawInput);
   const fallback = buildDeterministicFeedback(sanitized, scenario, options?.pseudonymousSeed);
 
+  if (externalProvidersAreDisabled()) return fallback;
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   const model = process.env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash';
   if (!apiKey || !options?.fetchImpl && process.env.GEMINI_LIVE_ENABLED !== 'true') {

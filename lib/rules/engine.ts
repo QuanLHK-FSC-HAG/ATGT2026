@@ -6,6 +6,7 @@ import type {
   AssessmentRecord,
   PublicScenarioView,
   ScenarioDefinition,
+  ScenarioVisualSpec,
   ScenarioResultRecord,
   StudyPhase,
   StudyRunRecord,
@@ -32,9 +33,7 @@ type SeedRow = {
     surface_state?: string;
     group_theme?: string;
     school_zone?: string;
-    city?: string;
   };
-  city?: string;
   scenario_setup?: string;
   pedagogical_risk?: string;
   learning_objective?: string;
@@ -66,6 +65,14 @@ const LEGACY_SCENARIOS: ScenarioDefinition[] = [
       standard_explanation_vi: 'Tài xế xe tải không thể quan sát toàn bộ phần sườn phải phía dưới qua gương. Điền vào khoảng trống khi xe đang chuyển hướng là nguyên nhân hàng đầu dẫn đến tai nạn cuốn vào gầm.',
       suggested_practice_vi: 'Luyện tập thói quen giảm tốc từ xa, quan sát đèn báo rẽ và giữ khoảng cách tối thiểu 3m phía sau xe lớn.',
     },
+    visual_spec: buildScenarioVisualSpec({
+      title_vi: 'Điểm mù xe tải chuyển hướng phải gần cổng trường',
+      npc_element: 'TRUCK_HEAVY',
+      trigger_event: 'blind_spot_right_turn',
+      correct_action: 'SLOW_AND_STOP',
+      option_ids: ['opt_brake_wait', 'opt_speed_pass', 'opt_honk_straight'],
+      safe_decisions: ['opt_brake_wait'],
+    }),
   },
   {
     scenario_id: 'school-gate-sudden-door',
@@ -92,6 +99,14 @@ const LEGACY_SCENARIOS: ScenarioDefinition[] = [
       standard_explanation_vi: 'Hiện tượng dooring (mở cửa xe bất cẩn) gây chấn thương nghiêm trọng. Cần chủ động giảm tốc và phòng ngừa khi thấy xe đỗ bên đường.',
       suggested_practice_vi: 'Quan sát tín hiệu đèn, chuyển động của hành khách trong xe từ xa để giảm tốc độ trước.',
     },
+    visual_spec: buildScenarioVisualSpec({
+      title_vi: 'Mở cửa xe ô tô đột ngột trước cổng trường',
+      npc_element: 'FAMILY_CAR',
+      trigger_event: 'door_opening',
+      correct_action: 'SLOW_AND_STOP',
+      option_ids: ['opt_keep_distance', 'opt_ride_close', 'opt_swerve_left_blind'],
+      safe_decisions: ['opt_keep_distance'],
+    }),
   },
   {
     scenario_id: 'intersection-uncontrolled-yield',
@@ -118,6 +133,13 @@ const LEGACY_SCENARIOS: ScenarioDefinition[] = [
       standard_explanation_vi: 'Giao lộ khuất tầm nhìn đòi hỏi phương tiện phải kiểm soát tốc độ dừng được an toàn. Giành đường tại điểm mù là hành vi đặc biệt nguy hiểm.',
       suggested_practice_vi: 'Tập kỹ năng rà phanh trước giao lộ và quét mắt theo thứ tự: phải - trái - phải.',
     },
+    visual_spec: buildScenarioVisualSpec({
+      title_vi: 'Giao cắt ngõ hẹp không có biển báo ưu tiên',
+      trigger_event: 'uncontrolled_intersection_yield',
+      correct_action: 'SLOW_AND_STOP',
+      option_ids: ['opt_slow_yield_right', 'opt_honk_rush', 'opt_look_only_left'],
+      safe_decisions: ['opt_slow_yield_right'],
+    }),
   },
 ];
 
@@ -154,6 +176,115 @@ function errorGroupFor(row: SeedRow): ScenarioDefinition['rubric']['error_group'
   return 'SCHOOL_GATE';
 }
 
+function includesAny(value: string, terms: string[]): boolean {
+  return terms.some(term => value.includes(term));
+}
+
+export function buildScenarioVisualSpec(input: {
+  title_vi: string;
+  npc_element?: string;
+  trigger_event?: string;
+  correct_action?: string;
+  time_of_day?: string;
+  surface_state?: string;
+  option_ids: string[];
+  safe_decisions: string[];
+}): ScenarioVisualSpec {
+  const raw = `${input.title_vi} ${input.npc_element || ''} ${input.trigger_event || ''}`.toLowerCase();
+  const event = (input.trigger_event || '').toLowerCase();
+
+  let scene_type: ScenarioVisualSpec['scene_type'] = 'SCHOOL_GATE';
+  if (includesAny(raw, ['rail', 'đường sắt', 'thanh chắn'])) scene_type = 'RAILWAY_CROSSING';
+  else if (includesAny(raw, ['roundabout', 'vòng xuyến'])) scene_type = 'ROUNDABOUT';
+  else if (includesAny(raw, ['door', 'mở cửa'])) scene_type = 'OPENING_DOOR';
+  else if (includesAny(raw, ['blind', 'điểm mù', 'truck', 'xe tải'])) scene_type = 'LARGE_VEHICLE_BLIND_SPOT';
+  else if (includesAny(raw, ['bus_stop', 'trạm xe', 'điểm dừng', 'xe buýt'])) scene_type = 'BUS_STOP';
+  else if (includesAny(raw, ['emergency', 'priority', 'ưu tiên', 'cảnh sát', 'police'])) scene_type = 'EMERGENCY_VEHICLE';
+  else if (includesAny(raw, ['overtak', 'vượt xe', 'vượt bên'])) scene_type = 'OVERTAKING';
+  else if (includesAny(raw, ['merge', 'lane_change', 'chuyển làn', 'nhập làn'])) scene_type = 'MERGE_LANE_CHANGE';
+  else if (includesAny(raw, ['fog', 'sương', 'low_visibility', 'chói', 'khuất tầm nhìn'])) scene_type = 'LOW_VISIBILITY';
+  else if (includesAny(raw, ['rain', 'wet', 'mưa', 'trơn', 'puddle', 'mud'])) scene_type = 'SLIPPERY_ROAD';
+  else if (includesAny(raw, ['construction', 'obstacle', 'chướng ngại', 'công trình', 'hàng rơi', 'loose_cargo'])) scene_type = 'OBSTACLE_CONSTRUCTION';
+  else if (includesAny(raw, ['narrow', 'ngõ hẹp', 'đường hẹp', 'cổng hẹp'])) scene_type = 'NARROW_ROAD';
+  else if (includesAny(raw, ['pedestrian', 'crosswalk', 'qua đường', 'người đi bộ', 'trẻ em'])) scene_type = 'PEDESTRIAN_CROSSING';
+  else if (includesAny(raw, ['light', 'signal', 'đèn', 'biển', 'giao lộ', 'ngã tư', 'yield'])) scene_type = 'INTERSECTION_SIGNAL';
+
+  let road_layout: ScenarioVisualSpec['road_layout'] = 'STRAIGHT';
+  if (scene_type === 'ROUNDABOUT') road_layout = 'ROUNDABOUT';
+  else if (scene_type === 'RAILWAY_CROSSING') road_layout = 'RAIL_CROSSING';
+  else if (scene_type === 'NARROW_ROAD') road_layout = 'NARROW_ROAD';
+  else if (includesAny(raw, ['ngã ba', 't_intersection'])) road_layout = 'T_INTERSECTION';
+  else if (scene_type === 'INTERSECTION_SIGNAL' || includesAny(raw, ['ngã tư', 'intersection', 'crosswalk'])) road_layout = 'CROSS_INTERSECTION';
+
+  const hazards = new Set<ScenarioVisualSpec['hazards'][number]>();
+  if (scene_type === 'INTERSECTION_SIGNAL') hazards.add('SIGNAL_CONFLICT');
+  if (scene_type === 'PEDESTRIAN_CROSSING') hazards.add('CROSSING_PEDESTRIAN');
+  if (scene_type === 'OPENING_DOOR') hazards.add('OPENING_DOOR');
+  if (scene_type === 'LARGE_VEHICLE_BLIND_SPOT') hazards.add('BLIND_SPOT');
+  if (scene_type === 'LOW_VISIBILITY') hazards.add('REDUCED_VISIBILITY');
+  if (scene_type === 'SLIPPERY_ROAD') hazards.add('LOW_GRIP');
+  if (scene_type === 'OBSTACLE_CONSTRUCTION') hazards.add('BLOCKED_PATH');
+  if (scene_type === 'RAILWAY_CROSSING') hazards.add('RAIL_APPROACH');
+  if (scene_type === 'EMERGENCY_VEHICLE') hazards.add('PRIORITY_VEHICLE');
+  if (hazards.size === 0) hazards.add('VEHICLE_CONFLICT');
+
+  const actors = new Set<ScenarioVisualSpec['actors'][number]>(['STUDENT']);
+  if (scene_type === 'PEDESTRIAN_CROSSING' || includesAny(raw, ['pedestrian', 'người đi bộ'])) actors.add('PEDESTRIAN');
+  if (includesAny(raw, ['car', 'family_car', 'ô tô', 'xe con', 'door'])) actors.add('CAR');
+  if (includesAny(raw, ['bus', 'xe buýt'])) actors.add('BUS');
+  if (includesAny(raw, ['truck', 'xe tải'])) actors.add('TRUCK');
+  if (includesAny(raw, ['officer', 'cảnh sát'])) actors.add('TRAFFIC_OFFICER');
+  if (scene_type === 'RAILWAY_CROSSING') actors.add('TRAIN');
+  if (scene_type === 'EMERGENCY_VEHICLE' && !actors.has('TRAFFIC_OFFICER')) actors.add('EMERGENCY_VEHICLE');
+
+  let traffic_control: ScenarioVisualSpec['traffic_control'] = 'NONE';
+  if (includesAny(event, ['pedestrian_red'])) traffic_control = 'PEDESTRIAN_RED';
+  else if (includesAny(event, ['pedestrian_green'])) traffic_control = 'PEDESTRIAN_GREEN';
+  else if (includesAny(event, ['yellow'])) traffic_control = 'YELLOW';
+  else if (includesAny(event, ['red', 'stop_light'])) traffic_control = 'RED';
+  else if (includesAny(event, ['green'])) traffic_control = 'GREEN';
+  else if (includesAny(event, ['yield'])) traffic_control = 'YIELD_SIGN';
+  else if (includesAny(event, ['stop_sign'])) traffic_control = 'STOP_SIGN';
+  else if (includesAny(event, ['officer_stop'])) traffic_control = 'OFFICER_STOP';
+  else if (scene_type === 'RAILWAY_CROSSING') traffic_control = 'RAIL_BARRIER';
+
+  const surfaceRaw = (input.surface_state || '').toLowerCase();
+  const surface: ScenarioVisualSpec['surface'] = includesAny(surfaceRaw, ['mud', 'bùn'])
+    ? 'MUDDY'
+    : includesAny(surfaceRaw, ['gravel', 'sỏi']) ? 'GRAVEL'
+      : includesAny(surfaceRaw, ['wet', 'ướt']) ? 'WET' : 'DRY';
+  const weather: ScenarioVisualSpec['weather'] = includesAny(raw, ['fog', 'sương'])
+    ? 'FOG'
+    : includesAny(raw, ['rain', 'mưa']) || surface === 'WET' ? 'RAIN' : 'SUNNY';
+  const timeRaw = (input.time_of_day || '').toLowerCase();
+  const time_of_day: ScenarioVisualSpec['time_of_day'] = includesAny(timeRaw, ['night', 'đêm'])
+    ? 'NIGHT'
+    : includesAny(timeRaw, ['evening', 'chiều tối']) ? 'EVENING'
+      : includesAny(timeRaw, ['afternoon', 'chiều']) ? 'AFTERNOON' : 'MORNING';
+
+  const safeAction = (input.correct_action || '').toUpperCase();
+  const safeEffect: ScenarioVisualSpec['decision_effects'][string] = safeAction.includes('SIGNAL')
+    ? { action: 'SIGNAL', outcome: 'SAFE_CLEARANCE' }
+    : safeAction.includes('YIELD') ? { action: 'YIELD', outcome: 'SAFE_CLEARANCE' }
+      : safeAction.includes('STOP') ? { action: 'STOP', outcome: 'CONTROLLED_STOP' }
+        : { action: 'BRAKE', outcome: 'SAFE_CLEARANCE' };
+  const decision_effects = Object.fromEntries(input.option_ids.map((id, index) => [
+    id,
+    input.safe_decisions.includes(id)
+      ? safeEffect
+      : index === 1
+        ? { action: 'ACCELERATE', outcome: 'CONFLICT' }
+        : { action: 'SWERVE', outcome: 'NEAR_MISS' },
+  ])) as ScenarioVisualSpec['decision_effects'];
+
+  const camera: ScenarioVisualSpec['camera'] = road_layout === 'CROSS_INTERSECTION' || road_layout === 'T_INTERSECTION'
+    ? 'INTERSECTION'
+    : scene_type === 'PEDESTRIAN_CROSSING' || scene_type === 'OPENING_DOOR' ? 'FOLLOW_VEHICLE'
+      : scene_type === 'ROUNDABOUT' || scene_type === 'RAILWAY_CROSSING' ? 'TOP_DOWN' : 'CINEMATIC_OVERVIEW';
+
+  return { scene_type, road_layout, hazards: [...hazards], actors: [...actors], traffic_control, weather, surface, time_of_day, camera, decision_effects };
+}
+
 function generateOptionsAndRubric(row: SeedRow): {
   options: { id: string; label_vi: string }[];
   safe_decisions: string[];
@@ -164,30 +295,30 @@ function generateOptionsAndRubric(row: SeedRow): {
   const event = (row.trigger_condition?.event || row.npc_element || '').toLowerCase();
   const title = (row.scenario_title || '').toLowerCase();
 
-  let safeLabel = 'Giảm tốc độ, quan sát kỹ hai bên và nhường đường an toàn';
-  let rushLabel = 'Tăng tốc lách qua hẹp để không bị chậm giờ, bỏ qua quan sát';
-  let ignoreLabel = 'Bấm còi to/đánh lái gấp rồi tiếp tục di chuyển mà không rà phanh';
+  let safeLabel = '<strong>🛑 Giảm tốc độ</strong>, quan sát kỹ hai bên và nhường đường an toàn';
+  let rushLabel = '<strong>⚡ Tăng tốc</strong> lách qua khe hẹp để không bị chậm giờ';
+  let ignoreLabel = '<strong>🔔 Bấm còi to</strong> và tiếp tục di chuyển mà không rà phanh';
 
   if (action === 'STOP' || event.includes('red') || title.includes('đèn đỏ') || title.includes('dừng')) {
-    safeLabel = 'Rà phanh chủ động, dừng hẳn trước vạch và kiên nhẫn chờ tín hiệu an toàn';
-    rushLabel = 'Tăng ga rồ máy cố phóng qua vạch trước khi các phương tiện vuông góc di chuyển';
-    ignoreLabel = 'Lách qua khe hẹp giữa các xe đang dừng để vượt qua giao lộ ngay';
+    safeLabel = '<strong>🛑 Rà phanh chủ động</strong>, dừng hẳn trước vạch và chờ tín hiệu an toàn';
+    rushLabel = '<strong>⚡ Tăng ga rồ máy</strong> cố phóng qua vạch trước khi đèn đỏ bật lâu';
+    ignoreLabel = '<strong>🚲 Lách qua khe hẹp</strong> giữa các xe đang dừng để vượt qua ngay';
   } else if (action === 'SLOW_AND_STOP' || event.includes('yellow') || title.includes('đèn vàng')) {
-    safeLabel = 'Chủ động giảm tốc độ, rà phanh đều tay và dừng an toàn trước vạch kẻ đường';
-    rushLabel = 'Tăng tốc đột ngột vượt qua vạch dừng khi đèn vừa chuyển màu';
-    ignoreLabel = 'Giữ nguyên tốc độ, bấm còi báo hiệu và vượt qua giao lộ';
+    safeLabel = '<strong>🛑 Chủ động giảm tốc</strong>, rà phanh đều tay và dừng an toàn trước vạch';
+    rushLabel = '<strong>⚡ Tăng tốc đột ngột</strong> vượt qua vạch dừng khi đèn vừa chuyển vàng';
+    ignoreLabel = '<strong>🔔 Giữ nguyên tốc độ</strong>, bấm còi báo hiệu và cố vượt qua giao lộ';
   } else if (event.includes('blind_spot') || title.includes('điểm mù') || title.includes('xe tải') || title.includes('xe buýt')) {
-    safeLabel = 'Giảm tốc, rà phanh giữ khoảng cách xa phía sau, tuyệt đối không đi vào vùng điểm mù';
-    rushLabel = 'Tăng tốc lách vào khoảng trống hẹp bên phải khi xe lớn đang rẽ';
-    ignoreLabel = 'Bấm còi liên tục rồi vượt song song ngay sát sườn xe lớn';
+    safeLabel = '<strong>🛑 Giảm tốc, rà phanh</strong> giữ khoảng cách xa, tránh tuyệt đối vùng điểm mù';
+    rushLabel = '<strong>⚡ Tăng tốc lách vào</strong> khoảng trống hẹp bên phải khi xe lớn đang rẽ';
+    ignoreLabel = '<strong>🔔 Bấm còi liên tục</strong> rồi vượt song song ngay sát sườn xe lớn';
   } else if (event.includes('door') || title.includes('mở cửa')) {
-    safeLabel = 'Giảm tốc độ, mở rộng khoảng cách an toàn >1m với hàng xe đang đỗ và chuẩn bị phanh';
-    rushLabel = 'Áp sát sườn ô tô để vượt nhanh trước khi cửa xe kịp mở rộng thêm';
-    ignoreLabel = 'Đánh lái gấp sang làn bên trái mà không quay đầu quan sát phía sau';
+    safeLabel = '<strong>🛑 Giảm tốc độ</strong>, mở rộng khoảng cách an toàn >1m với hàng xe đang đỗ';
+    rushLabel = '<strong>⚡ Áp sát sườn ô tô</strong> để vượt nhanh trước khi cửa xe kịp mở rộng thêm';
+    ignoreLabel = '<strong>🚲 Đánh lái gấp</strong> sang làn bên trái mà không quay đầu quan sát';
   } else if (event.includes('rain') || event.includes('wet') || title.includes('mưa') || title.includes('trơn')) {
-    safeLabel = 'Chủ động phanh sớm bằng cả hai phanh, hạ tốc độ và giữ khoảng cách gấp đôi bình thường';
-    rushLabel = 'Duy trì tốc độ cao rồi phanh gấp sát vạch dừng làm xe dễ bị trượt ngã';
-    ignoreLabel = 'Đánh võng tránh vũng nước mà không bật tín hiệu xin đường';
+    safeLabel = '<strong>🛑 Phanh sớm bằng cả hai phanh</strong>, hạ tốc độ và giữ khoảng cách gấp đôi';
+    rushLabel = '<strong>⚡ Duy trì tốc độ cao</strong> rồi phanh gấp sát vạch làm xe dễ bị trượt ngã';
+    ignoreLabel = '<strong>🚲 Đánh võng tránh vũng nước</strong> mà không bật tín hiệu xin đường';
   }
 
   return {
@@ -202,14 +333,54 @@ function generateOptionsAndRubric(row: SeedRow): {
   };
 }
 
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>\"']/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '\"': '&quot;',
+    "'": '&#39;',
+  })[character] || character);
+}
+
+function anonymizedSchoolName(value: string): string {
+  const compact = value.trim().replace(/\s*\([^)]*\)\s*$/, '');
+  const match = compact.match(/^Trường\s+(?:THCS\s*&\s*THPT\s+)?([ABC])$/i);
+  return match ? `Trường THCS & THPT ${match[1].toUpperCase()}` : compact;
+}
+
 function convertSeedRow(row: SeedRow): ScenarioDefinition {
   const objective = row.learning_objective || 'Quan sát, giảm tốc và xử lý an toàn theo tình huống.';
   const risk = row.pedagogical_risk || 'Rủi ro xung đột tại hiện trường nếu tiếp tục di chuyển.';
   const event = row.trigger_condition?.event || row.npc_element || 'tình huống giao thông';
-  const zone = row.trigger_condition?.school_zone || row.target_grade || 'khu vực cổng trường';
-  const city = row.trigger_condition?.city || row.city || 'địa phương';
+  const zone = anonymizedSchoolName(row.trigger_condition?.school_zone || row.target_grade || 'khu vực cổng trường');
 
   const { options, safe_decisions, critical_hazard_decisions } = generateOptionsAndRubric(row);
+
+  // Only trusted, generated tags are emitted. Every seed value is encoded first.
+  const safeZone = escapeHtml(zone);
+  const safeTitle = escapeHtml(row.scenario_title);
+  const safeRisk = escapeHtml(risk);
+  const safeSkillGroup = escapeHtml(row.skill_group || 'An toàn cơ bản');
+  const safeLegalReference = escapeHtml(
+    row.legal_reference && row.legal_reference !== 'NEEDS_LEGAL_REVIEW'
+      ? row.legal_reference
+      : 'Nội dung cần hội đồng chuyên môn/pháp lý rà soát trước khi sử dụng chính thức',
+  );
+
+  const richPrompt = `
+    <div class="scenario-context-tag">📍 ${safeZone}</div>
+    <div class="scenario-rich-prompt">
+      Em đang di chuyển tại <strong>${safeZone}</strong>.
+      Hiện trường ghi nhận: <mark>${safeTitle}</mark>.
+    </div>
+  `;
+
+  const richHazard = `
+    <span class="hazard-badge">⚠️ HIỂM HỌA</span>
+    <strong>${safeRisk}</strong>.
+    <br/><small>Nhóm kỹ năng: ${safeSkillGroup}</small>
+  `;
 
   return {
     scenario_id: row.scenario_id,
@@ -219,8 +390,8 @@ function convertSeedRow(row: SeedRow): ScenarioDefinition {
     vehicle_group: vehicleFor(row),
     difficulty: difficultyFor(row),
     approved: true,
-    prompt_vi: `${row.scenario_setup || `Bối cảnh tại ${zone} (${city}): ${row.scenario_title}.`}`.slice(0, 600),
-    hazard_cue_vi: `${risk} Nhóm kỹ năng: ${row.skill_group || 'Kỹ năng giao thông'}.`.slice(0, 400),
+    prompt_vi: richPrompt,
+    hazard_cue_vi: richHazard,
     options,
     rubric: {
       safe_decisions,
@@ -228,17 +399,35 @@ function convertSeedRow(row: SeedRow): ScenarioDefinition {
       critical_hazard_decisions,
       target_reaction_ms: [400, 2400],
       error_group: errorGroupFor(row),
-      safety_principle_vi: objective.slice(0, 300),
-      standard_explanation_vi: `${risk} Tham chiếu nội dung: ${row.legal_reference || 'Quy tắc an toàn giao thông đường bộ'}. Chờ chuyên gia hội đồng duyệt chính thức.`.slice(0, 500),
-      suggested_practice_vi: `Luyện tập tại ${zone}: quan sát sớm tín hiệu "${event}", chủ động giảm tốc và giữ khoảng cách an toàn trong ${row.trigger_condition?.dist ?? 7}m.`.slice(0, 400),
+      safety_principle_vi: objective,
+      standard_explanation_vi: `
+        <div class="legal-info">
+          <strong>Lý do an toàn:</strong> ${safeRisk}
+          <br/>
+          <span class="legal-ref-tag">⚖️ Trạng thái tham chiếu</span>
+          <em>${safeLegalReference}</em>.
+        </div>
+      `,
+      suggested_practice_vi: `Luyện tập tại ${zone}: quan sát sớm tín hiệu "${event}", chủ động giảm tốc và giữ khoảng cách an toàn.`,
     },
     npc_element: row.npc_element,
     trigger_event: row.trigger_condition?.event,
     correct_action: row.correct_action,
     target_grade: row.target_grade,
     skill_group: row.skill_group,
+    visual_spec: buildScenarioVisualSpec({
+      title_vi: row.scenario_title,
+      npc_element: row.npc_element,
+      trigger_event: row.trigger_condition?.event,
+      correct_action: row.correct_action,
+      time_of_day: row.trigger_condition?.time_of_day,
+      surface_state: row.trigger_condition?.surface_state,
+      option_ids: options.map(option => option.id),
+      safe_decisions,
+    }),
   };
 }
+
 
 export function loadSeedScenarios(): ScenarioDefinition[] {
   try {
@@ -276,6 +465,7 @@ export function toPublicScenarioView(def: ScenarioDefinition): PublicScenarioVie
     correct_action: def.correct_action,
     target_grade: def.target_grade,
     skill_group: def.skill_group,
+    visual_spec: def.visual_spec,
   };
 }
 
