@@ -421,12 +421,10 @@ export default function HomePage() {
               <span className="eyebrow">
                 <span className="live-dot" /> KHÔNG GIAN 3D GIAO THÔNG HỌC ĐƯỜNG
               </span>
-              <h1>
-                Vững tay lái.
-                <br />
-                <em>An toàn</em>
-                <br />
-                đến trường.
+              <h1 className="hero-slogan">
+                <span className="hero-slogan-blue">Vững tay lái.</span>{' '}
+                <span className="hero-slogan-orange">An toàn</span>{' '}
+                <span className="hero-slogan-green">đến trường.</span>
               </h1>
               <p className="hero-copy">
                 Khám phá mô phỏng 3D trước cổng trường học Việt Nam. Rèn luyện phản xạ dừng trước vạch đi bộ, quan sát đèn tín hiệu và tránh xa vùng điểm mù xe buýt.

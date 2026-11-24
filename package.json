@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
     "dev:acceptance": "node scripts/start-local-acceptance.mjs",
+    "dev:dataset": "node scripts/start-local-acceptance.mjs --store .runtime/public-dataset/logical_store.json --existing",
+    "data:prepare": "node scripts/prepare-public-dataset.mjs",
+    "data:publish": "node scripts/publish-synthetic-dataset.mjs",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",

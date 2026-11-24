@@ -92,6 +92,20 @@ Toàn bộ kết quả thực nghiệm được đồng bộ trực tuyến th�
 npm run dev:acceptance -- --store .runtime/local-preview/logical_store.json
 ```
 
+### Chạy bộ dữ liệu nghiên cứu giả lập công khai
+
+Repository kèm snapshot tổng hợp gồm 1.017 học sinh và 3.051 lượt xử lý. Chuẩn bị
+bản sao có thể ghi trong vùng runtime rồi chạy dashboard:
+
+```powershell
+npm run data:prepare
+npm run dev:dataset
+```
+
+Nguồn dữ liệu và mô tả nằm tại `data/research/synthetic-study-2026/`. Toàn bộ hồ
+sơ và hoạt động trong snapshot là dữ liệu giả lập, không phải bằng chứng cá nhân
+hoặc trường học tham gia thực tế.
+
 Mở `http://127.0.0.1:3001`. Chế độ này cách ly Google/Gemini, dùng kho dữ liệu local riêng và tài khoản admin synthetic `local-admin@example.test`.
 
 ### Yêu cầu môi trường
