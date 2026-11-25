@@ -7,6 +7,7 @@ import World3D, { type CameraMode, type VehicleType } from '@/components/world-3
 import { DEMO_PROVINCES } from '@/game/scenarios';
 import type { AttemptResult, GameAction, Phase, Scenario } from '@/game/types';
 import type { ParticipantInput } from '@/lib/types';
+import ParticipationDashboard from '@/components/participation-dashboard';
 
 const phases: Phase[] = ['PRE', 'TRAINING', 'POST'];
 const phaseNames: Record<Phase, string> = {
@@ -446,10 +447,11 @@ export default function HomePage() {
               />
 
               <div className="hero-caption">
-                <span>01 / QUAN SÁT HIỆN TRƯỜNG 3D</span>
-                <span>02 / ĐƯA RA QUYẾT ĐỊNH ĐÚNG LUẬT</span>
-                <span>03 / ĐỒNG BỘ TIẾN ĐỘ TRỰC TUYẾN</span>
+                <span className="hero-step-blue">01 / QUAN SÁT HIỆN TRƯỜNG 3D</span>
+                <span className="hero-step-orange">02 / ĐƯA RA QUYẾT ĐỊNH ĐÚNG LUẬT</span>
+                <span className="hero-step-green">03 / ĐỒNG BỘ TIẾN ĐỘ TRỰC TUYẾN</span>
               </div>
+              <ParticipationDashboard />
             </section>
 
             <section className="entry-card">
