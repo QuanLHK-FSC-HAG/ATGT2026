@@ -3,6 +3,7 @@ import { readParticipantFromRequest } from '../auth/session.ts';
 import { buildAssessmentRecord, evaluateAttempt, getScenario, transitionStudyRun } from '../rules/engine.ts';
 import { getStorageAdapter } from '../google/storage.ts';
 import { DomainError, object, text, uuid } from '../validation/input.ts';
+import { deriveInteractionSpec, resolveInteractionDecision } from '../gameplay/interaction.ts';
 import type { DeviceClass, ScenarioResultRecord, StudyPhase } from '../types.ts';
 
 export async function authenticatedSession(req: Request) {
@@ -47,11 +48,49 @@ export async function submitAttempt(req: Request, raw: unknown) {
   if (!scenario.approved || !scenario.phase_eligibility.includes(phase)) throw new DomainError(403, 'SCENARIO_NOT_ELIGIBLE', 'Scenario not available for this phase');
 
   const events = await storage.getSessionEvents(session.session_id);
-  const hazard = events.find(event => event.scenario_id === scenario_id && event.type === 'HAZARD_VISIBLE');
-  const decision = events.find(event => event.scenario_id === scenario_id && event.type === 'DECISION_INPUT' && event.payload.decision_id === selected_decision);
+  const scenarioEvents = events.filter(event => event.scenario_id === scenario_id);
+  const hasV2Events = scenarioEvents.some(event => event.schema_version === '2');
+  const boundV2Events = scenarioEvents
+    .filter(event => event.schema_version === '2' && event.payload.attempt_id === attempt_id && event.payload.phase === phase)
+    .sort((a, b) => Number(a.payload.at_ms) - Number(b.payload.at_ms));
+  const lastStart = scenarioEvents.map(event => event.type).lastIndexOf('SCENARIO_START');
+  const attemptEvents = hasV2Events ? boundV2Events : lastStart >= 0 ? scenarioEvents.slice(lastStart) : scenarioEvents;
+  const hazard = attemptEvents.find(event => event.type === 'HAZARD_VISIBLE');
+  const decision = attemptEvents.find(event => event.type === 'DECISION_INPUT' && event.payload.decision_id === selected_decision);
   let reaction_ms: number | null = null;
   const flags: string[] = [];
-  if (hazard && decision) reaction_ms = Math.max(0, Date.parse(decision.timestamp) - Date.parse(hazard.timestamp));
+  const v2Events = attemptEvents.filter(event => event.schema_version === '2');
+  const starts = v2Events.filter(event => event.type === 'SCENARIO_START');
+  const terminals = v2Events.filter(event => event.type === 'TERMINAL');
+  const endings = v2Events.filter(event => event.type === 'SCENARIO_END');
+  if (hasV2Events && (starts.length !== 1 || terminals.length !== 1 || endings.length !== 1)) {
+    throw new DomainError(409, 'INTERACTION_TRACE_INCOMPLETE', 'Lượt tương tác chưa có kết quả kết thúc hợp lệ');
+  }
+  const terminal = terminals[0];
+  const ending = endings[0];
+  const startAt = Number(starts[0]?.payload.at_ms);
+  const terminalAt = Number(terminal?.payload.at_ms);
+  const endingAt = Number(ending?.payload.at_ms);
+  if (terminal && ending && (!Number.isFinite(startAt) || startAt !== 0 || terminalAt < startAt || endingAt < terminalAt)) {
+    throw new DomainError(409, 'INTERACTION_TRACE_INCOMPLETE', 'Thứ tự kết thúc lượt tương tác không hợp lệ');
+  }
+  if (terminal?.payload.terminal_outcome) {
+    const trace = v2Events.flatMap(event => {
+      const action = typeof event.payload.action === 'string' ? event.payload.action : null;
+      const at_ms = Number(event.payload.at_ms);
+      return action && Number.isFinite(at_ms) ? [{ action, at_ms }] : [];
+    });
+    const resolved = resolveInteractionDecision(
+      { options: scenario.options, interaction_spec: scenario.interaction_spec ?? deriveInteractionSpec(scenario) },
+      trace as Parameters<typeof resolveInteractionDecision>[1],
+    );
+    if (resolved.status !== 'RESOLVED' || resolved.option_id !== selected_decision) throw new DomainError(409, 'INTERACTION_DECISION_MISMATCH', 'Quyết định không khớp với hành động trên sa bàn');
+    flags.push('INTERACTION_TRACE_VERIFIED_V2');
+  }
+  const hazardAtMs = typeof hazard?.payload.at_ms === 'number' ? hazard.payload.at_ms : null;
+  const decisiveAction = v2Events.find(event => ['STOP', 'YIELD', 'BRAKE', 'TERMINAL'].includes(event.type) && (hazardAtMs === null || Number(event.payload.at_ms) >= hazardAtMs));
+  if (hazardAtMs !== null && v2Events.length && decisiveAction && typeof decisiveAction.payload.at_ms === 'number') reaction_ms = Math.max(0, decisiveAction.payload.at_ms - hazardAtMs);
+  else if (hazard && decision) reaction_ms = Math.max(0, Date.parse(decision.timestamp) - Date.parse(hazard.timestamp));
   else flags.push('MISSING_VERIFIABLE_TELEMETRY');
   if (reaction_ms !== null && clientReaction !== null && clientReaction !== undefined && Math.abs(reaction_ms - Number(clientReaction)) > 250) flags.push('CLIENT_REACTION_IGNORED_SERVER_DERIVED');
 

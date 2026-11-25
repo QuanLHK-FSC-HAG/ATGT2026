@@ -1,6 +1,6 @@
 export type GameAction = 'BRAKE' | 'SIGNAL' | 'YIELD' | 'PAUSE' | 'RESUME' | 'HAZARD_VISIBLE';
 export type Phase = 'PRE' | 'TRAINING' | 'POST';
-import type { ScenarioVisualSpec } from '../lib/types';
+import type { ScenarioInteractionSpec, ScenarioVisualSpec } from '../lib/types';
 
 export type Scenario = {
   scenario_id: string;
@@ -15,5 +15,6 @@ export type Scenario = {
   target_grade?: string;
   skill_group?: string;
   visual_spec?: ScenarioVisualSpec;
+  interaction_spec?: ScenarioInteractionSpec;
 };
 export type AttemptResult = { rule_score: number; outcome: string; feedback?: string };

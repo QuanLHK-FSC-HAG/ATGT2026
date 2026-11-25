@@ -1,15 +1,18 @@
 ﻿'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import { clearLocalParticipantSession, createSession, loadScenario, sendEvents, submitAttempt, type SessionInfo } from '@/components/api';
-import World3D, { type CameraMode, type VehicleType } from '@/components/world-3d';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { clearLocalParticipantSession, createSession, loadScenario, sendEvents, submitAttempt, type ClientGameplayEvent, type SessionInfo } from '@/components/api';
+import World3D, { type CameraMode, type VehicleType, type World3DGameplayEvent, type World3DGameplayState } from '@/components/world-3d';
 import { DEMO_PROVINCES } from '@/game/scenarios';
-import type { AttemptResult, GameAction, Phase, Scenario } from '@/game/types';
+import type { AttemptResult, Phase, Scenario } from '@/game/types';
 import type { ParticipantInput } from '@/lib/types';
+import { resolveInteractionDecision } from '@/lib/gameplay/interaction';
+
 import ParticipationDashboard from '@/components/participation-dashboard';
 
 const phases: Phase[] = ['PRE', 'TRAINING', 'POST'];
+const interactive25DEnabled = process.env.NEXT_PUBLIC_INTERACTIVE_25D === 'true';
 const phaseNames: Record<Phase, string> = {
   PRE: 'Chặng 1: Trước khi học',
   TRAINING: 'Chặng 2: Luyện tập tình huống',
@@ -82,6 +85,8 @@ export default function HomePage() {
   const [leaderboardTab, setLeaderboardTab] = useState<'ALL' | 'CITY_3D' | 'ARENA_CHALLENGE' | 'SAFE_JOURNEY'>('ALL');
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [localHistory, setLocalHistory] = useState<any[]>([]);
+  const [gameplayState, setGameplayState] = useState<World3DGameplayState | null>(null);
+  const [textFallback, setTextFallback] = useState(false);
 
   // Tải bảng xếp hạng từ localStorage & server
   useEffect(() => {
@@ -120,8 +125,23 @@ export default function HomePage() {
     return () => document.removeEventListener('fullscreenchange', onFsChange);
   }, []);
 
-  const actions = useRef<GameAction[]>([]);
+  const actions = useRef<ClientGameplayEvent[]>([]);
   const started = useRef(0);
+  const startedEpoch = useRef(0);
+
+  const pilotInteractive = Boolean(interactive25DEnabled && scenario?.visual_spec && scenario.interaction_spec);
+
+  const handleGameplayEvent = useCallback((event: World3DGameplayEvent) => {
+    actions.current.push(event);
+    if (event.type !== 'TERMINAL' || !scenario) return;
+    const trace = actions.current.flatMap(item => item.action ? [{ action: item.action, at_ms: item.at_ms }] : []);
+    const resolution = resolveInteractionDecision(scenario, trace);
+    if (resolution.status !== 'RESOLVED') {
+      setError('Cảnh đã kết thúc nhưng chưa ánh xạ được hành động vào phương án. Kết quả chưa được lưu.');
+      return;
+    }
+    setSelected(resolution.option_id);
+  }, [scenario]);
 
   const valid =
     [form.full_name, form.class_name, form.school_name, form.province_city].every((v) => v.trim().length > 0) &&
@@ -152,6 +172,8 @@ export default function HomePage() {
     setError('');
     setCameraMode('CINEMATIC_OVERVIEW');
     actions.current = [];
+    setGameplayState(null);
+    setTextFallback(false);
   }
 
   async function start() {
@@ -167,6 +189,9 @@ export default function HomePage() {
       setCameraMode('FOLLOW_VEHICLE');
       setScreen('play');
       started.current = performance.now();
+      startedEpoch.current = Date.now();
+      setGameplayState(null);
+      setTextFallback(false);
     } catch {
       setError('Chưa thể khởi tạo phiên học tập. Vui lòng thử lại.');
     } finally {
@@ -190,6 +215,9 @@ export default function HomePage() {
       setCameraMode('FOLLOW_VEHICLE');
       actions.current = [];
       started.current = performance.now();
+      startedEpoch.current = Date.now();
+      setGameplayState(null);
+      setTextFallback(false);
       setScreen('play');
     } catch {
       setError('Chưa tải được cảnh chơi thử. Vui lòng thử lại.');
@@ -216,7 +244,7 @@ export default function HomePage() {
     try {
       const durationMs = Math.min(300_000, Math.max(0, Math.round(performance.now() - started.current)));
       // Do not infer driving actions from the position of an answer option.
-      await sendEvents(session, scenario.scenario_id, [], selected, durationMs);
+      await sendEvents(session, phase, scenario.scenario_id, actions.current, selected, startedEpoch.current, durationMs);
       const nextResult = await submitAttempt(session, phase, scenario, selected, durationMs);
       setResult(nextResult);
       setResults((prev) => ({ ...prev, [phase]: nextResult }));
@@ -245,6 +273,7 @@ export default function HomePage() {
         setDemoCount(value => value + 1);
         actions.current = [];
         started.current = performance.now();
+        startedEpoch.current = Date.now();
       } catch {
         setError('Chưa mở được cảnh tiếp theo.');
       } finally {
@@ -267,6 +296,9 @@ export default function HomePage() {
       setResult(null);
       actions.current = [];
       started.current = performance.now();
+      startedEpoch.current = Date.now();
+      setGameplayState(null);
+      setTextFallback(false);
       setCameraMode(nextPhase === 'TRAINING' ? 'INTERSECTION' : 'FOLLOW_VEHICLE');
     } catch {
       setError('Chưa mở được chặng tiếp theo. Vui lòng thử lại.');
@@ -284,6 +316,7 @@ export default function HomePage() {
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
+      if (pilotInteractive && !textFallback) return;
       const index = ['1', '2', '3'].indexOf(event.key);
       if (index >= 0) {
         setSelected(scenario.options[index]?.id || '');
@@ -296,7 +329,7 @@ export default function HomePage() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [screen, scenario, selected, busy, result]);
+  }, [screen, scenario, selected, busy, result, pilotInteractive, textFallback]);
 
   return (
     <div className="site-shell">
@@ -819,6 +852,9 @@ export default function HomePage() {
                       sceneEvent={scenario.trigger_event}
                       selectedDecision={selectedDecision}
                       visualSpec={scenario.visual_spec}
+                      interactive={pilotInteractive && !result && !textFallback}
+                      onGameplayEvent={handleGameplayEvent}
+                      onGameplayStateChange={setGameplayState}
                     />
                   </div>
 
@@ -831,7 +867,17 @@ export default function HomePage() {
                       <div dangerouslySetInnerHTML={{ __html: scenario.hazard_cue_vi }} />
                     </div>
 
-                    <div style={{ display: 'grid', gap: '8px', margin: '12px 0' }}>
+                    {pilotInteractive && !textFallback && (
+                      <div className="scenario-cue" role="status" aria-live="polite">
+                        {gameplayState?.terminal
+                          ? 'Sa bàn đã ghi nhận cách xử lý. Em hãy xác nhận để lưu kết quả.'
+                          : gameplayState?.hazard_visible
+                            ? 'Nguy hiểm đã xuất hiện — hãy phanh, nhường hoặc điều khiển phương tiện ngay trên sa bàn.'
+                            : 'Bấm vào sa bàn rồi dùng WASD/phím mũi tên. Space để phanh, Q/E bật xi-nhan, Y để nhường.'}
+                      </div>
+                    )}
+
+                    {(!pilotInteractive || textFallback) && <div style={{ display: 'grid', gap: '8px', margin: '12px 0' }}>
                       {scenario.options.map((option, index) => (
                         <button
                           type="button"
@@ -845,7 +891,13 @@ export default function HomePage() {
                           <span dangerouslySetInnerHTML={{ __html: option.label_vi }} />
                         </button>
                       ))}
-                    </div>
+                    </div>}
+
+                    {pilotInteractive && !result && (
+                      <button type="button" className="text-button" onClick={() => { setTextFallback(value => !value); setSelected(''); }}>
+                        {textFallback ? 'Quay lại điều khiển sa bàn' : 'Dùng phương án chữ hỗ trợ'}
+                      </button>
+                    )}
 
                     {result ? (
                       <div className="feedback" role="status">

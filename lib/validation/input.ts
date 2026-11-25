@@ -71,6 +71,7 @@ export function eventBatch(value: unknown, sessionId: string): { batch_id: strin
   if (Buffer.byteLength(JSON.stringify(input.events), 'utf8') > maxBytes) throw new DomainError(413, 'BATCH_TOO_LARGE', 'Batch too large');
   const ids = new Set<string>();
   let previousSeq = -1;
+  let previousV2AtMs = -1;
   const events = input.events.map(raw => {
     const item = object(raw);
     noUnexpectedKeys(item, ['event_id', 'session_id', 'seq', 'timestamp', 'schema_version', 'type', 'scenario_id', 'payload']);
@@ -81,17 +82,34 @@ export function eventBatch(value: unknown, sessionId: string): { batch_id: strin
     if (!Number.isSafeInteger(item.seq) || (item.seq as number) <= previousSeq || (item.seq as number) < 1 || (item.seq as number) > 1000000) throw new DomainError(400, 'INVALID_SEQ', 'Invalid event order');
     previousSeq = item.seq as number;
     if (typeof item.timestamp !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(item.timestamp) || !Number.isFinite(Date.parse(item.timestamp)) || Date.parse(item.timestamp) > Date.now() + 60000 || Date.parse(item.timestamp) < Date.now() - 86400000) throw new DomainError(400, 'INVALID_TIMESTAMP', 'Invalid timestamp');
-    if (item.schema_version !== '1' || !['SCENARIO_START', 'HAZARD_VISIBLE', 'DECISION_INPUT', 'BRAKE', 'SIGNAL', 'PAUSE', 'RESUME', 'SCENARIO_END'].includes(String(item.type))) throw new DomainError(400, 'INVALID_EVENT', 'Unknown schema or event');
+    const schemaVersion = String(item.schema_version);
+    const eventType = String(item.type);
+    const allowedTypes = schemaVersion === '1'
+      ? ['SCENARIO_START', 'HAZARD_VISIBLE', 'DECISION_INPUT', 'PAUSE', 'RESUME', 'SCENARIO_END']
+      : ['SCENARIO_START', 'HAZARD_VISIBLE', 'DECISION_INPUT', 'BRAKE', 'STOP', 'SIGNAL', 'YIELD', 'MOVEMENT', 'TERMINAL', 'PAUSE', 'RESUME', 'SCENARIO_END'];
+    if (!['1', '2'].includes(schemaVersion) || !allowedTypes.includes(eventType)) throw new DomainError(400, 'INVALID_EVENT', 'Unknown schema or event');
     const payload = object(item.payload);
-    noUnexpectedKeys(payload, ['attempt_id', 'decision_id', 'phase', 'input_type', 'fps', 'latency_ms', 'tab_visible', 'network_online']);
+    noUnexpectedKeys(payload, ['attempt_id', 'decision_id', 'phase', 'input_type', 'fps', 'latency_ms', 'tab_visible', 'network_online', 'action', 'speed_kmh', 'distance_to_hazard_m', 'player_x', 'player_z', 'signal_direction', 'terminal_outcome', 'at_ms', 'archetype']);
     if (payload.attempt_id !== undefined) uuid(payload.attempt_id, 'attempt_id');
     if (payload.phase !== undefined && !['PRE', 'TRAINING', 'POST'].includes(String(payload.phase))) throw new DomainError(400, 'INVALID_EVENT', 'Invalid phase');
     if (payload.input_type !== undefined && !['KEYBOARD', 'TOUCH', 'MOUSE', 'UNKNOWN'].includes(String(payload.input_type))) throw new DomainError(400, 'INVALID_EVENT', 'Invalid input type');
     if (payload.decision_id !== undefined && (typeof payload.decision_id !== 'string' || !/^opt_[a-z_]{1,60}$/.test(payload.decision_id))) throw new DomainError(400, 'INVALID_EVENT', 'Invalid decision');
     for (const key of ['fps', 'latency_ms']) if (payload[key] !== undefined && (typeof payload[key] !== 'number' || !Number.isFinite(payload[key]) || (payload[key] as number) < 0 || (payload[key] as number) > 60000)) throw new DomainError(400, 'INVALID_EVENT', 'Invalid measurement');
+    for (const key of ['speed_kmh', 'distance_to_hazard_m', 'at_ms']) if (payload[key] !== undefined && (typeof payload[key] !== 'number' || !Number.isFinite(payload[key]) || (payload[key] as number) < 0 || (payload[key] as number) > 300000)) throw new DomainError(400, 'INVALID_EVENT', 'Invalid gameplay measurement');
+    for (const key of ['player_x', 'player_z']) if (payload[key] !== undefined && (typeof payload[key] !== 'number' || !Number.isFinite(payload[key]) || Math.abs(payload[key] as number) > 10000)) throw new DomainError(400, 'INVALID_EVENT', 'Invalid gameplay position');
+    if (payload.signal_direction !== undefined && !['OFF', 'LEFT', 'RIGHT'].includes(String(payload.signal_direction))) throw new DomainError(400, 'INVALID_EVENT', 'Invalid signal direction');
+    if (payload.terminal_outcome !== undefined && !['SAFE_STOP', 'SAFE_YIELD', 'CONFLICT', 'BLIND_ZONE_ENTRY'].includes(String(payload.terminal_outcome))) throw new DomainError(400, 'INVALID_EVENT', 'Invalid terminal outcome');
+    if (payload.action !== undefined && !['MOVE_FORWARD', 'MOVE_BACKWARD', 'STEER_LEFT', 'STEER_RIGHT', 'BRAKE', 'STOP', 'ACCELERATE', 'SIGNAL_LEFT', 'SIGNAL_RIGHT', 'YIELD', 'PROCEED', 'LANE_CHANGE_LEFT', 'LANE_CHANGE_RIGHT'].includes(String(payload.action))) throw new DomainError(400, 'INVALID_EVENT', 'Invalid gameplay action');
+    if (eventType === 'DECISION_INPUT' && payload.decision_id === undefined) throw new DomainError(400, 'INVALID_EVENT', 'Decision event requires a decision');
+    if (eventType === 'TERMINAL' && payload.terminal_outcome === undefined) throw new DomainError(400, 'INVALID_EVENT', 'Terminal event requires an outcome');
+    if (schemaVersion === '2') {
+      if (payload.attempt_id === undefined || payload.phase === undefined || payload.at_ms === undefined) throw new DomainError(400, 'INVALID_EVENT', 'V2 event requires attempt, phase and relative time');
+      if ((payload.at_ms as number) < previousV2AtMs) throw new DomainError(400, 'INVALID_EVENT', 'V2 relative time must be monotonic');
+      previousV2AtMs = payload.at_ms as number;
+    }
     for (const key of ['tab_visible', 'network_online']) if (payload[key] !== undefined && typeof payload[key] !== 'boolean') throw new DomainError(400, 'INVALID_EVENT', 'Invalid boolean');
     if (typeof item.scenario_id !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(item.scenario_id)) throw new DomainError(400, 'INVALID_EVENT', 'Invalid scenario');
-    return { event_id: eventId, session_id: sessionId, seq: previousSeq, timestamp: item.timestamp, schema_version: '1', type: item.type, scenario_id: item.scenario_id, payload } as TelemetryEvent;
+    return { event_id: eventId, session_id: sessionId, seq: previousSeq, timestamp: item.timestamp, schema_version: String(item.schema_version) as '1' | '2', type: item.type, scenario_id: item.scenario_id, payload } as TelemetryEvent;
   });
   return { batch_id: batchId, events };
 }

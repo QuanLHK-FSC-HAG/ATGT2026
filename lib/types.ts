@@ -113,6 +113,50 @@ export interface ScenarioVisualSpec {
   decision_effects: Record<string, ScenarioVisualDecisionEffect>;
 }
 
+export type GameplayAction =
+  | 'MOVE_FORWARD'
+  | 'MOVE_BACKWARD'
+  | 'STEER_LEFT'
+  | 'STEER_RIGHT'
+  | 'BRAKE'
+  | 'STOP'
+  | 'ACCELERATE'
+  | 'SIGNAL_LEFT'
+  | 'SIGNAL_RIGHT'
+  | 'YIELD'
+  | 'PROCEED'
+  | 'LANE_CHANGE_LEFT'
+  | 'LANE_CHANGE_RIGHT';
+
+export interface GameplayTraceEvent {
+  action: GameplayAction;
+  at_ms: number;
+  speed_kmh?: number;
+  distance_to_hazard_m?: number;
+}
+
+export interface ScenarioInteractionDecisionRule {
+  option_id: string;
+  all_of: GameplayAction[];
+  any_of?: GameplayAction[];
+  none_of?: GameplayAction[];
+  priority?: number;
+}
+
+export interface ScenarioInteractionSpec {
+  version: '1';
+  allowed_actions: GameplayAction[];
+  hazard_trigger: {
+    distance_m: number;
+    visible_for_ms?: number;
+  };
+  completion: {
+    max_duration_ms: number;
+    stop_speed_kmh: number;
+  };
+  decision_rules: ScenarioInteractionDecisionRule[];
+}
+
 export interface ScenarioDefinition {
   scenario_id: string;
   version: string;
@@ -132,6 +176,7 @@ export interface ScenarioDefinition {
   target_grade?: string;
   skill_group?: string;
   visual_spec: ScenarioVisualSpec;
+  interaction_spec?: ScenarioInteractionSpec;
 }
 
 export interface PublicScenarioView {
@@ -150,6 +195,7 @@ export interface PublicScenarioView {
   target_grade?: string;
   skill_group?: string;
   visual_spec: ScenarioVisualSpec;
+  interaction_spec?: ScenarioInteractionSpec;
 }
 
 export interface TelemetryEvent {
@@ -157,8 +203,8 @@ export interface TelemetryEvent {
   session_id: string;
   seq: number;
   timestamp: string;
-  schema_version: string;
-  type: 'SCENARIO_START' | 'HAZARD_VISIBLE' | 'DECISION_INPUT' | 'BRAKE' | 'SIGNAL' | 'PAUSE' | 'RESUME' | 'SCENARIO_END';
+  schema_version: '1' | '2';
+  type: 'SCENARIO_START' | 'HAZARD_VISIBLE' | 'DECISION_INPUT' | 'BRAKE' | 'STOP' | 'SIGNAL' | 'YIELD' | 'MOVEMENT' | 'TERMINAL' | 'PAUSE' | 'RESUME' | 'SCENARIO_END';
   scenario_id: string;
   payload: Record<string, string | number | boolean | null>;
 }

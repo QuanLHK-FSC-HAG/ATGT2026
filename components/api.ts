@@ -1,6 +1,6 @@
-import type { ParticipantInput } from '@/lib/types';
+import type { GameplayAction, ParticipantInput } from '@/lib/types';
 import { FALLBACK } from '@/game/scenarios';
-import type { AttemptResult, GameAction, Phase, Scenario } from '@/game/types';
+import type { AttemptResult, Phase, Scenario } from '@/game/types';
 
 export type SessionInfo = {
   participantId: string;
@@ -10,10 +10,33 @@ export type SessionInfo = {
   storageMode: 'GOOGLE' | 'LOCAL_DEMO_MOCK' | 'BROWSER_FALLBACK';
 };
 
+export type ClientGameplayEvent = {
+  type: 'ACTION' | 'HAZARD_VISIBLE' | 'TERMINAL';
+  at_ms: number;
+  action?: GameplayAction;
+  speed_kmh: number;
+  distance_to_hazard_m: number;
+  archetype: string;
+  outcome?: 'SAFE_STOP' | 'SAFE_YIELD' | 'CONFLICT' | 'BLIND_ZONE_ENTRY';
+};
+
 const id = () =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto
     ? crypto.randomUUID()
     : `id-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+const pendingAttemptIds = new Map<string, string>();
+
+function attemptKey(session: SessionInfo, phase: Phase, scenarioId: string) {
+  return `${session.sessionId}:${phase}:${scenarioId}`;
+}
+
+export function reserveAttemptId(session: SessionInfo, phase: Phase, scenarioId: string): string {
+  const key = attemptKey(session, phase, scenarioId);
+  const attemptId = pendingAttemptIds.get(key) ?? id();
+  pendingAttemptIds.set(key, attemptId);
+  return attemptId;
+}
 
 export async function createSession(input: ParticipantInput): Promise<SessionInfo> {
   const payload = {
@@ -102,10 +125,12 @@ export async function loadScenario(phase: Phase, allowDemoFallback = false): Pro
 
 export async function sendEvents(
   session: SessionInfo,
+  phase: Phase,
   scenarioId: string,
-  actions: GameAction[],
+  trace: ClientGameplayEvent[],
   selectedDecision?: string,
-  observedReactionMs?: number
+  attemptStartedAtMs = Date.now(),
+  legacyReactionMs = 0,
 ) {
   if (session.mode !== 'server') return;
   try {
@@ -114,54 +139,73 @@ export async function sendEvents(
       session_id: string;
       seq: number;
       timestamp: string;
-      schema_version: string;
-      type: 'HAZARD_VISIBLE' | 'DECISION_INPUT' | 'BRAKE' | 'SIGNAL' | 'PAUSE' | 'RESUME';
+      schema_version: '1' | '2';
+      type: 'SCENARIO_START' | 'HAZARD_VISIBLE' | 'DECISION_INPUT' | 'BRAKE' | 'STOP' | 'SIGNAL' | 'YIELD' | 'MOVEMENT' | 'TERMINAL' | 'SCENARIO_END';
       scenario_id: string;
       payload: Record<string, string | number | boolean | null>;
     }> = [];
 
-    const now = Date.now();
     let seq = 1;
-
-    events.push({
+    const attemptId = reserveAttemptId(session, phase, scenarioId);
+    const v2Payload = (extra: Record<string, string | number | boolean | null> = {}) => ({ attempt_id: attemptId, phase, ...extra });
+    if (!trace.length) {
+      const now = Date.now();
+      events.push({ event_id: id(), session_id: session.sessionId, seq: seq++, timestamp: new Date(now - Math.max(0, Math.min(300000, legacyReactionMs))).toISOString(), schema_version: '1', type: 'HAZARD_VISIBLE', scenario_id: scenarioId, payload: {} });
+      if (selectedDecision) events.push({ event_id: id(), session_id: session.sessionId, seq: seq++, timestamp: new Date(now).toISOString(), schema_version: '1', type: 'DECISION_INPUT', scenario_id: scenarioId, payload: { decision_id: selectedDecision } });
+    } else events.push({
       event_id: id(),
       session_id: session.sessionId,
       seq: seq++,
-      timestamp: new Date(now - Math.max(0, Math.min(300000, observedReactionMs ?? 0))).toISOString(),
-      schema_version: '1',
-      type: 'HAZARD_VISIBLE',
+      timestamp: new Date(attemptStartedAtMs).toISOString(),
+      schema_version: '2',
+      type: 'SCENARIO_START',
       scenario_id: scenarioId,
-      payload: {},
+      payload: v2Payload({ at_ms: 0 }),
     });
-
-    for (const act of actions) {
-      if (act === 'HAZARD_VISIBLE') continue;
-      const eventType =
-        act === 'BRAKE' ? 'BRAKE' : act === 'SIGNAL' ? 'SIGNAL' : act === 'PAUSE' ? 'PAUSE' : act === 'RESUME' ? 'RESUME' : 'BRAKE';
+    for (const item of trace.slice().sort((a, b) => a.at_ms - b.at_ms)) {
+      const eventType = item.type === 'HAZARD_VISIBLE' ? 'HAZARD_VISIBLE'
+        : item.type === 'TERMINAL' ? 'TERMINAL'
+          : item.action === 'BRAKE' ? 'BRAKE'
+            : item.action === 'STOP' ? 'STOP'
+              : item.action === 'YIELD' ? 'YIELD'
+                : item.action === 'SIGNAL_LEFT' || item.action === 'SIGNAL_RIGHT' ? 'SIGNAL'
+                  : 'MOVEMENT';
       events.push({
         event_id: id(),
         session_id: session.sessionId,
         seq: seq++,
-        timestamp: new Date(now - 600).toISOString(),
-        schema_version: '1',
+        timestamp: new Date(attemptStartedAtMs + Math.max(0, item.at_ms)).toISOString(),
+        schema_version: '2',
         type: eventType,
         scenario_id: scenarioId,
-        payload: {},
+        payload: v2Payload({
+          speed_kmh: item.speed_kmh,
+          distance_to_hazard_m: item.distance_to_hazard_m,
+          at_ms: item.at_ms,
+          archetype: item.archetype,
+          ...(item.action ? { action: item.action } : {}),
+          ...(item.action === 'SIGNAL_LEFT' ? { signal_direction: 'LEFT' } : item.action === 'SIGNAL_RIGHT' ? { signal_direction: 'RIGHT' } : {}),
+          ...(item.outcome ? { terminal_outcome: item.outcome } : {}),
+        }),
       });
     }
 
-    if (selectedDecision) {
+    const terminalAtMs = trace
+      .filter(item => item.type === 'TERMINAL')
+      .reduce<number | null>((latest, item) => latest === null ? item.at_ms : Math.max(latest, item.at_ms), null);
+    if (trace.length && selectedDecision) {
       events.push({
         event_id: id(),
         session_id: session.sessionId,
         seq: seq++,
-        timestamp: new Date(now).toISOString(),
-        schema_version: '1',
+        timestamp: new Date(attemptStartedAtMs + Math.max(0, terminalAtMs ?? 0)).toISOString(),
+        schema_version: '2',
         type: 'DECISION_INPUT',
         scenario_id: scenarioId,
-        payload: { decision_id: selectedDecision },
+        payload: v2Payload({ decision_id: selectedDecision, at_ms: terminalAtMs ?? 0 }),
       });
     }
+    if (trace.length) events.push({ event_id: id(), session_id: session.sessionId, seq: seq++, timestamp: new Date(attemptStartedAtMs + Math.max(0, terminalAtMs ?? 0)).toISOString(), schema_version: '2', type: 'SCENARIO_END', scenario_id: scenarioId, payload: v2Payload({ at_ms: terminalAtMs ?? 0 }) });
 
     const response = await fetch('/api/public/events/batch', {
       method: 'POST',
@@ -176,12 +220,12 @@ export async function sendEvents(
     if (!response.ok) {
       throw new Error(`Telemetry batch rejected with HTTP ${response.status}`);
     }
-  } catch {
-    // Non-blocking telemetry
+  } catch (error) {
+    // Interactive attempts must never be scored without their exact trace.
+    if (trace.length) throw error;
+    // Legacy telemetry remains non-blocking for compatibility.
   }
 }
-
-const pendingAttemptIds = new Map<string, string>();
 
 export async function submitAttempt(
   session: SessionInfo,
@@ -194,9 +238,8 @@ export async function submitAttempt(
     throw new Error('A saved assessment requires a server session');
   }
 
-  const attemptKey = `${session.sessionId}:${phase}:${scenario.scenario_id}`;
-  const attemptId = pendingAttemptIds.get(attemptKey) ?? id();
-  pendingAttemptIds.set(attemptKey, attemptId);
+  const key = attemptKey(session, phase, scenario.scenario_id);
+  const attemptId = reserveAttemptId(session, phase, scenario.scenario_id);
   const res = await fetch('/api/public/attempts/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -219,7 +262,7 @@ export async function submitAttempt(
   if (typeof (data.result?.rule_score ?? data.rule_score) !== 'number' || typeof (data.result?.outcome ?? data.outcome) !== 'string') {
     throw new Error('Attempt response did not contain a verified result');
   }
-  pendingAttemptIds.delete(attemptKey);
+  pendingAttemptIds.delete(key);
   const rule_score = data.result?.rule_score ?? data.rule_score as number;
   const outcome = data.result?.outcome ?? data.outcome as string;
 

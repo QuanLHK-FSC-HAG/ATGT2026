@@ -10,6 +10,8 @@ if (process.env.NODE_ENV === 'production' || process.env.VERCEL || process.env.K
 const { values } = parseArgs({ options: {
   store: { type: 'string' },
   existing: { type: 'boolean', default: false },
+  interactive: { type: 'boolean', default: false },
+  port: { type: 'string', default: '3001' },
 }, strict: true, allowPositionals: false });
 if (!values.store) throw new Error('Use --store .runtime/NEW-RUN/logical_store.json');
 const runtimeRoot = resolve('.runtime');
@@ -41,10 +43,12 @@ const env = { ...process.env,
   PARTICIPANT_SESSION_SECRET: randomBytes(48).toString('base64url'),
   GEMINI_LIVE_ENABLED: 'false',
   NEXT_TELEMETRY_DISABLED: '1',
+  NEXT_PUBLIC_INTERACTIVE_25D: values.interactive ? 'true' : 'false',
 };
 // Define empty values rather than deleting them: Next must not reload real
 // provider credentials from an existing .env.local during this launch.
 for (const key of ['GOOGLE_OAUTH_CLIENT_ID', 'NEXT_PUBLIC_GOOGLE_CLIENT_ID', 'GOOGLE_OAUTH_CLIENT_SECRET', 'GOOGLE_SHEETS_ID', 'GOOGLE_DRIVE_FOLDER_ID', 'GOOGLE_SERVICE_ACCOUNT_JSON_BASE64', 'GEMINI_API_KEY']) env[key] = '';
-const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3001'], { env, stdio: 'inherit' });
+if (!/^\d{4,5}$/.test(values.port)) throw new Error('Port must be a 4 or 5 digit number');
+const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', values.port], { env, stdio: 'inherit' });
 child.on('exit', code => { process.exitCode = code ?? 1; });
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal));

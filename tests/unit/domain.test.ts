@@ -187,6 +187,18 @@ describe('SafeRide Domain Unit Tests', () => {
     );
     assert.equal(batch.events.length, 1);
 
+    assert.throws(
+      () => eventBatch({
+        batch_id: randomUUID(),
+        session_id: sessionId,
+        events: [
+          { event_id: randomUUID(), session_id: sessionId, seq: 1, timestamp: new Date().toISOString(), schema_version: '2', type: 'SCENARIO_START', scenario_id: 'SCN-101A', payload: { attempt_id: randomUUID(), phase: 'PRE', at_ms: 100 } },
+          { event_id: randomUUID(), session_id: sessionId, seq: 2, timestamp: new Date().toISOString(), schema_version: '2', type: 'HAZARD_VISIBLE', scenario_id: 'SCN-101A', payload: { attempt_id: randomUUID(), phase: 'PRE', at_ms: 50 } },
+        ],
+      }, sessionId),
+      (err: unknown) => err instanceof DomainError && err.code === 'INVALID_EVENT',
+    );
+
     const req = new Request('http://localhost/api/admin/overview', {
       headers: { authorization: 'Bearer fake-admin-token' },
     });

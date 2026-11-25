@@ -264,7 +264,7 @@ export class LocalOnlyMockFileAdapter implements SafeRideStorageAdapter {
         all.push(JSON.parse(line) as TelemetryEvent);
       }
     }
-    return all.sort((a, b) => a.seq - b.seq);
+    return all.sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp) || a.seq - b.seq);
   }
 
   async recordAttempt(result: ScenarioResultRecord) {

@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { DomainError } from '../validation/input.ts';
+import { deriveInteractionSpec } from '../gameplay/interaction.ts';
 import type {
   AssessmentRecord,
   PublicScenarioView,
@@ -466,6 +467,7 @@ export function toPublicScenarioView(def: ScenarioDefinition): PublicScenarioVie
     target_grade: def.target_grade,
     skill_group: def.skill_group,
     visual_spec: def.visual_spec,
+    interaction_spec: def.interaction_spec ?? deriveInteractionSpec(def),
   };
 }
 

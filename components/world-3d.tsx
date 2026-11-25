@@ -1,10 +1,33 @@
 ﻿'use client';
 
 import React, { useEffect, useRef } from 'react';
-import type { ScenarioVisualSpec } from '@/lib/types';
+import type { GameplayAction, ScenarioVisualSpec } from '@/lib/types';
 
 export type CameraMode = 'CINEMATIC_OVERVIEW' | 'FOLLOW_VEHICLE' | 'TOP_DOWN' | 'INTERSECTION';
 export type VehicleType = 'BIKE' | 'E_BIKE' | 'E_SCOOTER' | 'MOTO_50CC';
+
+export interface World3DGameplayEvent {
+  type: 'ACTION' | 'HAZARD_VISIBLE' | 'TERMINAL';
+  at_ms: number;
+  action?: GameplayAction;
+  speed_kmh: number;
+  distance_to_hazard_m: number;
+  archetype: SceneArchetype;
+  outcome?: 'SAFE_STOP' | 'SAFE_YIELD' | 'CONFLICT' | 'BLIND_ZONE_ENTRY';
+}
+
+export interface World3DGameplayState {
+  speed_kmh: number;
+  distance_to_hazard_m: number;
+  player_x: number;
+  player_z: number;
+  brake: boolean;
+  signal: 'OFF' | 'LEFT' | 'RIGHT';
+  hazard_visible: boolean;
+  archetype: SceneArchetype;
+  terminal: boolean;
+  outcome: World3DGameplayEvent['outcome'] | null;
+}
 
 export type SceneArchetype =
   | 'STRAIGHT_ROAD'
@@ -36,6 +59,8 @@ export interface World3DProps {
   correctAction?: string;
   selectedDecision?: string;
   visualSpec?: ScenarioVisualSpec;
+  onGameplayEvent?: (event: World3DGameplayEvent) => void;
+  onGameplayStateChange?: (state: World3DGameplayState) => void;
 }
 
 type Projector = (x: number, y: number, z: number) => { x: number; y: number };
@@ -175,8 +200,14 @@ export default function World3D({
   sceneEvent = '',
   selectedDecision = '',
   visualSpec,
+  interactive = false,
+  onGameplayEvent,
+  onGameplayStateChange,
 }: World3DProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const startedAtRef = useRef(0);
+  const callbacksRef = useRef({ onGameplayEvent, onGameplayStateChange });
+  const inputRef = useRef({ forward: false, backward: false, left: false, right: false });
 
   const dataRef = useRef({
     cameraMode,
@@ -196,7 +227,66 @@ export default function World3D({
     sceneEvent,
     selectedDecision,
     visualSpec,
+    interactive,
+    hazardVisible: false,
+    lastStateEmission: 0,
+    terminal: false,
+    outcome: null as World3DGameplayEvent['outcome'] | null,
+    stopEmitted: false,
   });
+
+  const resetInputs = () => {
+    inputRef.current = { forward: false, backward: false, left: false, right: false };
+  };
+
+  useEffect(() => {
+    callbacksRef.current = { onGameplayEvent, onGameplayStateChange };
+  }, [onGameplayEvent, onGameplayStateChange]);
+
+  useEffect(() => {
+    if (!interactive) return;
+    const d = dataRef.current;
+    d.playerX = 0;
+    d.playerZ = 18;
+    d.speed = 0;
+    d.targetSpeed = 0;
+    d.brake = false;
+    d.signal = 'OFF';
+    d.signalTimer = 0;
+    d.time = 0;
+    d.hazardVisible = false;
+    d.lastStateEmission = 0;
+    d.terminal = false;
+    d.outcome = null;
+    d.stopEmitted = false;
+    startedAtRef.current = performance.now();
+    resetInputs();
+    const scene = resolveScene(visualSpec, sceneKind, sceneEvent);
+    callbacksRef.current.onGameplayStateChange?.({
+      speed_kmh: 0,
+      distance_to_hazard_m: scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT' ? 19 : 18,
+      player_x: 0,
+      player_z: 18,
+      brake: false,
+      signal: 'OFF',
+      hazard_visible: false,
+      archetype: scene.archetype,
+      terminal: false,
+      outcome: null,
+    });
+  }, [interactive, sceneKind, sceneEvent, visualSpec]);
+
+  useEffect(() => {
+    if (!interactive) return;
+    const release = () => resetInputs();
+    const visibility = () => { if (document.hidden) release(); };
+    window.addEventListener('blur', release);
+    document.addEventListener('visibilitychange', visibility);
+    return () => {
+      window.removeEventListener('blur', release);
+      document.removeEventListener('visibilitychange', visibility);
+    };
+  }, [interactive]);
 
   useEffect(() => {
     Object.assign(dataRef.current, {
@@ -209,8 +299,10 @@ export default function World3D({
       sceneEvent,
       selectedDecision,
       visualSpec,
+      interactive,
     });
     const d = dataRef.current;
+    if (interactive) return;
     const effect = decisionEffect(visualSpec, selectedDecision);
     if (!selectedDecision) {
       d.brake = false;
@@ -229,7 +321,94 @@ export default function World3D({
       d.targetSpeed = 8;
       d.signal = /left/.test(effect) ? 'LEFT' : /right|signal/.test(effect) ? 'RIGHT' : 'OFF';
     }
-  }, [cameraMode, vehicleType, isDriving, weather, hazardActive, sceneKind, sceneEvent, selectedDecision, visualSpec]);
+  }, [cameraMode, vehicleType, isDriving, weather, hazardActive, sceneKind, sceneEvent, selectedDecision, visualSpec, interactive]);
+
+  const emitAction = (action: GameplayAction) => {
+    if (!interactive) return;
+    const d = dataRef.current;
+    if (d.terminal) return;
+    const scene = resolveScene(d.visualSpec, d.sceneKind, d.sceneEvent);
+    const distance = Math.max(0, Math.abs(d.playerZ - (scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT' ? -1 : 0)));
+    callbacksRef.current.onGameplayEvent?.({
+      type: 'ACTION',
+      action,
+      at_ms: Math.max(0, Math.round(performance.now() - startedAtRef.current)),
+      speed_kmh: Math.max(0, Math.round(d.speed * 10) / 10),
+      distance_to_hazard_m: Math.round(distance * 10) / 10,
+      archetype: scene.archetype,
+    });
+  };
+
+  const finishGameplay = (outcome: NonNullable<World3DGameplayEvent['outcome']>, action?: GameplayAction) => {
+    const d = dataRef.current;
+    if (!interactive || d.terminal) return;
+    d.terminal = true;
+    d.outcome = outcome;
+    d.targetSpeed = 0;
+    d.brake = true;
+    resetInputs();
+    const scene = resolveScene(d.visualSpec, d.sceneKind, d.sceneEvent);
+    const hazardZ = scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT' ? -1 : 0;
+    callbacksRef.current.onGameplayEvent?.({
+      type: 'TERMINAL',
+      action,
+      outcome,
+      at_ms: Math.max(0, Math.round(performance.now() - startedAtRef.current)),
+      speed_kmh: Math.max(0, Math.round(d.speed * 10) / 10),
+      distance_to_hazard_m: Math.round(Math.abs(d.playerZ - hazardZ) * 10) / 10,
+      archetype: scene.archetype,
+    });
+  };
+
+  const setMovement = (direction: keyof typeof inputRef.current, active: boolean) => {
+    if (dataRef.current.terminal) return;
+    if (inputRef.current[direction] === active) return;
+    inputRef.current[direction] = active;
+    if (active) {
+      const action = direction === 'forward' ? 'MOVE_FORWARD' : direction === 'backward' ? 'MOVE_BACKWARD' : direction === 'left' ? 'STEER_LEFT' : 'STEER_RIGHT';
+      emitAction(action);
+      const d = dataRef.current;
+      if (d.hazardVisible && (action === 'STEER_LEFT' || action === 'STEER_RIGHT')) finishGameplay('SAFE_YIELD', action);
+    }
+  };
+
+  const performAction = (action: 'BRAKE' | 'YIELD' | 'SIGNAL_LEFT' | 'SIGNAL_RIGHT') => {
+    if (!interactive) return;
+    const d = dataRef.current;
+    if (d.terminal) return;
+    if (action === 'BRAKE' || action === 'YIELD') {
+      d.brake = true;
+      d.targetSpeed = 0;
+    } else {
+      d.signal = action === 'SIGNAL_LEFT' ? 'LEFT' : 'RIGHT';
+      d.signalTimer = 0;
+    }
+    emitAction(action);
+    if (action === 'YIELD' && d.hazardVisible) finishGameplay('SAFE_YIELD', 'YIELD');
+    if ((action === 'SIGNAL_LEFT' || action === 'SIGNAL_RIGHT') && d.hazardVisible) finishGameplay('SAFE_YIELD', action);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLCanvasElement>) => {
+    if (!interactive || event.repeat) return;
+    const key = event.key.toLowerCase();
+    if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' ', 'w', 'a', 's', 'd', 'q', 'e', 'y'].includes(key)) event.preventDefault();
+    if (key === 'arrowup' || key === 'w') setMovement('forward', true);
+    else if (key === 'arrowdown' || key === 's') setMovement('backward', true);
+    else if (key === 'arrowleft' || key === 'a') setMovement('left', true);
+    else if (key === 'arrowright' || key === 'd') setMovement('right', true);
+    else if (key === ' ') performAction('BRAKE');
+    else if (key === 'q') performAction('SIGNAL_LEFT');
+    else if (key === 'e') performAction('SIGNAL_RIGHT');
+    else if (key === 'y') performAction('YIELD');
+  };
+
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLCanvasElement>) => {
+    const key = event.key.toLowerCase();
+    if (key === 'arrowup' || key === 'w') setMovement('forward', false);
+    else if (key === 'arrowdown' || key === 's') setMovement('backward', false);
+    else if (key === 'arrowleft' || key === 'a') setMovement('left', false);
+    else if (key === 'arrowright' || key === 'd') setMovement('right', false);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -239,10 +418,12 @@ export default function World3D({
     ctx.imageSmoothingEnabled = false;
 
     let raf = 0;
-    let last = 0;
+    let last = performance.now();
 
     const frame = (now: number) => {
-      if (now - last < 33) return; // 30fps smooth target
+      const elapsed = now - last;
+      if (elapsed < 33) return; // 30fps smooth target
+      const dt = Math.min(0.1, Math.max(0.001, elapsed / 1000));
       last = now;
 
       const d = dataRef.current;
@@ -250,12 +431,76 @@ export default function World3D({
       const kind = `${d.sceneKind || ''} ${d.sceneEvent || ''}`.toLowerCase();
       const specWeather = d.visualSpec?.weather === 'RAIN' ? 'rain' : d.visualSpec?.weather === 'FOG' ? 'evening' : 'sunny';
       const activeWeather = d.visualSpec ? specWeather : d.weather;
-      const dt = 0.05;
       d.time += dt;
+      if (d.interactive && !d.terminal) {
+        const input = inputRef.current;
+        if (input.forward) {
+          d.brake = false;
+          d.targetSpeed = 12;
+        } else if (input.backward) {
+          d.brake = true;
+          d.targetSpeed = 0;
+        } else if (!d.brake) {
+          d.targetSpeed = Math.max(0, d.targetSpeed - 0.35);
+        }
+        const steering = (input.right ? 1 : 0) - (input.left ? 1 : 0);
+        d.playerX = Math.max(-1.75, Math.min(1.75, d.playerX + steering * dt * 2.4));
+      }
       d.speed += (d.targetSpeed - d.speed) * 0.1;
-      if (d.isDriving) d.playerZ -= d.speed * dt;
-      if (d.playerZ < -24) d.playerZ = 24;
+      if (d.isDriving && !d.terminal) d.playerZ -= d.speed * dt;
+      if (d.playerZ < -24) d.playerZ = d.interactive ? -24 : 24;
       if (d.signal !== 'OFF') d.signalTimer += dt;
+
+      if (d.interactive) {
+        const hazardZ = scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT' ? -1 : 0;
+        const distance = Math.max(0, Math.abs(d.playerZ - hazardZ));
+        if (!d.hazardVisible && distance <= 10) {
+          d.hazardVisible = true;
+          callbacksRef.current.onGameplayEvent?.({
+            type: 'HAZARD_VISIBLE',
+            at_ms: Math.max(0, Math.round(now - startedAtRef.current)),
+            speed_kmh: Math.max(0, Math.round(d.speed * 10) / 10),
+            distance_to_hazard_m: Math.round(distance * 10) / 10,
+            archetype: scene.archetype,
+          });
+        }
+        if (d.hazardVisible && d.brake && !d.stopEmitted && d.speed <= 0.45) {
+          d.stopEmitted = true;
+          callbacksRef.current.onGameplayEvent?.({
+            type: 'ACTION',
+            action: 'STOP',
+            at_ms: Math.max(0, Math.round(now - startedAtRef.current)),
+            speed_kmh: 0,
+            distance_to_hazard_m: Math.round(distance * 10) / 10,
+            archetype: scene.archetype,
+          });
+          if (distance >= 1.2) finishGameplay('SAFE_STOP');
+        }
+        if (!d.terminal) {
+          const conflict = scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT'
+            ? d.playerZ <= 1.2 && Math.abs(d.playerX) < 1.35
+            : d.playerZ <= -1.1;
+          if (conflict) {
+            emitAction('ACCELERATE');
+            finishGameplay(scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT' ? 'BLIND_ZONE_ENTRY' : 'CONFLICT', 'PROCEED');
+          }
+        }
+        if (now - d.lastStateEmission >= 120) {
+          d.lastStateEmission = now;
+          callbacksRef.current.onGameplayStateChange?.({
+            speed_kmh: Math.max(0, Math.round(d.speed * 10) / 10),
+            distance_to_hazard_m: Math.round(distance * 10) / 10,
+            player_x: Math.round(d.playerX * 100) / 100,
+            player_z: Math.round(d.playerZ * 100) / 100,
+            brake: d.brake,
+            signal: d.signal,
+            hazard_visible: d.hazardVisible,
+            archetype: scene.archetype,
+            terminal: d.terminal,
+            outcome: d.outcome,
+          });
+        }
+      }
 
       const rect = canvas.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -509,7 +754,41 @@ export default function World3D({
 
   return (
     <div style={{ position: 'relative', width: '100%', flex: 1, minHeight: 420, background: '#38bdf8', overflow: 'hidden', borderRadius: '22px' }}>
-      <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} aria-label="Mô phỏng giao thông 2.5D Isometric" />
+      <canvas
+        ref={canvasRef}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block', outline: 'none' }}
+        aria-label={interactive ? 'Sa bàn giao thông 2.5D tương tác. Dùng phím mũi tên hoặc WASD để điều khiển.' : 'Mô phỏng giao thông 2.5D Isometric'}
+        role={interactive ? 'application' : 'img'}
+        tabIndex={interactive ? 0 : -1}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onBlur={resetInputs}
+      />
+      {interactive && (
+        <div aria-label="Điều khiển sa bàn" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', left: 12, bottom: 42, display: 'grid', gridTemplateColumns: 'repeat(3, 44px)', gridTemplateRows: 'repeat(2, 44px)', gap: 6, pointerEvents: 'auto' }}>
+            {([['left', '←', 'Rẽ trái', 1, 2], ['forward', '↑', 'Tiến', 2, 1], ['backward', '↓', 'Giảm tốc', 2, 2], ['right', '→', 'Rẽ phải', 3, 2]] as const).map(([direction, label, aria, column, row]) => (
+              <button
+                key={direction}
+                type="button"
+                aria-label={aria}
+                disabled={dataRef.current.terminal}
+                style={{ gridColumn: column, gridRow: row }}
+                onPointerDown={event => { event.currentTarget.setPointerCapture(event.pointerId); setMovement(direction, true); }}
+                onPointerUp={event => { if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); setMovement(direction, false); }}
+                onPointerCancel={() => setMovement(direction, false)}
+                onLostPointerCapture={() => setMovement(direction, false)}
+              >{label}</button>
+            ))}
+          </div>
+          <div style={{ position: 'absolute', right: 12, bottom: 42, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(64px, auto))', gap: 7, pointerEvents: 'auto' }}>
+            <button type="button" onClick={() => performAction('SIGNAL_LEFT')}>Xi-nhan trái</button>
+            <button type="button" onClick={() => performAction('SIGNAL_RIGHT')}>Xi-nhan phải</button>
+            <button type="button" onClick={() => performAction('YIELD')}>Nhường</button>
+            <button type="button" onClick={() => performAction('BRAKE')}>Phanh</button>
+          </div>
+        </div>
+      )}
       <div style={{ position: 'absolute', left: 12, bottom: 12, fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 800, color: '#f8fafc', background: 'rgba(15, 23, 42, 0.75)', padding: '5px 10px', borderRadius: 8 }}>
         MÔ PHỎNG TÌNH HUỐNG 2.5D
       </div>
