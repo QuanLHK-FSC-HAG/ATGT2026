@@ -223,7 +223,16 @@ export async function submitAttempt(
   const rule_score = data.result?.rule_score ?? data.rule_score as number;
   const outcome = data.result?.outcome ?? data.outcome as string;
 
-  let feedback: string | undefined;
+  // Điểm Rule Engine hiện ngay; phản hồi AI (Gemini) lấy riêng ở nền, không chặn.
+  return { rule_score, outcome, feedback: 'Kết quả được chấm bởi Rule Engine trên máy chủ. Hãy đọc kỹ nguyên tắc an toàn trước chặng tiếp theo.' };
+}
+
+export async function fetchAiFeedback(
+  scenario: Scenario,
+  decision: string,
+  outcome: string,
+  rule_score: number
+): Promise<string | null> {
   try {
     const aiRes = await fetch('/api/public/ai-feedback', {
       method: 'POST',
@@ -231,12 +240,11 @@ export async function submitAttempt(
       credentials: 'include',
       body: JSON.stringify({ scenario_id: scenario.scenario_id, selected_decision: decision, outcome, rule_score }),
     });
-    if (aiRes.ok) {
-      const aiData = (await aiRes.json()) as { error_explanation?: string; safety_principle?: string; suggested_practice?: string };
-      feedback = aiData.safety_principle || aiData.error_explanation || aiData.suggested_practice;
-    }
+    if (!aiRes.ok) return null;
+    const aiData = (await aiRes.json()) as { error_explanation?: string; safety_principle?: string; suggested_practice?: string };
+    return aiData.safety_principle || aiData.error_explanation || aiData.suggested_practice || null;
   } catch {
     // The saved Rule Engine result remains valid when feedback is unavailable.
+    return null;
   }
-  return { rule_score, outcome, feedback: feedback || 'Kết quả được chấm bởi Rule Engine trên máy chủ. Hãy đọc kỹ nguyên tắc an toàn trước chặng tiếp theo.' };
 }

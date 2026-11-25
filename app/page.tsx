@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { clearLocalParticipantSession, createSession, loadScenario, sendEvents, submitAttempt, type SessionInfo } from '@/components/api';
+import { clearLocalParticipantSession, createSession, fetchAiFeedback, loadScenario, sendEvents, submitAttempt, type SessionInfo } from '@/components/api';
 import World3D, { type CameraMode, type VehicleType } from '@/components/world-3d';
 import { DEMO_PROVINCES } from '@/game/scenarios';
 import type { AttemptResult, GameAction, Phase, Scenario } from '@/game/types';
@@ -220,6 +220,13 @@ export default function HomePage() {
       const nextResult = await submitAttempt(session, phase, scenario, selected, durationMs);
       setResult(nextResult);
       setResults((prev) => ({ ...prev, [phase]: nextResult }));
+      // Phản hồi AI (Gemini) lấy ở nền, không chặn việc hiện điểm; về tới đâu cập nhật tới đó.
+      void fetchAiFeedback(scenario, selected, nextResult.outcome, nextResult.rule_score).then((feedback) => {
+        if (!feedback) return;
+        const enriched = { ...nextResult, feedback };
+        setResult((current) => (current === nextResult ? enriched : current));
+        setResults((prev) => (prev[phase] === nextResult ? { ...prev, [phase]: enriched } : prev));
+      });
     } catch {
       setError('Chưa thể ghi nhận câu trả lời. Vui lòng thử lại.');
     } finally {

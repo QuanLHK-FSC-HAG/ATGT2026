@@ -360,7 +360,9 @@ function convertSeedRow(row: SeedRow): ScenarioDefinition {
   // Only trusted, generated tags are emitted. Every seed value is encoded first.
   const safeZone = escapeHtml(zone);
   const safeTitle = escapeHtml(row.scenario_title);
-  const safeRisk = escapeHtml(risk);
+  // Mã sự kiện nội bộ (vd: pedestrian_green) không bao giờ hiển thị cho học sinh:
+  // dùng luôn tiêu đề tiếng Việt của kịch bản thay cho mã.
+  const safeRisk = escapeHtml(risk.includes(event) ? risk.replace(event, row.scenario_title) : risk);
   const safeSkillGroup = escapeHtml(row.skill_group || 'An toàn cơ bản');
   const safeLegalReference = escapeHtml(
     row.legal_reference && row.legal_reference !== 'NEEDS_LEGAL_REVIEW'
@@ -408,7 +410,7 @@ function convertSeedRow(row: SeedRow): ScenarioDefinition {
           <em>${safeLegalReference}</em>.
         </div>
       `,
-      suggested_practice_vi: `Luyện tập tại ${zone}: quan sát sớm tín hiệu "${event}", chủ động giảm tốc và giữ khoảng cách an toàn.`,
+      suggested_practice_vi: `Luyện tập tại ${zone}: quan sát sớm "${safeTitle}", chủ động giảm tốc và giữ khoảng cách an toàn.`,
     },
     npc_element: row.npc_element,
     trigger_event: row.trigger_condition?.event,

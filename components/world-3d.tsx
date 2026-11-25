@@ -339,9 +339,13 @@ export default function World3D({
 
       if (scene.archetype === 'INTERSECTION' || /traffic_light|light|den_/.test(scene.trafficControl)) {
         block(ctx, project, 3.4, 0, 1.5, 0.3, 4, 0.3, C.signalOff, shade(C.signalOff, -30), shade(C.signalOff, -12));
-        const isRedEvent = /red|dừng|den_do/.test(scene.trafficControl);
+        // Đèn cho người đi bộ và đèn cho xe là hai đèn khác nhau: đèn người đi bộ
+        // xanh nghĩa là xe phải dừng (đỏ), đèn người đi bộ đỏ nghĩa là xe được đi (xanh).
+        const isPedestrianGreen = /pedestrian_green/.test(scene.trafficControl);
+        const isPedestrianRed = /pedestrian_red/.test(scene.trafficControl);
+        const isRedEvent = isPedestrianGreen || (!isPedestrianRed && /red|dừng|den_do/.test(scene.trafficControl));
         const isYellowEvent = /yellow|vàng|den_vang/.test(scene.trafficControl);
-        const isGreenEvent = /green|xanh|den_xanh/.test(scene.trafficControl);
+        const isGreenEvent = isPedestrianRed || (!isPedestrianGreen && /green|xanh|den_xanh/.test(scene.trafficControl));
         const lightPhase = isRedEvent ? 0 : isYellowEvent ? 1 : isGreenEvent ? 2 : Math.floor(d.time / 3) % 3;
         block(ctx, project, 3.1, 3.4, 1.4, 0.9, 0.8, 0.6, lightPhase === 0 ? C.red : C.signalOff, '#111', '#222');
         block(ctx, project, 3.1, 2.5, 1.4, 0.9, 0.8, 0.6, lightPhase === 1 ? C.yellow : C.signalOff, '#111', '#222');
