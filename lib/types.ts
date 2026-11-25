@@ -100,17 +100,39 @@ export interface ScenarioVisualDecisionEffect {
   outcome: 'SAFE_CLEARANCE' | 'CONTROLLED_STOP' | 'CONFLICT' | 'NEAR_MISS';
 }
 
+export type ScenarioSignType =
+  | 'YIELD'
+  | 'NO_LEFT'
+  | 'MANDATORY'
+  | 'SPEED_LIMIT'
+  | 'ONE_WAY'
+  | 'SPEED_HUMP'
+  | 'SCHOOL'
+  | 'CHILDREN'
+  | 'LANE_SPLIT'
+  | 'RIGHT_TURN'
+  | 'STOP'
+  | 'CONSTRUCTION';
+
 export interface ScenarioVisualSpec {
   scene_type: ScenarioSceneType;
   road_layout: 'STRAIGHT' | 'T_INTERSECTION' | 'CROSS_INTERSECTION' | 'ROUNDABOUT' | 'RAIL_CROSSING' | 'NARROW_ROAD';
   hazards: ScenarioHazardType[];
   actors: Array<'STUDENT' | 'PEDESTRIAN' | 'CAR' | 'BUS' | 'TRUCK' | 'TRAFFIC_OFFICER' | 'TRAIN' | 'EMERGENCY_VEHICLE'>;
-  traffic_control: 'NONE' | 'RED' | 'YELLOW' | 'GREEN' | 'PEDESTRIAN_RED' | 'PEDESTRIAN_GREEN' | 'YIELD_SIGN' | 'STOP_SIGN' | 'OFFICER_STOP' | 'RAIL_BARRIER';
+  traffic_control: 'NONE' | 'RED' | 'YELLOW' | 'GREEN' | 'PEDESTRIAN_RED' | 'PEDESTRIAN_GREEN' | 'YIELD_SIGN' | 'STOP_SIGN' | 'OFFICER_STOP' | 'RAIL_BARRIER' | 'OFF';
   weather: 'SUNNY' | 'RAIN' | 'FOG';
   surface: 'DRY' | 'WET' | 'MUDDY' | 'GRAVEL';
   time_of_day: 'MORNING' | 'AFTERNOON' | 'EVENING' | 'NIGHT';
   camera: 'INTERSECTION' | 'FOLLOW_VEHICLE' | 'TOP_DOWN' | 'CINEMATIC_OVERVIEW';
   decision_effects: Record<string, ScenarioVisualDecisionEffect>;
+  // Gợi ý vẽ chi tiết (suy ra từ tiêu đề/sự kiện, dùng cho mô phỏng 3D):
+  sign?: ScenarioSignType;
+  turn?: 'LEFT' | 'RIGHT';
+  npc_signal?: 'LEFT' | 'RIGHT';
+  raining?: boolean;
+  at_school?: boolean;
+  crosswalk_faded?: boolean;
+  dual_arrow_light?: boolean;
 }
 
 export interface ScenarioDefinition {

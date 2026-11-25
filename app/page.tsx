@@ -56,6 +56,7 @@ const VEHICLE_INFO: Record<VehicleType, { label: string; desc: string; icon: str
   E_BIKE: { icon: '⚡', label: 'Xe đạp điện', desc: 'Phanh sớm nhẹ tay, giữ cự ly an toàn' },
   E_SCOOTER: { icon: '🛵', label: 'Xe máy điện', desc: 'Bắt buộc đội mũ bảo hiểm đạt chuẩn, bật xi-nhan khi rẽ' },
   MOTO_50CC: { icon: '🏍️', label: 'Xe máy dưới 50cc', desc: 'Dành cho học sinh THPT đủ điều kiện theo quy định' },
+  WALK: { icon: '🚶', label: 'Đi bộ', desc: 'Đi bộ qua đường, quan sát hai bên trước khi sang đường' },
 };
 
 export default function HomePage() {
@@ -164,7 +165,7 @@ export default function HomePage() {
       const firstScenario = await loadScenario('PRE');
       setScenario(firstScenario);
       setPhase('PRE');
-      setCameraMode('FOLLOW_VEHICLE');
+      setCameraMode(cameraForScenario(firstScenario, 'PRE'));
       setScreen('play');
       started.current = performance.now();
     } catch {
@@ -187,7 +188,7 @@ export default function HomePage() {
       setDemoMode(true);
       setDemoCount(1);
       setShowTutorial(true);
-      setCameraMode('FOLLOW_VEHICLE');
+      setCameraMode(cameraForScenario(first, 'PRE'));
       actions.current = [];
       started.current = performance.now();
       setScreen('play');
@@ -250,6 +251,7 @@ export default function HomePage() {
         setResult(null);
         setShowTutorial(false);
         setDemoCount(value => value + 1);
+        setCameraMode(cameraForScenario(nextDemo, 'PRE'));
         actions.current = [];
         started.current = performance.now();
       } catch {
@@ -268,13 +270,14 @@ export default function HomePage() {
     setError('');
     try {
       const nextPhase = phases[phases.indexOf(phase) + 1];
-      setScenario(await loadScenario(nextPhase));
+      const nextScenario = await loadScenario(nextPhase);
+      setScenario(nextScenario);
       setPhase(nextPhase);
       setSelected('');
       setResult(null);
       actions.current = [];
       started.current = performance.now();
-      setCameraMode(nextPhase === 'TRAINING' ? 'INTERSECTION' : 'FOLLOW_VEHICLE');
+      setCameraMode(cameraForScenario(nextScenario, nextPhase));
     } catch {
       setError('Chưa mở được chặng tiếp theo. Vui lòng thử lại.');
     } finally {
@@ -282,9 +285,23 @@ export default function HomePage() {
     }
   }
 
-  const selectedDecision = scenario && selected
-    ? selected === scenario.options[0]?.id ? 'safe' : selected === scenario.options[1]?.id ? 'rush' : 'ignore'
-    : '';
+  // Truyền thẳng option.id: decision_effects trong seed dùng key opt_safe/opt_rush/
+  // opt_ignore (và id riêng như opt_brake_wait) — truyền id thì World3D mới tra
+  // trúng hiệu ứng; trước đây map theo vị trí nên luôn trượt key (D1).
+  const selectedDecision = scenario && selected ? selected : '';
+
+  // Xe hiệu dụng: case STUDENT_WALKER thì vẽ người đi bộ bất kể phương tiện đã chọn.
+  const effectiveVehicle: VehicleType = scenario?.vehicle_group === 'PEDESTRIAN' ? 'WALK' : vehicleType;
+
+  // Camera theo kịch bản (C1/C2): spec.camera quyết định góc quay; không có spec
+  // thì theo chặng như cũ (TRAINING → INTERSECTION, còn lại FOLLOW_VEHICLE).
+  function cameraForScenario(scn: Scenario | null, fallbackPhase: Phase): CameraMode {
+    const cam = scn?.visual_spec?.camera;
+    if (cam === 'INTERSECTION') return 'INTERSECTION';
+    if (cam === 'TOP_DOWN') return 'TOP_DOWN';
+    if (cam === 'FOLLOW_VEHICLE') return 'FOLLOW_VEHICLE';
+    return fallbackPhase === 'TRAINING' ? 'INTERSECTION' : 'FOLLOW_VEHICLE';
+  }
 
   useEffect(() => {
     if (screen !== 'play' || !scenario) return;
@@ -585,7 +602,7 @@ export default function HomePage() {
                   Chọn phương tiện điều khiển 3D <span>*</span>
                 </label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginTop: '4px' }}>
-                  {(['BIKE', 'E_BIKE', 'E_SCOOTER', 'MOTO_50CC'] as VehicleType[]).map((vt) => {
+                  {(['BIKE', 'E_BIKE', 'E_SCOOTER', 'MOTO_50CC', 'WALK'] as VehicleType[]).map((vt) => {
                     const vInfo = VEHICLE_INFO[vt];
                     const isV = vehicleType === vt;
                     return (
@@ -687,7 +704,7 @@ export default function HomePage() {
                       {form.class_name} · {form.school_name} · {form.province_city}
                     </span>
                     <span>
-                      Cấp độ: {LEVEL_INFO[difficultyLevel].label} · Phương tiện: {VEHICLE_INFO[vehicleType].label}
+                      Cấp độ: {LEVEL_INFO[difficultyLevel].label} · Phương tiện: {VEHICLE_INFO[effectiveVehicle].label}
                     </span>
                     <button className="text-button" onClick={() => setScreen('welcome')} style={{ width: 'fit-content', marginTop: '6px' }}>
                       ✎ Sửa lại thông tin hoặc phương tiện
@@ -817,9 +834,9 @@ export default function HomePage() {
                 <div className="play-grid">
                   <div style={{ minHeight: '460px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <World3D
-                      key={`${phase}-${vehicleType}-${difficultyLevel}`}
+                      key={`${phase}-${effectiveVehicle}-${difficultyLevel}`}
                       cameraMode={cameraMode}
-                      vehicleType={vehicleType}
+                      vehicleType={effectiveVehicle}
                       isDriving={!result}
                       weather={phase === 'POST' || difficultyLevel === 'THU_THACH' ? 'rain' : 'sunny'}
                       sceneKind={scenario.npc_element}
@@ -916,7 +933,7 @@ export default function HomePage() {
 
                 <div className="notice" style={{ background: '#d7ffb8', borderColor: '#46a302', color: '#14532d' }}>
                   <strong>Huy hiệu đạt được:</strong> {LEVEL_INFO[difficultyLevel].badge} · Phương tiện:{' '}
-                  {VEHICLE_INFO[vehicleType].label}.{' '}
+                  {VEHICLE_INFO[effectiveVehicle].label}.{' '}
                   {session?.storageMode === 'GOOGLE'
                     ? 'Kết quả học tập đã được lưu và đồng bộ trực tuyến lên Google Sheets để phục vụ thống kê nghiên cứu.'
                     : session?.storageMode === 'LOCAL_DEMO_MOCK'

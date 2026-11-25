@@ -9,6 +9,7 @@ export type Scenario = {
   prompt_vi: string;
   hazard_cue_vi: string;
   options: { id: string; label_vi: string }[];
+  vehicle_group?: 'BICYCLE' | 'E_BIKE' | 'UNDER_50CC' | 'PEDESTRIAN' | 'MIXED_TRAFFIC';
   npc_element?: string;
   trigger_event?: string;
   correct_action?: string;

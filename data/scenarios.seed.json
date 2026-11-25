@@ -4271,7 +4271,7 @@
     "cognitive_level": "APPLICATION",
     "vehicle_type": "E_BIKE",
     "scenario_title": "Xe cảnh sát phát tín hiệu ưu tiên phía sau",
-    "npc_element": "TRUCK_LIGHT",
+    "npc_element": "POLICE_CAR",
     "correct_action": "PULL_OVER_AND_YIELD",
     "legal_reference": "NEEDS_LEGAL_REVIEW",
     "trigger_condition": {

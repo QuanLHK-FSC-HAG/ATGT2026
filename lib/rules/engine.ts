@@ -6,6 +6,7 @@ import type {
   AssessmentRecord,
   PublicScenarioView,
   ScenarioDefinition,
+  ScenarioSignType,
   ScenarioVisualSpec,
   ScenarioResultRecord,
   StudyPhase,
@@ -180,6 +181,58 @@ function includesAny(value: string, terms: string[]): boolean {
   return terms.some(term => value.includes(term));
 }
 
+function signFor(title: string, event: string): ScenarioSignType | undefined {
+  const t = `${title} ${event}`.toLowerCase();
+  if (/crossing_guard|cầm biển dừng|biển dừng/.test(t)) return 'STOP';
+  if (/no_left_turn|cấm rẽ trái/.test(t)) return 'NO_LEFT';
+  if (/conditional_right_turn|rẽ phải có điều kiện/.test(t)) return 'RIGHT_TURN';
+  if (/mandatory_direction|bắt buộc đi vòng/.test(t)) return 'MANDATORY';
+  if (/one_way|một chiều/.test(t)) return 'ONE_WAY';
+  if (/speed_hump|gờ giảm tốc/.test(t)) return 'SPEED_HUMP';
+  if (/work_zone_sign|giới hạn tốc độ|biển báo giảm tốc/.test(t)) return 'SPEED_LIMIT';
+  if (/lane_split|tách làn/.test(t)) return 'LANE_SPLIT';
+  if (/biển khu vực trường|school_zone/.test(t)) return 'SCHOOL';
+  if (/biển cảnh báo trẻ em/.test(t)) return 'CHILDREN';
+  if (/sidewalk_construction|biển công trường/.test(t)) return 'CONSTRUCTION';
+  if (/yield_sign|biển nhường đường/.test(t)) return 'YIELD';
+  return undefined;
+}
+
+// Hướng xi-nhan của học sinh: chính học sinh là người rẽ (các event xe NPC rẽ
+// thuộc về npcSignalFor). Áp dụng cả khi hành động đúng là SIGNAL_AND_YIELD
+// (bật xi-nhan rồi rẽ) lẫn STOP (đang rẽ thì dừng chờ — xi-nhan vẫn bật,
+// vd SCN-412A rẽ phải thì dừng cho người đi bộ, SCN-117A chờ đèn đỏ để rẽ
+// phải, SCN-119A chờ ở làn rẽ trái).
+const PLAYER_TURN_EVENTS = [
+  'lane_arrow', 'right_turn_crosswalk', 'alley_turn', 'parent_child_turn',
+  'uncontrolled_intersection', 'reversing_driveway', 'truck_blocks_turn',
+  'truck_opposite_turn', 'courteous_avoidance', 'alley_courtesy',
+  'turning_pedestrian', 'conditional_right_turn', 'lane_signal_off',
+];
+
+function turnFor(title: string, event: string, correctAction?: string): 'LEFT' | 'RIGHT' | undefined {
+  if (!['SIGNAL_AND_YIELD', 'STOP'].includes((correctAction || '').toUpperCase())) return undefined;
+  if (!PLAYER_TURN_EVENTS.includes(event.toLowerCase())) return undefined;
+  const t = `${title} ${event}`.toLowerCase();
+  if (/rẽ trái|left/.test(t)) return 'LEFT';
+  return 'RIGHT';
+}
+
+// Xi-nhan của xe NPC (xe buýt/xe tải/ô tô đối diện đang chuyển hướng).
+function npcSignalFor(title: string, event: string): 'LEFT' | 'RIGHT' | undefined {
+  const t = `${title} ${event}`.toLowerCase();
+  // 'roundabout_bus' (SCN-404A, xe buýt chuẩn bị rẽ ở vòng xuyến): giả định rẽ
+  // phải để ra khỏi vòng xuyến — hướng rẽ không nêu rõ trong tiêu đề/sự kiện.
+  if (/roundabout_bus/.test(t)) return 'RIGHT';
+  if (/contract_bus_pullover|tấp vào đón/.test(t)) return 'RIGHT';
+  if (/oncoming_left_turn|ô tô đối diện.*rẽ trái/.test(t)) return 'LEFT';
+  if (/dump_truck_turn|xi-nhan phải/.test(t)) return 'RIGHT';
+  if (/bus_leaving_stop|rời trạm/.test(t)) return 'LEFT';
+  if (/yield_to_bus_stop|vào trạm/.test(t)) return 'RIGHT';
+  if (/car_waiting_left|dừng chờ rẽ trái/.test(t)) return 'LEFT';
+  return undefined;
+}
+
 export function buildScenarioVisualSpec(input: {
   title_vi: string;
   npc_element?: string;
@@ -191,8 +244,22 @@ export function buildScenarioVisualSpec(input: {
   safe_decisions: string[];
 }): ScenarioVisualSpec {
   const raw = `${input.title_vi} ${input.npc_element || ''} ${input.trigger_event || ''}`.toLowerCase();
+  const title = (input.title_vi || '').toLowerCase();
   const event = (input.trigger_event || '').toLowerCase();
 
+  // Thứ tự ưu tiên đã sửa: công trình được xét TRƯỚC người đi bộ/ngã tư
+  // (chỉ SCN-120A dính cả hai nhóm — "Biển công trường... chiếm một phần vỉa hè",
+  // npc TRAFFIC_LIGHT — và phải ra OBSTACLE_CONSTRUCTION, không phải
+  // PEDESTRIAN_CROSSING/INTERSECTION_SIGNAL). 'blocked' không còn tự kích hoạt
+  // nhánh công trình (SCN-106A "Đèn xanh..." → INTERSECTION_SIGNAL,
+  // SCN-803A "chiếm vỉa hè" → PEDESTRIAN_CROSSING). 'biển' không còn tự kích
+  // hoạt nhánh ngã tư; 'ngã ba' được tính là ngã tư (SCN-413A).
+  // - pedestrian/intersection trước low_vis/slippery: các case về người đi bộ
+  //   trong mưa/sương (701A/706A/710A/715A/811A) ra PEDESTRIAN_CROSSING, các case
+  //   nhắc đèn/ngã tư (711A/717A/719A) ra INTERSECTION_SIGNAL.
+  // - 'đèn pha' (đèn xe đối diện, SCN-714A) và 'headlight' KHÔNG kích hoạt
+  //   nhánh ngã tư — 714A giữ đúng LOW_VISIBILITY (chói). /đèn pha(?!nh)/
+  //   để không chặn 'đèn phanh' (SCN-619A, vẫn ra INTERSECTION_SIGNAL như cũ).
   let scene_type: ScenarioVisualSpec['scene_type'] = 'SCHOOL_GATE';
   if (includesAny(raw, ['rail', 'đường sắt', 'thanh chắn'])) scene_type = 'RAILWAY_CROSSING';
   else if (includesAny(raw, ['roundabout', 'vòng xuyến'])) scene_type = 'ROUNDABOUT';
@@ -202,12 +269,14 @@ export function buildScenarioVisualSpec(input: {
   else if (includesAny(raw, ['emergency', 'priority', 'ưu tiên', 'cảnh sát', 'police'])) scene_type = 'EMERGENCY_VEHICLE';
   else if (includesAny(raw, ['overtak', 'vượt xe', 'vượt bên'])) scene_type = 'OVERTAKING';
   else if (includesAny(raw, ['merge', 'lane_change', 'chuyển làn', 'nhập làn'])) scene_type = 'MERGE_LANE_CHANGE';
+  else if (includesAny(raw, ['construction', 'obstacle', 'chướng ngại', 'công trình', 'hàng rơi', 'loose_cargo'])) scene_type = 'OBSTACLE_CONSTRUCTION';
+  else if (includesAny(raw, ['pedestrian', 'crosswalk', 'qua đường', 'người đi bộ', 'trẻ em'])) scene_type = 'PEDESTRIAN_CROSSING';
+  else if (includesAny(raw, ['signal', 'giao lộ', 'ngã tư', 'ngã ba', 'yield'])
+    || (/light/.test(raw) && !/headlight/.test(raw))
+    || (/đèn/.test(raw) && !/đèn pha(?!nh)/.test(raw))) scene_type = 'INTERSECTION_SIGNAL';
   else if (includesAny(raw, ['fog', 'sương', 'low_visibility', 'chói', 'khuất tầm nhìn'])) scene_type = 'LOW_VISIBILITY';
   else if (includesAny(raw, ['rain', 'wet', 'mưa', 'trơn', 'puddle', 'mud'])) scene_type = 'SLIPPERY_ROAD';
-  else if (includesAny(raw, ['construction', 'obstacle', 'chướng ngại', 'công trình', 'hàng rơi', 'loose_cargo'])) scene_type = 'OBSTACLE_CONSTRUCTION';
   else if (includesAny(raw, ['narrow', 'ngõ hẹp', 'đường hẹp', 'cổng hẹp'])) scene_type = 'NARROW_ROAD';
-  else if (includesAny(raw, ['pedestrian', 'crosswalk', 'qua đường', 'người đi bộ', 'trẻ em'])) scene_type = 'PEDESTRIAN_CROSSING';
-  else if (includesAny(raw, ['light', 'signal', 'đèn', 'biển', 'giao lộ', 'ngã tư', 'yield'])) scene_type = 'INTERSECTION_SIGNAL';
 
   let road_layout: ScenarioVisualSpec['road_layout'] = 'STRAIGHT';
   if (scene_type === 'ROUNDABOUT') road_layout = 'ROUNDABOUT';
@@ -230,13 +299,23 @@ export function buildScenarioVisualSpec(input: {
 
   const actors = new Set<ScenarioVisualSpec['actors'][number]>(['STUDENT']);
   if (scene_type === 'PEDESTRIAN_CROSSING' || includesAny(raw, ['pedestrian', 'người đi bộ'])) actors.add('PEDESTRIAN');
-  if (includesAny(raw, ['car', 'family_car', 'ô tô', 'xe con', 'door'])) actors.add('CAR');
+  // 'police_car' chứa 'car' nhưng là xe ưu tiên, không phải ô tô thường.
+  // 'door' trần không tính là ô tô — 'bus_door_opening' là cửa xe buýt (SCN-517A).
+  if (includesAny(raw, ['family_car', 'ô tô', 'xe con']) || (/car/.test(raw) && !/police_car/.test(raw))) actors.add('CAR');
   if (includesAny(raw, ['bus', 'xe buýt'])) actors.add('BUS');
   if (includesAny(raw, ['truck', 'xe tải'])) actors.add('TRUCK');
-  if (includesAny(raw, ['officer', 'cảnh sát'])) actors.add('TRAFFIC_OFFICER');
+  // 'cảnh sát' là NGƯỜI điều tiết chỉ khi không phải "xe cảnh sát" (SCN-105A/415A
+  // là người; SCN-808A "Xe cảnh sát phát tín hiệu ưu tiên" là xe ưu tiên).
+  // 'đèn điều tiết' là đèn rẽ trái, không phải người điều tiết.
+  if (includesAny(raw, ['officer', 'guard', 'tình nguyện viên']) || (/cảnh sát/.test(raw) && !/xe cảnh sát/.test(raw)) || (/điều tiết/.test(raw) && !/đèn điều tiết/.test(raw))) actors.add('TRAFFIC_OFFICER');
   if (scene_type === 'RAILWAY_CROSSING') actors.add('TRAIN');
-  if (scene_type === 'EMERGENCY_VEHICLE' && !actors.has('TRAFFIC_OFFICER')) actors.add('EMERGENCY_VEHICLE');
+  if ((scene_type === 'EMERGENCY_VEHICLE' || includesAny(raw, ['ambulance', 'fire_engine', 'xe cứu thương', 'xe cứu hỏa'])) && !actors.has('TRAFFIC_OFFICER')) actors.add('EMERGENCY_VEHICLE');
 
+  // Màu đèn: suy từ sự kiện trước, rồi từ tiêu đề tiếng Việt (trước đây chỉ xét
+  // sự kiện nên 12 case nhắc đèn trong tiêu đề bị bỏ qua, và 17 case không khớp
+  // màu nào thì đèn tự chạy vòng). 'Đèn xanh đã hết' nghĩa là đèn đã chuyển đỏ.
+  // Tiêu đề nhắc đèn mà không nêu màu (vd SCN-703A) mặc định vẽ đèn đỏ — đèn
+  // đang chờ ở vạch dừng là trạng thái an toàn cần chuẩn bị dừng.
   let traffic_control: ScenarioVisualSpec['traffic_control'] = 'NONE';
   if (includesAny(event, ['pedestrian_red'])) traffic_control = 'PEDESTRIAN_RED';
   else if (includesAny(event, ['pedestrian_green'])) traffic_control = 'PEDESTRIAN_GREEN';
@@ -247,6 +326,19 @@ export function buildScenarioVisualSpec(input: {
   else if (includesAny(event, ['stop_sign'])) traffic_control = 'STOP_SIGN';
   else if (includesAny(event, ['officer_stop'])) traffic_control = 'OFFICER_STOP';
   else if (scene_type === 'RAILWAY_CROSSING') traffic_control = 'RAIL_BARRIER';
+  else if (title.includes('đèn người đi bộ đỏ')) traffic_control = 'PEDESTRIAN_RED';
+  else if (title.includes('đèn người đi bộ xanh')) traffic_control = 'PEDESTRIAN_GREEN';
+  else if (title.includes('đèn đỏ') || title.includes('đèn xanh đã hết') || title.includes('đèn xanh hết')) traffic_control = 'RED';
+  else if (title.includes('đèn xanh')) traffic_control = 'GREEN';
+  else if (title.includes('đèn vàng')) traffic_control = 'YELLOW';
+  else if (title.includes('đèn') && title.includes('tắt')) traffic_control = 'OFF';
+  else if (title.includes('không đèn') || title.includes('không có đèn')) traffic_control = 'NONE';
+  // Không mặc định mọi tiêu đề nhắc 'đèn' thành đèn đỏ: 'đèn cảnh báo'/'đèn khẩn
+  // cấp' là đèn xe buýt (SCN-212A/517A), 'đèn pha' là đèn xe đối diện (SCN-714A),
+  // 'đèn phanh' là đèn xe phía trước (SCN-619A), 'đèn pin' là đèn cầm tay
+  // (SCN-718A), 'thiếu đèn' là không có đèn (SCN-707A). Chỉ 'đèn tín hiệu'/
+  // 'đèn giao thông' không nêu màu mới mặc định đỏ (SCN-703A).
+  else if (/đèn tín hiệu|đèn giao thông/.test(title)) traffic_control = 'RED';
 
   const surfaceRaw = (input.surface_state || '').toLowerCase();
   const surface: ScenarioVisualSpec['surface'] = includesAny(surfaceRaw, ['mud', 'bùn'])
@@ -261,6 +353,16 @@ export function buildScenarioVisualSpec(input: {
     ? 'NIGHT'
     : includesAny(timeRaw, ['evening', 'chiều tối']) ? 'EVENING'
       : includesAny(timeRaw, ['afternoon', 'chiều']) ? 'AFTERNOON' : 'MORNING';
+
+  // Đang mưa thật (vệt mưa rơi) khác với đường ướt sau mưa: chỉ vẽ mưa khi tiêu
+  // đề/sự kiện nhắc mưa, trừ "sau mưa" (SCN-705A "Mặt đường ướt sau mưa" không
+  // vẽ mưa). time_of_day ghi mưa (rainy_morning/heavy_rain...) KHÔNG đủ để vẽ
+  // mưa — bản rà soát liệt kê các case đó vào nhóm R1 (vd SCN-605A/611A/713A:
+  // đường ướt nhưng tiêu đề không nhắc mưa). 'sau cơn mưa' (SCN-709A) vẫn tính
+  // là đang mưa theo quy tắc của bản rà soát (không nằm trong danh sách R1).
+  const raining = weather === 'RAIN'
+    && /mưa|rain/.test(`${title} ${event}`)
+    && !/sau mưa|after_rain/.test(`${title} ${event}`);
 
   const safeAction = (input.correct_action || '').toUpperCase();
   const safeEffect: ScenarioVisualSpec['decision_effects'][string] = safeAction.includes('SIGNAL')
@@ -282,7 +384,25 @@ export function buildScenarioVisualSpec(input: {
     : scene_type === 'PEDESTRIAN_CROSSING' || scene_type === 'OPENING_DOOR' ? 'FOLLOW_VEHICLE'
       : scene_type === 'ROUNDABOUT' || scene_type === 'RAILWAY_CROSSING' ? 'TOP_DOWN' : 'CINEMATIC_OVERVIEW';
 
-  return { scene_type, road_layout, hazards: [...hazards], actors: [...actors], traffic_control, weather, surface, time_of_day, camera, decision_effects };
+  return {
+    scene_type,
+    road_layout,
+    hazards: [...hazards],
+    actors: [...actors],
+    traffic_control,
+    weather,
+    surface,
+    time_of_day,
+    camera,
+    decision_effects,
+    sign: signFor(title, event),
+    turn: turnFor(title, event, input.correct_action),
+    npc_signal: npcSignalFor(title, event),
+    raining,
+    at_school: /trường học|cổng trường|trước cổng|cạnh cổng|school/.test(raw),
+    crosswalk_faded: /faded_crosswalk/.test(event) || (/vạch/.test(title) && /mờ/.test(title)),
+    dual_arrow_light: event === 'left_arrow_red' || /mũi tên xanh.*rẽ trái đỏ/.test(title),
+  };
 }
 
 function generateOptionsAndRubric(row: SeedRow): {

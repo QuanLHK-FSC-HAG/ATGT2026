@@ -74,6 +74,7 @@ const NPCS = new Set([
   'TRUCK_LIGHT',
   'BUS_PUBLIC',
   'TRUCK_HEAVY',
+  'POLICE_CAR',
 ]);
 
 const ARCHETYPES: ScenarioArchetype[] = [
