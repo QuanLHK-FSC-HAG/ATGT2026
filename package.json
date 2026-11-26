@@ -21,6 +21,7 @@
     "phaser": "^3.90.0",
     "react": "latest",
     "react-dom": "latest",
+    "three": "^0.187.0",
     "zod": "latest"
   },
   "devDependencies": {
@@ -29,6 +30,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/three": "^0.187.0",
     "tailwindcss": "latest",
     "tsx": "latest",
     "typescript": "latest"

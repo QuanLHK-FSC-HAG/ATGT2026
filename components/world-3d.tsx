@@ -1,6 +1,7 @@
-﻿'use client';
+'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 import type { ScenarioVisualSpec } from '@/lib/types';
 
 export type CameraMode = 'CINEMATIC_OVERVIEW' | 'FOLLOW_VEHICLE' | 'TOP_DOWN' | 'INTERSECTION';
@@ -37,8 +38,6 @@ export interface World3DProps {
   selectedDecision?: string;
   visualSpec?: ScenarioVisualSpec;
 }
-
-type Projector = (x: number, y: number, z: number) => { x: number; y: number };
 
 const C = {
   grass: '#7ED957',
@@ -300,94 +299,614 @@ function shade(hex: string, amount: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-function block(
-  ctx: CanvasRenderingContext2D,
-  p: Projector,
-  x: number,
-  y: number,
-  z: number,
-  w: number,
-  h: number,
-  d: number,
-  top: string,
-  left: string,
-  right: string,
-) {
-  const a = p(x, y + h, z);
-  const b = p(x + w, y + h, z);
-  const c = p(x + w, y + h, z + d);
-  const d0 = p(x, y + h, z + d);
-  const aB = p(x, y, z);
-  const cB = p(x + w, y, z + d);
+// ===========================================================================
+// 3D-lite: mô tả cảnh thuần túy (không phụ thuộc Three.js) + bộ dựng Three.js
+// ---------------------------------------------------------------------------
+// Vì sao dùng three thuần thay vì @react-three/fiber: bộ vẽ cũ đã là code
+// mệnh lệnh (imperative); three thuần giữ bundle nhẹ cho máy phòng máy và
+// điện thoại học sinh, không thêm React reconciler, và tránh rủi ro tương
+// thích phiên bản R3F với React/Next mới nhất. Toàn bộ hình khối low-poly
+// tự vẽ bằng code, không dùng ảnh AI, không texture nặng.
+// ===========================================================================
 
-  ctx.fillStyle = left;
-  ctx.beginPath();
-  ctx.moveTo(a.x, a.y);
-  ctx.lineTo(d0.x, d0.y);
-  ctx.lineTo(cB.x, cB.y);
-  ctx.lineTo(aB.x, aB.y);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.fillStyle = right;
-  ctx.beginPath();
-  ctx.moveTo(d0.x, d0.y);
-  ctx.lineTo(c.x, c.y);
-  ctx.lineTo(cB.x, cB.y);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.fillStyle = top;
-  ctx.beginPath();
-  ctx.moveTo(a.x, a.y);
-  ctx.lineTo(b.x, b.y);
-  ctx.lineTo(c.x, c.y);
-  ctx.lineTo(d0.x, d0.y);
-  ctx.closePath();
-  ctx.fill();
+/** Mô tả cảnh 3D thuần túy (số/chuỗi/boolean) — để kiểm thử mà không cần
+ * WebGL, và để bộ dựng Three.js chỉ việc dịch mô tả thành mesh. */
+export interface Scene3DDescription {
+  scene: ResolvedScene;
+  light: LightState;
+  npcVehicles: NpcVehicle[];
+  crosswalk: boolean;
+  /** Vạch qua đường đã mờ (SCN-109A, F1): vẽ xám nhạt thay vì trắng đặc. */
+  crosswalkFaded: boolean;
+  sky: string;
+  road: string;
+  signText?: string;
+  schoolBuilding: boolean;
+  atSchool: boolean;
+  pedestrian: boolean;
+  officer: boolean;
+  blindSpot: boolean;
+  blindLabel?: string;
+  rain: boolean;
+  fog: boolean;
+  night: boolean;
+  evening: boolean;
+  isWalk: boolean;
+  /** Chuỗi gộp sceneKind + sceneEvent (chữ thường) — dùng cho chi tiết biên
+   * như gầm cầu vượt (LOW_VISIBILITY). */
+  kind: string;
 }
 
-/** Vẽ một xe NPC (xe buýt xanh teal, xe tải vàng, ô tô hồng, xe ưu tiên trắng
- * + đèn chớp đỏ/xanh). Xi-nhan (T1): 2 chấm vàng cam nhấp nháy ở phía hướng
- * rẽ (trước + sau xe). */
-function drawVehicle(
-  ctx: CanvasRenderingContext2D,
-  project: Projector,
-  time: number,
-  v: NpcVehicle,
-) {
-  const dims: Record<NpcVehicleKind, { w: number; h: number; d: number; top: string; dark: string }> = {
-    BUS: { w: 2.2, h: 2.4, d: 4.8, top: '#22a6b3', dark: '#14727b' },
-    TRUCK: { w: 2.2, h: 2.2, d: 4, top: C.truck, dark: C.truckDark },
-    CAR: { w: 1.05, h: 0.9, d: 2.2, top: C.car, dark: C.carDark },
-    EMERGENCY: { w: 1.8, h: 1.2, d: 3, top: '#f8fafc', dark: '#94a3b8' },
+export function describeScene3D(
+  spec: ScenarioVisualSpec | undefined,
+  sceneKind: string,
+  sceneEvent: string,
+  vehicleType: VehicleType,
+  weather: 'sunny' | 'rain' | 'evening',
+): Scene3DDescription {
+  const scene = resolveScene(spec, sceneKind, sceneEvent);
+  const kind = `${sceneKind || ''} ${sceneEvent || ''}`.toLowerCase();
+  const specWeather = spec?.weather === 'RAIN' ? 'rain' : spec?.weather === 'FOG' ? 'evening' : 'sunny';
+  const activeWeather = spec ? specWeather : weather;
+  const npcVehicles = npcVehiclesFor(spec, scene, sceneKind);
+  const blind = scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT' ? npcVehicles[0] : undefined;
+  return {
+    scene,
+    light: lightStateFor(spec?.traffic_control, spec?.dual_arrow_light),
+    npcVehicles,
+    crosswalk: drawsCrosswalk(spec, scene.archetype),
+    crosswalkFaded: spec?.crosswalk_faded === true,
+    sky: skyColorFor(spec, activeWeather),
+    road: roadColorFor(spec, activeWeather),
+    signText: signLabel(spec?.sign),
+    schoolBuilding: scene.archetype === 'SCHOOL_GATE' || /school|cong_truong/.test(kind),
+    atSchool: spec?.at_school !== false,
+    pedestrian: scene.archetype === 'PEDESTRIAN_CROSSING' || scene.actors.has('pedestrian'),
+    officer: scene.actors.has('traffic_officer'),
+    blindSpot: scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT',
+    blindLabel: blind
+      ? blind.kind === 'BUS'
+        ? 'VÙNG ĐIỂM MÙ XE BUÝT'
+        : blind.kind === 'CAR'
+          ? 'VÙNG ĐIỂM MÙ XE Ô TÔ'
+          : 'VÙNG ĐIỂM MÙ XE TẢI'
+      : undefined,
+    // Mưa chỉ khi kịch bản đang mưa thật (spec.raining); đường ướt sau mưa
+    // không vẽ mưa (R1).
+    rain: activeWeather === 'rain' && (!spec || spec.raining === true),
+    fog: spec?.weather === 'FOG' || scene.archetype === 'LOW_VISIBILITY',
+    night: spec?.time_of_day === 'NIGHT',
+    evening: spec?.time_of_day === 'EVENING',
+    isWalk: vehicleType === 'WALK',
+    kind,
   };
-  const dim = dims[v.kind];
+}
+
+// --- Helpers dựng mesh (chỉ chạy trong trình duyệt, bên trong useEffect) ---
+
+function std(color: string, opts?: { emissive?: string; emissiveIntensity?: number; transparent?: boolean; opacity?: number }): THREE.MeshStandardMaterial {
+  return new THREE.MeshStandardMaterial({
+    color,
+    roughness: 0.9,
+    metalness: 0,
+    emissive: opts?.emissive ?? '#000000',
+    emissiveIntensity: opts?.emissiveIntensity ?? 1,
+    transparent: opts?.transparent ?? false,
+    opacity: opts?.opacity ?? 1,
+  });
+}
+
+function box(w: number, h: number, d: number, color: string, x: number, y: number, z: number, opts?: { emissive?: string; emissiveIntensity?: number; transparent?: boolean; opacity?: number }): THREE.Mesh {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), std(color, opts));
+  m.position.set(x, y, z);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  return m;
+}
+
+/** Texture chữ vẽ bằng canvas 2D (không phải ảnh AI) — dùng cho biển báo,
+ * đèn người đi bộ, biển trường, vùng điểm mù, mũi tên đèn. Mặt phẳng quay
+ * 45° để hướng về camera isometric (nhìn từ hướng +x/+z). */
+function textTexture(text: string, opts?: { font?: string; color?: string; bg?: string; border?: string }): THREE.CanvasTexture {
+  const font = opts?.font ?? '900 44px system-ui, sans-serif';
+  const pad = 22;
+  const c = document.createElement('canvas');
+  const ctx = c.getContext('2d');
+  if (!ctx) throw new Error('Canvas 2D không khả dụng');
+  ctx.font = font;
+  const tw = Math.ceil(ctx.measureText(text).width);
+  const th = 64;
+  c.width = tw + pad * 2;
+  c.height = th + pad * 2;
+  const g = c.getContext('2d');
+  if (!g) throw new Error('Canvas 2D không khả dụng');
+  if (opts?.bg) {
+    g.fillStyle = opts.bg;
+    g.fillRect(0, 0, c.width, c.height);
+  }
+  if (opts?.border) {
+    g.strokeStyle = opts.border;
+    g.lineWidth = 6;
+    g.strokeRect(3, 3, c.width - 6, c.height - 6);
+  }
+  g.font = font;
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillStyle = opts?.color ?? '#0f172a';
+  g.fillText(text, c.width / 2, c.height / 2 + 2);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
+}
+
+function textPlane(text: string, height: number, opts?: { font?: string; color?: string; bg?: string; border?: string }): THREE.Mesh {
+  const tex = textTexture(text, opts);
+  const img = tex.image as HTMLCanvasElement;
+  const w = height * (img.width / img.height);
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(w, height),
+    new THREE.MeshBasicMaterial({ map: tex, transparent: !opts?.bg, side: THREE.DoubleSide }),
+  );
+  m.rotation.y = Math.PI / 4;
+  return m;
+}
+
+type DynRefs = {
+  blinkers: { mesh: THREE.Mesh; side: 'LEFT' | 'RIGHT'; owner: 'PLAYER' | 'NPC' }[];
+  emergencyBars: { red: THREE.MeshStandardMaterial; blue: THREE.MeshStandardMaterial }[];
+  brakeMats: THREE.MeshStandardMaterial[];
+  pedestrian?: THREE.Group;
+  rain?: THREE.Points;
+  rainBase?: Float32Array;
+  unsafeRing?: THREE.Mesh;
+};
+
+const GROUND_X = 12;
+const GROUND_Z = 30;
+
+function buildGround(desc: Scene3DDescription): THREE.InstancedMesh {
+  const geo = new THREE.BoxGeometry(0.96, 0.3, 0.96);
+  const mat = new THREE.MeshStandardMaterial({ roughness: 0.95, metalness: 0 });
+  const count = (GROUND_X * 2 + 1) * (GROUND_Z * 2 + 1);
+  const mesh = new THREE.InstancedMesh(geo, mat, count);
+  mesh.receiveShadow = true;
+  const dummy = new THREE.Object3D();
+  const color = new THREE.Color();
+  let i = 0;
+  for (let x = -GROUND_X; x <= GROUND_X; x++) {
+    for (let z = -GROUND_Z; z <= GROUND_Z; z++) {
+      const isIntersection = ['INTERSECTION', 'PEDESTRIAN_CROSSING', 'ROUNDABOUT'].includes(desc.scene.archetype);
+      const isCrossRoad = isIntersection && z >= -2 && z <= 2;
+      const roadHalfWidth = desc.scene.archetype === 'NARROW_ROAD' ? 1 : 2;
+      const isRoad = (x >= -roadHalfWidth && x <= roadHalfWidth) || isCrossRoad;
+      const isWalk = x === -3 || x === 3;
+      const isCrosswalk = desc.crosswalk && z >= -1 && z <= 1 && Math.abs(x) <= 2;
+      // Vạch mờ (F1): vạch màu xám nhạt thay vì trắng đặc.
+      const crosswalkColor = desc.crosswalkFaded ? '#9aa5b1' : C.line;
+      const top = isCrosswalk && x % 2 === 0 ? crosswalkColor : isRoad ? desc.road : isWalk ? C.walk : C.grass;
+      dummy.position.set(x, -0.15, z);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+      mesh.setColorAt(i, color.set(top));
+      i++;
+    }
+  }
+  mesh.count = i;
+  mesh.instanceMatrix.needsUpdate = true;
+  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  return mesh;
+}
+
+function buildMarkings(desc: Scene3DDescription): THREE.Group {
+  const g = new THREE.Group();
+  const white = std(C.line);
+  const add = (w: number, d: number, x: number, z: number, color?: string) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.02, d), color ? std(color) : white);
+    m.position.set(x, 0.02, z);
+    m.receiveShadow = true;
+    g.add(m);
+  };
+  // Vạch đứt giữa đường.
+  for (let z = -GROUND_Z; z <= GROUND_Z; z += 2) add(0.14, 1, -0.07, z);
+  // Vạch biên liền hai bên.
+  add(0.1, GROUND_Z * 2, -2.2, 0);
+  add(0.1, GROUND_Z * 2, 2.1, 0);
+  // Vạch dừng trước ngã tư.
+  for (let x = -2.1; x <= 2.1; x += 0.5) add(0.45, 0.28, x, -1.6);
+  // Vạch qua đường: 3 dải (mờ → xám nhạt, F1).
+  if (desc.crosswalk) {
+    const stripeColor = desc.crosswalkFaded ? '#9aa5b1' : '#ffffff';
+    for (const x of [-2, 0, 2]) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.02, 2), std(stripeColor));
+      m.position.set(x, 0.02, 0);
+      m.receiveShadow = true;
+      g.add(m);
+    }
+  }
+  return g;
+}
+
+const VEHICLE_DIMS: Record<NpcVehicleKind, { w: number; h: number; d: number; top: string; dark: string }> = {
+  BUS: { w: 2.2, h: 2.4, d: 4.8, top: '#22a6b3', dark: '#14727b' },
+  TRUCK: { w: 2.2, h: 2.2, d: 4, top: C.truck, dark: C.truckDark },
+  CAR: { w: 1.05, h: 0.9, d: 2.2, top: C.car, dark: C.carDark },
+  EMERGENCY: { w: 1.8, h: 1.2, d: 3, top: '#f8fafc', dark: '#94a3b8' },
+};
+
+function buildVehicleMesh(v: NpcVehicle): { group: THREE.Group; blinkers: THREE.Mesh[]; bar?: { red: THREE.MeshStandardMaterial; blue: THREE.MeshStandardMaterial } } {
+  const g = new THREE.Group();
+  const blinkers: THREE.Mesh[] = [];
+  let bar: { red: THREE.MeshStandardMaterial; blue: THREE.MeshStandardMaterial } | undefined;
+  const dim = VEHICLE_DIMS[v.kind];
   const top = v.color ?? dim.top;
+  const addWheel = (x: number, z: number) => {
+    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.2, 12), std('#1f2937'));
+    wheel.rotation.z = Math.PI / 2;
+    wheel.position.set(x, 0.32, z);
+    wheel.castShadow = true;
+    g.add(wheel);
+  };
   if (v.kind === 'TRUCK') {
-    block(ctx, project, v.x, 0, v.z, dim.w, dim.h, dim.d, top, shade(top, -55), shade(top, -25));
-    block(ctx, project, v.x + 0.1, 2.2, v.z + 0.4, 2, 1.2, 2.2, shade(C.truck, 30), C.truckDark, C.truckDark);
+    g.add(box(dim.w, dim.h, dim.d, top, 0, dim.h / 2, 0));
+    g.add(box(2, 1.2, 2.2, shade(C.truck, 30), 0.1, 2.2 + 0.6, 0.4));
   } else if (v.kind === 'BUS') {
-    block(ctx, project, v.x, 0, v.z, dim.w, dim.h, dim.d, top, '#14727b', '#1b8792');
+    g.add(box(dim.w, dim.h, dim.d, top, 0, dim.h / 2, 0));
+    g.add(box(dim.w + 0.04, 0.7, dim.d * 0.7, '#bae6fd', 0, 1.7, 0));
   } else if (v.kind === 'EMERGENCY') {
-    block(ctx, project, v.x, 0, v.z, dim.w, dim.h, dim.d, top, '#94a3b8', '#cbd5e1');
-    const flash = Math.floor(time * 5) % 2 === 0 ? C.red : C.player;
-    block(ctx, project, v.x + 0.5, 1.2, v.z + 0.6, 0.8, 0.25, 0.5, flash, shade(flash, -40), shade(flash, -20));
+    g.add(box(dim.w, dim.h, dim.d, top, 0, dim.h / 2, 0));
+    g.add(box(dim.w * 0.8, 0.5, dim.d * 0.6, '#dbeafe', 0, dim.h + 0.1, 0));
+    const red = std('#dc2626', { emissive: '#dc2626', emissiveIntensity: 1 });
+    const blue = std('#2563eb', { emissive: '#2563eb', emissiveIntensity: 1 });
+    const barRed = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.22, 0.5), red);
+    barRed.position.set(-0.25, dim.h + 0.45, 0.3);
+    const barBlue = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.22, 0.5), blue);
+    barBlue.position.set(0.25, dim.h + 0.45, 0.3);
+    g.add(barRed, barBlue);
+    bar = { red, blue };
   } else {
-    block(ctx, project, v.x, 0, v.z, dim.w, dim.h, dim.d, top, shade(top, -45), shade(top, -20));
+    g.add(box(dim.w, dim.h, dim.d, top, 0, dim.h / 2, 0));
+    g.add(box(dim.w * 0.85, 0.55, dim.d * 0.55, '#dbeafe', 0, dim.h + 0.2, 0));
   }
-  if (v.signal && Math.floor(time * 3) % 2 === 0) {
-    const sideX = v.signal === 'LEFT' ? v.x - 0.1 : v.x + dim.w - 0.1;
-    const sigF = project(sideX, 0.9, v.z - 0.2);
-    const sigB = project(sideX, 0.9, v.z + dim.d - 0.2);
-    ctx.fillStyle = '#f59e0b';
-    ctx.beginPath();
-    ctx.arc(sigF.x, sigF.y, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(sigB.x, sigB.y, 5, 0, Math.PI * 2);
-    ctx.fill();
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      addWheel(sx * (dim.w / 2 - 0.05), sz * (dim.d / 2 - 0.45));
+    }
   }
+  // Xi-nhan NPC (T1): 2 chấm vàng cam ở phía hướng rẽ (trước + sau xe).
+  if (v.signal) {
+    const sideX = v.signal === 'LEFT' ? -dim.w / 2 : dim.w / 2;
+    for (const z of [-dim.d / 2 + 0.1, dim.d / 2 - 0.1]) {
+      const dot = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 10), std('#f59e0b', { emissive: '#f59e0b', emissiveIntensity: 1.6 }));
+      dot.position.set(sideX, 0.9, z);
+      g.add(dot);
+      blinkers.push(dot);
+    }
+  }
+  g.position.set(v.x, 0, v.z);
+  return { group: g, blinkers, bar };
+}
+
+function buildTrafficLight(desc: Scene3DDescription): THREE.Group {
+  const g = new THREE.Group();
+  const light = desc.light;
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 4, 10), std(C.signalOff));
+  pole.position.set(3.4, 2, 1.5);
+  pole.castShadow = true;
+  g.add(pole);
+  if (light.dual) {
+    // Mũi tên ở mặt trước cột đèn (hướng +z, phía xe học sinh tới).
+    const up = textPlane('↑', 0.9, { color: C.green, font: '900 60px system-ui, sans-serif' });
+    up.position.set(3.55, 3.2, 1.85);
+    const left = textPlane('←', 0.9, { color: C.red, font: '900 60px system-ui, sans-serif' });
+    left.position.set(3.55, 2.2, 1.85);
+    g.add(up, left);
+  } else {
+    const housing = box(0.9, 2.6, 0.6, '#111827', 3.4, 2.5, 1.5);
+    g.add(housing);
+    const phases: ['RED' | 'YELLOW' | 'GREEN', number][] = [['RED', 3.4], ['YELLOW', 2.5], ['GREEN', 1.6]];
+    for (const [phase, y] of phases) {
+      const on = light.phase === phase;
+      const color = phase === 'RED' ? C.red : phase === 'YELLOW' ? C.yellow : C.green;
+      const lamp = new THREE.Mesh(
+        new THREE.SphereGeometry(0.28, 14, 14),
+        std(on ? color : C.signalOff, on ? { emissive: color, emissiveIntensity: 2 } : undefined),
+      );
+      // Đèn ở mặt trước hộp đèn (z = 1.85) để xe tới từ hướng +z nhìn thấy.
+      lamp.position.set(3.4, y, 1.85);
+      g.add(lamp);
+    }
+  }
+  // Đèn người đi bộ riêng ở cột đối diện (SCN-102A/308A).
+  if (light.ped) {
+    const pedPole = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 2.2, 10), std(C.signalOff));
+    pedPole.position.set(-3.4, 1.1, 1.5);
+    pedPole.castShadow = true;
+    g.add(pedPole);
+    const sign = textPlane(light.ped === 'green' ? 'ĐI' : 'DỪNG', 0.7, {
+      color: '#ffffff',
+      bg: light.ped === 'green' ? C.green : C.red,
+      font: '900 40px system-ui, sans-serif',
+    });
+    sign.position.set(-3.4, 2.6, 1.5);
+    g.add(sign);
+  }
+  return g;
+}
+
+function buildPlayer(vehicleType: VehicleType): { group: THREE.Group; brakeMats: THREE.MeshStandardMaterial[]; blinkers: { left: THREE.Mesh[]; right: THREE.Mesh[] } } {
+  const g = new THREE.Group();
+  const brakeMats: THREE.MeshStandardMaterial[] = [];
+  const blinkers: { left: THREE.Mesh[]; right: THREE.Mesh[] } = { left: [], right: [] };
+  const isWalk = vehicleType === 'WALK';
+  const addBlinker = (side: 'left' | 'right', x: number, z: number, y: number) => {
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 10), std('#f59e0b', { emissive: '#f59e0b', emissiveIntensity: 1.6 }));
+    dot.position.set(x, y, z);
+    g.add(dot);
+    blinkers[side].push(dot);
+  };
+  const addBrakeLight = (x: number, z: number) => {
+    const m = std('#7f1d1d', { emissive: '#ff2d55', emissiveIntensity: 0.15 });
+    const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.1, 0.06), m);
+    lamp.position.set(x, 0.35, z);
+    g.add(lamp);
+    brakeMats.push(m);
+  };
+  if (!isWalk) {
+    const dims = {
+      BIKE: { w: 0.5, h: 0.28, d: 1.5 },
+      E_BIKE: { w: 0.72, h: 0.48, d: 1.7 },
+      E_SCOOTER: { w: 0.72, h: 0.48, d: 1.7 },
+      MOTO_50CC: { w: 0.9, h: 0.48, d: 2 },
+    }[vehicleType];
+    if (vehicleType === 'BIKE') {
+      for (const z of [-0.55, 0.55]) {
+        const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.06, 16), std('#1f2937'));
+        wheel.rotation.z = Math.PI / 2;
+        wheel.position.set(0, 0.34, z);
+        wheel.castShadow = true;
+        g.add(wheel);
+      }
+      g.add(box(0.08, 0.08, 1.1, C.player, 0, 0.55, 0));
+    } else {
+      g.add(box(dims.w, dims.h, dims.d, C.player, 0, dims.h / 2 + 0.1, 0));
+      for (const sx of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+          const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.16, 12), std('#1f2937'));
+          wheel.rotation.z = Math.PI / 2;
+          wheel.position.set(sx * (dims.w / 2 - 0.05), 0.3, sz * (dims.d / 2 - 0.35));
+          wheel.castShadow = true;
+          g.add(wheel);
+        }
+      }
+    }
+    // Người lái: thân + đầu + mũ bảo hiểm.
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.5, 4, 10), std(shade(C.player, 45)));
+    body.position.set(0, 1.05, 0.1);
+    body.castShadow = true;
+    g.add(body);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 14, 14), std(C.skin));
+    head.position.set(0, 1.62, 0.12);
+    head.castShadow = true;
+    g.add(head);
+    const helmet = new THREE.Mesh(new THREE.SphereGeometry(0.26, 14, 14), std('#0284c7'));
+    helmet.scale.set(1, 0.7, 1);
+    helmet.position.set(0, 1.68, 0.12);
+    helmet.castShadow = true;
+    g.add(helmet);
+    // Đèn phanh 2 ô đỏ ở đuôi xe + xi-nhan 2 bên.
+    addBrakeLight(-dims.w / 2 + 0.1, dims.d / 2);
+    addBrakeLight(dims.w / 2 - 0.1, dims.d / 2);
+    addBlinker('left', -dims.w / 2, -dims.d / 2 + 0.1, 0.5);
+    addBlinker('left', -dims.w / 2, dims.d / 2 - 0.1, 0.5);
+    addBlinker('right', dims.w / 2, -dims.d / 2 + 0.1, 0.5);
+    addBlinker('right', dims.w / 2, dims.d / 2 - 0.1, 0.5);
+  } else {
+    // Người đi bộ: thân áo xanh, đầu, không xe, không mũ bảo hiểm (W1).
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.26, 0.6, 4, 10), std(C.player));
+    body.position.set(0, 0.85, 0.1);
+    body.castShadow = true;
+    g.add(body);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 14, 14), std(C.skin));
+    head.position.set(0, 1.5, 0.12);
+    head.castShadow = true;
+    g.add(head);
+  }
+  return { group: g, brakeMats, blinkers };
+}
+
+function buildWorld(desc: Scene3DDescription, vehicleType: VehicleType, dyn: DynRefs): { group: THREE.Group; player: ReturnType<typeof buildPlayer> } {
+  const g = new THREE.Group();
+  g.add(buildGround(desc));
+  g.add(buildMarkings(desc));
+
+  // Tòa nhà (B1): chỉ mang biển TRƯỜNG A khi kịch bản ở khu vực trường.
+  if (desc.schoolBuilding) {
+    const wall = desc.atSchool ? C.school : '#e8dcc8';
+    const roof = desc.atSchool ? C.roof : '#94a3b8';
+    g.add(box(4, 5, 4, wall, -5.5, 2.5, -6));
+    g.add(box(4, 0.6, 4, roof, -5.5, 5.3, -6));
+    for (let i = 0; i < 3; i++) {
+      g.add(box(0.7, 0.9, 0.15, C.window, -6.6 + i * 1.1, 3.5, -3.95));
+    }
+    if (desc.atSchool) {
+      const sign = textPlane('TRƯỜNG A', 0.8, { color: '#854d0e', bg: '#fef08a', border: '#ca8a04', font: '900 40px system-ui, sans-serif' });
+      sign.position.set(-5.5, 6.1, -4);
+      g.add(sign);
+    }
+  }
+
+  // Cây xanh ven đường.
+  for (const [tx, tz] of [[-6, 6], [6, 10], [-6, 16], [6, -2]] as const) {
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 2, 8), std(C.trunk));
+    trunk.position.set(tx, 1, tz);
+    trunk.castShadow = true;
+    g.add(trunk);
+    const leaf = new THREE.Mesh(new THREE.IcosahedronGeometry(0.95, 0), std(C.leaf));
+    leaf.position.set(tx, 2.8, tz);
+    leaf.castShadow = true;
+    g.add(leaf);
+  }
+
+  // Đèn giao thông + đèn người đi bộ.
+  if (desc.light.draw) g.add(buildTrafficLight(desc));
+
+  // Xe NPC.
+  for (const v of desc.npcVehicles) {
+    const built = buildVehicleMesh(v);
+    g.add(built.group);
+    for (const b of built.blinkers) dyn.blinkers.push({ mesh: b, side: v.signal ?? 'RIGHT', owner: 'NPC' });
+    if (built.bar) dyn.emergencyBars.push(built.bar);
+  }
+
+  // Vùng điểm mù (xe buýt/xe tải/ô tô): nền đỏ mờ + nhãn đặt TRƯỚC ĐẦU XE
+  // (vùng học sinh sắp bước vào), không đặt dưới thân xe.
+  if (desc.blindSpot && desc.blindLabel) {
+    const blind = desc.npcVehicles[0];
+    const dimD = blind ? VEHICLE_DIMS[blind.kind].d : 4;
+    const zoneX = blind ? blind.x : 0.4;
+    const zoneZ = blind ? blind.z + dimD / 2 + 1.1 : -2;
+    const zone = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.6), new THREE.MeshBasicMaterial({ color: '#ef4444', transparent: true, opacity: 0.3, side: THREE.DoubleSide }));
+    zone.rotation.x = -Math.PI / 2;
+    zone.position.set(zoneX, 0.04, zoneZ);
+    g.add(zone);
+    const label = textPlane(`⚠ ${desc.blindLabel}`, 0.7, { color: '#dc2626', font: '900 40px system-ui, sans-serif' });
+    label.position.set(zoneX, 0.9, zoneZ);
+    g.add(label);
+  }
+
+  // Người đi bộ qua đường (đi lại ngang vạch).
+  if (desc.pedestrian) {
+    const p = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.26, 0.55, 4, 10), std('#FF8A65'));
+    body.position.set(0, 0.85, 0);
+    body.castShadow = true;
+    p.add(body);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.26, 14, 14), std(C.skin));
+    head.position.set(0, 1.5, 0);
+    head.castShadow = true;
+    p.add(head);
+    p.position.set(0, 0, 0.2);
+    g.add(p);
+    dyn.pedestrian = p;
+  }
+
+  // Người điều tiết giao thông (O1): thân cam + đầu + biển DỪNG đỏ.
+  if (desc.officer) {
+    const o = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.26, 0.55, 4, 10), std('#f59e0b'));
+    body.position.set(0, 0.85, 0);
+    body.castShadow = true;
+    o.add(body);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.26, 14, 14), std(C.skin));
+    head.position.set(0, 1.5, 0);
+    head.castShadow = true;
+    o.add(head);
+    const stop = new THREE.Mesh(new THREE.CircleGeometry(0.42, 20), std('#dc2626', { emissive: '#dc2626', emissiveIntensity: 0.3 }));
+    stop.position.set(0.35, 1.6, 0);
+    stop.rotation.y = Math.PI / 4;
+    o.add(stop);
+    const stopText = textPlane('DỪNG', 0.34, { color: '#ffffff', font: '900 40px system-ui, sans-serif' });
+    stopText.position.set(0.35, 1.6, 0.02);
+    o.add(stopText);
+    o.position.set(1.6, 0, -0.5);
+    g.add(o);
+  }
+
+  // Biển báo theo spec.sign (S1).
+  if (desc.signText) {
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.2, 8), std('#475569'));
+    pole.position.set(3.2, 1.1, -2);
+    pole.castShadow = true;
+    g.add(pole);
+    const sign = textPlane(desc.signText, 0.62, { color: '#0f172a', bg: '#f8fafc', border: '#334155', font: '900 40px system-ui, sans-serif' });
+    sign.position.set(3.2, 2.5, -2);
+    g.add(sign);
+  }
+
+  // Chi tiết theo archetype.
+  const a = desc.scene.archetype;
+  if (a === 'OPENING_DOOR') {
+    g.add(box(0.15, 1.3, 1.4, C.yellow, 1.2, 1.25, 4.3));
+  }
+  if (a === 'BUS_STOP') {
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 3, 8), std('#475569'));
+    pole.position.set(4.8, 1.5, -2);
+    g.add(pole);
+    g.add(box(1.5, 0.3, 0.8, '#f8fafc', 4.8, 2.9, -2));
+  }
+  if (a === 'MERGE_LANE_CHANGE') {
+    for (let z = -8; z <= 5; z += 1.4) {
+      const dash = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.03, 0.72), std(C.yellow));
+      dash.position.set(1.05, 0.03, z);
+      g.add(dash);
+    }
+    const arrow = textPlane('↗', 1.2, { color: '#fef08a', font: '900 70px system-ui, sans-serif' });
+    arrow.position.set(0.9, 0.8, -1.2);
+    g.add(arrow);
+  }
+  if (a === 'OVERTAKING') {
+    const ring = new THREE.Mesh(new THREE.CircleGeometry(1.5, 24), new THREE.MeshBasicMaterial({ color: '#ef4444', transparent: true, opacity: 0.3, side: THREE.DoubleSide }));
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.set(0, 0.04, -4.2);
+    g.add(ring);
+  }
+  if (a === 'RAILWAY_CROSSING') {
+    for (const z of [0.8, -0.8]) {
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(10, 0.08, 0.16), std('#475569'));
+      rail.position.set(0, 0.05, z);
+      g.add(rail);
+    }
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 3.4, 8), std('#e2e8f0'));
+    post.position.set(-3, 1.7, 2);
+    g.add(post);
+    g.add(box(5, 0.18, 0.18, C.red, -0.5, 3.1, 2));
+  }
+  if (a === 'ROUNDABOUT') {
+    const island = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.1, 0.45, 20), std(C.grassDark));
+    island.position.set(0, 0.22, 0);
+    island.castShadow = true;
+    island.receiveShadow = true;
+    g.add(island);
+    const center = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.3, 16), std(C.walk));
+    center.position.set(0, 0.6, 0);
+    g.add(center);
+  }
+  if (a === 'OBSTACLE_CONSTRUCTION') {
+    g.add(box(3, 0.7, 0.55, '#f97316', 0, 0.35, -1));
+    for (const x of [-1.2, 0, 1.2]) {
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.8, 10), std(C.yellow));
+      cone.position.set(x, 1.1, -0.9);
+      cone.castShadow = true;
+      g.add(cone);
+    }
+  }
+  if (a === 'LOW_VISIBILITY') {
+    g.add(box(1.3, 0.95, 2.5, '#94a3b8', -0.65, 0.48, -4.8));
+    if (/underpass|cau_vuot/.test(desc.kind)) {
+      g.add(box(1.2, 5.5, 1.2, '#64748b', -5.5, 2.75, -7));
+      g.add(box(1.2, 5.5, 1.2, '#64748b', 4.3, 2.75, -7));
+      g.add(box(11, 0.8, 1.2, '#94a3b8', -0.6, 5.9, -7));
+    }
+  }
+
+  // Vòng cảnh báo đỏ trên đầu xe HS khi lựa chọn gây xung đột (thay cho vòng
+  // tròn canvas cũ) — ẩn/hiện theo từng khung hình.
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(0.9, 0.09, 8, 24),
+    std('#ef4444', { emissive: '#ef4444', emissiveIntensity: 1.2 }),
+  );
+  ring.rotation.x = Math.PI / 2;
+  ring.visible = false;
+  g.add(ring);
+  dyn.unsafeRing = ring;
+
+  const player = buildPlayer(vehicleType);
+  for (const b of player.blinkers.left) dyn.blinkers.push({ mesh: b, side: 'LEFT', owner: 'PLAYER' });
+  for (const b of player.blinkers.right) dyn.blinkers.push({ mesh: b, side: 'RIGHT', owner: 'PLAYER' });
+  dyn.brakeMats.push(...player.brakeMats);
+  g.add(player.group);
+  return { group: g, player };
 }
 
 export default function World3D({
@@ -401,7 +920,7 @@ export default function World3D({
   selectedDecision = '',
   visualSpec,
 }: World3DProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const dataRef = useRef({
     cameraMode,
@@ -475,26 +994,108 @@ export default function World3D({
     }
   }, [cameraMode, vehicleType, isDriving, weather, hazardActive, sceneKind, sceneEvent, selectedDecision, visualSpec]);
 
+  // Badge phản xạ (DOM thay cho chữ vẽ trên canvas): tính thuần từ props,
+  // nhưng màu xanh chỉ hiện khi xe ĐÃ phanh dừng thật (brakeLive đồng bộ
+  // từ vòng lặp) — đang tiến tới vạch thì vẫn vàng "đang thực hiện".
+  const badgeEffect = decisionEffect(visualSpec, selectedDecision);
+  const badgeSafe = Boolean(selectedDecision) && /brake|stop|yield|wait|slow|safe|keep_distance/.test(badgeEffect);
+  const badgeUnsafe = Boolean(selectedDecision) && /rush|accelerate|speed|overtake|pass|ignore|swerve|conflict|near_miss/.test(badgeEffect);
+  const [brakeLive, setBrakeLive] = useState(false);
+  const brakeLiveRef = useRef(false);
+  const badgeBrake = badgeSafe && brakeLive;
+  const badgeText = badgeBrake ? 'ĐÃ GIẢM TỐC / NHƯỜNG ĐƯỜNG' : badgeUnsafe ? 'NGUY CƠ XUNG ĐỘT TĂNG CAO' : 'ĐANG THỰC HIỆN LỰA CHỌN';
+  const badgeBg = badgeBrake ? '#22c55e' : badgeUnsafe ? '#ef4444' : '#f59e0b';
+  const desc = describeScene3D(visualSpec, sceneKind, sceneEvent, vehicleType, weather);
+  const skyBg = desc.sky;
+
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.imageSmoothingEnabled = false;
+    const container = containerRef.current;
+    if (!container) return;
+    const d = dataRef.current;
+    const sceneDesc = describeScene3D(d.visualSpec, d.sceneKind, d.sceneEvent, d.vehicleType, d.weather);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap; // PCFSoft đã bị gỡ từ three 0.187
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.inset = '0';
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.domElement.style.display = 'block';
+    renderer.domElement.setAttribute('aria-label', 'Mô phỏng giao thông 3D Isometric');
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(sceneDesc.sky);
+    if (sceneDesc.fog) scene.fog = new THREE.Fog(sceneDesc.sky, 34, 72);
+
+    // Ánh sáng: bán cầu + mặt trời có bóng đổ (bóng 1024, đủ nhẹ cho máy yếu).
+    const hemi = new THREE.HemisphereLight(0xdfefff, 0x6b7c5e, sceneDesc.night ? 0.35 : sceneDesc.evening ? 0.8 : 1.0);
+    scene.add(hemi);
+    const sun = new THREE.DirectionalLight(0xfff2d9, sceneDesc.night ? 0.45 : sceneDesc.evening ? 0.9 : 1.6);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.camera.left = -30;
+    sun.shadow.camera.right = 30;
+    sun.shadow.camera.top = 30;
+    sun.shadow.camera.bottom = -30;
+    sun.shadow.camera.near = 1;
+    sun.shadow.camera.far = 90;
+    sun.shadow.bias = -0.0005;
+    scene.add(sun);
+    scene.add(sun.target);
+
+    // Camera trực giao isometric — nhìn quen như bản 2.5D nhưng có chiều sâu.
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 200);
+    const zoomFor = (mode: CameraMode) => (mode === 'INTERSECTION' ? 1.25 : mode === 'CINEMATIC_OVERVIEW' ? 0.8 : mode === 'TOP_DOWN' ? 0.6 : 1);
+    const applyFrustum = () => {
+      const w = Math.max(320, container.clientWidth);
+      const h = Math.max(260, container.clientHeight);
+      const halfH = 12 / zoomFor(d.cameraMode);
+      const aspect = w / h;
+      camera.left = -halfH * aspect;
+      camera.right = halfH * aspect;
+      camera.top = halfH;
+      camera.bottom = -halfH;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    };
+    applyFrustum();
+
+    const dyn: DynRefs = { blinkers: [], emergencyBars: [], brakeMats: [] };
+    const { group: world, player } = buildWorld(sceneDesc, d.vehicleType, dyn);
+    scene.add(world);
+
+    // Mưa (chỉ khi đang mưa thật): 300 hạt Points quanh camera.
+    let rainGeo: THREE.BufferGeometry | undefined;
+    if (sceneDesc.rain) {
+      const count = 300;
+      const pos = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        pos[i * 3] = (Math.random() - 0.5) * 40;
+        pos[i * 3 + 1] = Math.random() * 14;
+        pos[i * 3 + 2] = (Math.random() - 0.5) * 40;
+      }
+      rainGeo = new THREE.BufferGeometry();
+      rainGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const rain = new THREE.Points(
+        rainGeo,
+        new THREE.PointsMaterial({ color: '#cfe8f5', size: 0.14, transparent: true, opacity: 0.55 }),
+      );
+      dyn.rain = rain;
+      dyn.rainBase = pos;
+      scene.add(rain);
+    }
+
+    const ro = new ResizeObserver(applyFrustum);
+    ro.observe(container);
 
     let raf = 0;
-    let last = 0;
-
+    let last = performance.now();
     const frame = (now: number) => {
-      if (now - last < 33) return; // 30fps smooth target
+      const dt = Math.min(0.05, Math.max(0.001, (now - last) / 1000));
       last = now;
-
-      const d = dataRef.current;
-      const scene = resolveScene(d.visualSpec, d.sceneKind, d.sceneEvent);
-      const kind = `${d.sceneKind || ''} ${d.sceneEvent || ''}`.toLowerCase();
-      const specWeather = d.visualSpec?.weather === 'RAIN' ? 'rain' : d.visualSpec?.weather === 'FOG' ? 'evening' : 'sunny';
-      const activeWeather = d.visualSpec ? specWeather : d.weather;
-      const dt = 0.05;
       d.time += dt;
       d.speed += (d.targetSpeed - d.speed) * 0.1;
       if (d.isDriving) d.playerZ -= d.speed * dt;
@@ -506,371 +1107,102 @@ export default function World3D({
       }
       if (d.playerZ < -24) d.playerZ = 24;
       if (d.signal !== 'OFF') d.signalTimer += dt;
-
-      const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const w = Math.max(320, Math.floor(rect.width));
-      const h = Math.max(260, Math.floor(rect.height));
-      if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
-        canvas.width = Math.floor(w * dpr);
-        canvas.height = Math.floor(h * dpr);
+      // Đồng bộ trạng thái phanh thật ra badge DOM (chỉ đổi khi thay đổi).
+      if (d.brake !== brakeLiveRef.current) {
+        brakeLiveRef.current = d.brake;
+        setBrakeLive(d.brake);
       }
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, w, h);
 
-      // TOP_DOWN thật sự khác FOLLOW_VEHICLE: zoom 0.6 nhìn từ trên cao.
-      const zoom = d.cameraMode === 'INTERSECTION' ? 1.25 : d.cameraMode === 'CINEMATIC_OVERVIEW' ? 0.8 : d.cameraMode === 'TOP_DOWN' ? 0.6 : 1;
-      const tile = 34 * zoom;
+      player.group.position.set(d.playerX, 0, d.playerZ);
+
+      // Camera bám xe (trừ màn chào nhìn toàn cảnh).
       const camX = d.cameraMode === 'CINEMATIC_OVERVIEW' ? 0 : d.playerX;
       const camZ = d.cameraMode === 'CINEMATIC_OVERVIEW' ? 0 : d.playerZ - 8;
-      const project: Projector = (x, y, z) => ({
-        x: w / 2 + (x - camX) * tile * 0.72 - (z - camZ) * tile * 0.14,
-        y: h * 0.60 + (z - camZ) * tile * 0.32 - y * tile * 0.48,
-      });
-
-      // Bầu trời 2.5D theo thời điểm trong kịch bản (E1: tối/đêm không còn trời xanh).
-      ctx.fillStyle = skyColorFor(d.visualSpec, activeWeather);
-      ctx.fillRect(0, 0, w, h);
-
-      // Mặt đất 2.5D Isometric
-      for (let x = -12; x <= 12; x++) {
-        for (let z = Math.floor(camZ) - 18; z <= Math.floor(camZ) + 24; z++) {
-          const isIntersection = ['INTERSECTION', 'PEDESTRIAN_CROSSING', 'ROUNDABOUT'].includes(scene.archetype);
-          const isCrossRoad = isIntersection && z >= -2 && z <= 2;
-          const roadHalfWidth = scene.archetype === 'NARROW_ROAD' ? 1 : 2;
-          const isRoad = (x >= -roadHalfWidth && x <= roadHalfWidth) || isCrossRoad;
-          const isWalk = x === -3 || x === 3;
-          const isCrosswalk = drawsCrosswalk(d.visualSpec, scene.archetype) && z >= -1 && z <= 1 && Math.abs(x) <= 2;
-          // Vạch mờ (F1): vạch màu xám nhạt thay vì trắng đặc.
-          const crosswalkColor = d.visualSpec?.crosswalk_faded ? '#9aa5b1' : C.line;
-          const roadColor = roadColorFor(d.visualSpec, activeWeather);
-          const top = isCrosswalk && x % 2 === 0 ? crosswalkColor : isRoad ? roadColor : isWalk ? C.walk : C.grass;
-          const left = shade(top, -26);
-          const right = shade(top, -12);
-          block(ctx, project, x, -0.35, z, 0.96, 0.32, 0.96, top, left, right);
-        }
-      }
-
-      // Vạch sơn đường & vạch dừng
-      for (let z = Math.floor(camZ) - 18; z <= Math.floor(camZ) + 24; z += 2) {
-        block(ctx, project, -0.07, -0.01, z, 0.14, 0.02, 1, C.line, shade(C.line, -20), shade(C.line, -10));
-      }
-      for (const edge of [-2.2, 2.1]) {
-        for (let z = Math.floor(camZ) - 18; z <= Math.floor(camZ) + 24; z++) {
-          block(ctx, project, edge, -0.01, z, 0.1, 0.02, 0.98, C.line, shade(C.line, -20), shade(C.line, -10));
-        }
-      }
-      for (let x = -2.1; x <= 2.1; x += 0.5) {
-        block(ctx, project, x, -0.01, -1.6, 0.45, 0.02, 0.28, C.line, shade(C.line, -20), shade(C.line, -10));
-      }
-
-      // Tòa nhà trường chỉ mang biển TRƯỜNG A khi kịch bản ở khu vực trường
-      // (B1: 10/12 case không ở trường thì vẽ tòa nhà chung chung, không biển).
-      if (scene.archetype === 'SCHOOL_GATE' || /school|cong_truong/.test(kind)) {
-        const atSchool = d.visualSpec?.at_school !== false;
-        const wall = atSchool ? C.school : '#e8dcc8';
-        const roof = atSchool ? C.roof : '#94a3b8';
-        block(ctx, project, -7.5, 0, -8, 4, 5, 4, wall, shade(wall, -40), shade(wall, -20));
-        block(ctx, project, -7.5, 5, -8, 4, 0.6, 4, roof, shade(roof, -40), shade(roof, -20));
-        for (let i = 0; i < 3; i++) {
-          block(ctx, project, -7.1 + i * 1.1, 2, -7.5, 0.7, 0.9, 0.15, C.window, shade(C.window, -40), shade(C.window, -20));
-        }
-        if (atSchool) {
-          const sign = project(-5.5, 5.8, -8);
-          ctx.fillStyle = '#fef08a';
-          ctx.fillRect(sign.x - 54, sign.y - 14, 108, 28);
-          ctx.strokeStyle = '#ca8a04';
-          ctx.lineWidth = 3;
-          ctx.strokeRect(sign.x - 54, sign.y - 14, 108, 28);
-          ctx.fillStyle = '#854d0e';
-          ctx.font = '900 13px system-ui, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText('TRƯỜNG A', sign.x, sign.y + 5);
-          ctx.textAlign = 'left';
-        }
-      }
-
-      // Cây xanh ven đường
-      for (const [tx, tz] of [[-6, 6], [6, 10], [-6, 16], [6, -2]] as const) {
-        block(ctx, project, tx, 0, tz, 0.5, 2, 0.5, C.trunk, shade(C.trunk, -30), shade(C.trunk, -12));
-        block(ctx, project, tx - 0.4, 2, tz - 0.4, 1.3, 1.6, 1.3, C.leaf, shade(C.leaf, -40), shade(C.leaf, -20));
-      }
-
-      // Đèn giao thông (L1+L2): chỉ vẽ khi traffic_control cho màu xác định
-      // (RED/YELLOW/GREEN/PEDESTRIAN_RED/PEDESTRIAN_GREEN/OFF), bất kể archetype;
-      // không vẽ khi NONE/YIELD_SIGN/STOP_SIGN/OFFICER_STOP/RAIL_BARRIER.
-      // Không còn chế độ đèn tự chạy vòng.
-      const light = lightStateFor(d.visualSpec?.traffic_control, d.visualSpec?.dual_arrow_light);
-      if (light.draw) {
-        block(ctx, project, 3.4, 0, 1.5, 0.3, 4, 0.3, C.signalOff, shade(C.signalOff, -30), shade(C.signalOff, -12));
-        if (light.dual) {
-          // Đèn 2 mũi tên (SCN-104A): xanh đi thẳng + đỏ rẽ trái.
-          const arrowUp = project(3.55, 3.2, 1.5);
-          const arrowLeft = project(3.55, 2.2, 1.5);
-          ctx.font = '900 22px system-ui';
-          ctx.textAlign = 'center';
-          ctx.fillStyle = C.green;
-          ctx.fillText('↑', arrowUp.x, arrowUp.y);
-          ctx.fillStyle = C.red;
-          ctx.fillText('←', arrowLeft.x, arrowLeft.y);
-          ctx.textAlign = 'left';
-        } else {
-          const phaseIndex = light.phase === 'RED' ? 0 : light.phase === 'YELLOW' ? 1 : light.phase === 'GREEN' ? 2 : -1;
-          block(ctx, project, 3.1, 3.4, 1.4, 0.9, 0.8, 0.6, phaseIndex === 0 ? C.red : C.signalOff, '#111', '#222');
-          block(ctx, project, 3.1, 2.5, 1.4, 0.9, 0.8, 0.6, phaseIndex === 1 ? C.yellow : C.signalOff, '#111', '#222');
-          block(ctx, project, 3.1, 1.6, 1.4, 0.9, 0.8, 0.6, phaseIndex === 2 ? C.green : C.signalOff, '#111', '#222');
-        }
-        // Đèn người đi bộ riêng ở cột đối diện (SCN-102A/308A).
-        if (light.ped) {
-          block(ctx, project, -3.4, 0, 1.5, 0.3, 2.2, 0.3, C.signalOff, shade(C.signalOff, -30), shade(C.signalOff, -12));
-          const pedSign = project(-3.4, 2.6, 1.5);
-          ctx.fillStyle = light.ped === 'green' ? C.green : C.red;
-          ctx.font = '900 13px system-ui';
-          ctx.textAlign = 'center';
-          ctx.fillText(light.ped === 'green' ? 'ĐI' : 'DỪNG', pedSign.x, pedSign.y);
-          ctx.textAlign = 'left';
-        }
-      }
-
-      // Xe NPC theo spec.actors (N2a/N3) — xe buýt và ô tô từng vô hình vì
-      // archetype không vẽ chúng. Nhãn vùng điểm mù đổi theo loại xe.
-      const npcVehicles = npcVehiclesFor(d.visualSpec, scene, d.sceneKind);
-      for (const v of npcVehicles) drawVehicle(ctx, project, d.time, v);
-      if (scene.archetype === 'LARGE_VEHICLE_BLIND_SPOT') {
-        const blind = npcVehicles[0];
-        const blindLabel = blind?.kind === 'BUS' ? 'VÙNG ĐIỂM MÙ XE BUÝT' : blind?.kind === 'CAR' ? 'VÙNG ĐIỂM MÙ XE Ô TÔ' : 'VÙNG ĐIỂM MÙ XE TẢI';
-        // Vùng nguy hiểm điểm mù màu đỏ nổi bật
-        ctx.fillStyle = 'rgba(239, 68, 68, 0.35)';
-        const mark = project(0.4, 0, -2);
-        ctx.fillRect(mark.x - tile * 0.6, mark.y - tile * 0.25, tile * 1.2, tile * 0.6);
-        ctx.fillStyle = '#dc2626';
-        ctx.font = 'bold 11px system-ui';
-        ctx.fillText(`⚠️ ${blindLabel}`, mark.x - tile * 0.5, mark.y - tile * 0.3);
-      }
-
-      if (scene.archetype === 'PEDESTRIAN_CROSSING' || scene.actors.has('pedestrian')) {
-        const walk = (Math.sin(d.time * 2) + 1) / 2;
-        const nx = -1.6 + walk * 3.2;
-        block(ctx, project, nx, 0, 0.2, 0.55, 1.1, 0.55, '#FF8A65', '#BF360C', '#E64A19');
-        block(ctx, project, nx - 0.05, 1.1, 0.3, 0.65, 0.6, 0.6, C.skin, '#D28C5B', '#EAB389');
-      }
-
-      // Người điều tiết giao thông (O1): thân + đầu + biển DỪNG đỏ.
-      if (scene.actors.has('traffic_officer')) {
-        block(ctx, project, 1.6, 0, -0.5, 0.55, 1.1, 0.55, '#f59e0b', '#b45309', '#d97706');
-        block(ctx, project, 1.55, 1.1, -0.4, 0.65, 0.6, 0.6, C.skin, '#D28C5B', '#EAB389');
-        const stopSign = project(1.85, 1.6, -0.5);
-        ctx.fillStyle = '#dc2626';
-        ctx.beginPath();
-        ctx.arc(stopSign.x, stopSign.y, 11, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#fff';
-        ctx.font = '900 8px system-ui';
-        ctx.textAlign = 'center';
-        ctx.fillText('DỪNG', stopSign.x, stopSign.y + 3);
-        ctx.textAlign = 'left';
-      }
-
-      // Biển báo theo spec.sign (S1): cột + bảng ghi nhãn ngắn.
-      const signText = signLabel(d.visualSpec?.sign);
-      if (signText) {
-        block(ctx, project, 3.2, 0, -2, 0.15, 2.2, 0.15, '#475569', '#334155', '#1e293b');
-        const signPos = project(3.2, 2.5, -2);
-        ctx.font = '900 11px system-ui';
-        const signW = Math.max(64, ctx.measureText(signText).width + 16);
-        ctx.fillStyle = '#f8fafc';
-        ctx.fillRect(signPos.x - signW / 2, signPos.y - 12, signW, 22);
-        ctx.strokeStyle = '#334155';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(signPos.x - signW / 2, signPos.y - 12, signW, 22);
-        ctx.fillStyle = '#0f172a';
-        ctx.textAlign = 'center';
-        ctx.fillText(signText, signPos.x, signPos.y + 4);
-        ctx.textAlign = 'left';
-      }
-
-      if (scene.archetype === 'OPENING_DOOR') {
-        // Tấm cửa đang mở (xe đã vẽ trong npcVehiclesFor — xe buýt nếu là xe đưa đón).
-        block(ctx, project, 1.2, 0.6, 4.3, 0.15, 1.3, 1.4, C.yellow, C.truckDark, C.truckDark);
-      }
-
-      if (scene.archetype === 'BUS_STOP') {
-        // Trạm dừng (xe buýt đã vẽ trong npcVehiclesFor).
-        block(ctx, project, 4.8, 0, -2, 0.25, 3, 0.25, '#475569', '#334155', '#1e293b');
-        block(ctx, project, 4.2, 2.5, -2.3, 1.5, 0.8, 0.3, '#f8fafc', '#cbd5e1', '#e2e8f0');
-      }
-
-      if (scene.archetype === 'MERGE_LANE_CHANGE') {
-        for (let z = -8; z <= 5; z += 1.4) {
-          block(ctx, project, 1.05, 0.02, z, 0.12, 0.04, 0.72, C.yellow, '#ca8a04', '#eab308');
-        }
-        const mergeMark = project(0.9, 0.25, -1.2);
-        ctx.strokeStyle = '#fef08a';
-        ctx.lineWidth = 5;
-        ctx.beginPath();
-        ctx.moveTo(mergeMark.x + 34, mergeMark.y - 24);
-        ctx.lineTo(mergeMark.x, mergeMark.y);
-        ctx.lineTo(mergeMark.x + 28, mergeMark.y + 8);
-        ctx.stroke();
-      }
-
-      if (scene.archetype === 'OVERTAKING') {
-        // Hai xe vượt nhau đã vẽ trong npcVehiclesFor (teal + hồng).
-        const conflict = project(0, 0.2, -4.2);
-        ctx.fillStyle = 'rgba(239, 68, 68, 0.32)';
-        ctx.beginPath();
-        ctx.arc(conflict.x, conflict.y, tile * 0.7, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      if (scene.archetype === 'RAILWAY_CROSSING') {
-        for (let x = -5; x <= 5; x += 0.5) {
-          block(ctx, project, x, 0.02, 0.8, 0.38, 0.08, 0.16, '#475569', '#1e293b', '#334155');
-          block(ctx, project, x, 0.02, -0.8, 0.38, 0.08, 0.16, '#475569', '#1e293b', '#334155');
-        }
-        block(ctx, project, -3, 0, 2, 0.22, 3.4, 0.22, '#e2e8f0', '#94a3b8', '#cbd5e1');
-        block(ctx, project, -3, 2.8, 2, 5, 0.18, 0.18, C.red, '#991b1b', '#b91c1c');
-      }
-
-      if (scene.archetype === 'ROUNDABOUT') {
-        block(ctx, project, -1.1, 0, -1.1, 2.2, 0.45, 2.2, C.grassDark, '#3f8f48', '#4fa556');
-        block(ctx, project, -0.45, 0.45, -0.45, 0.9, 0.3, 0.9, C.walk, C.walkDark, '#c8dce7');
-      }
-
-      if (scene.archetype === 'OBSTACLE_CONSTRUCTION') {
-        block(ctx, project, -1.5, 0, -1, 3, 0.7, 0.55, '#f97316', '#c2410c', '#ea580c');
-        for (const x of [-1.2, 0, 1.2]) {
-          block(ctx, project, x, 0.7, -0.9, 0.28, 0.8, 0.28, C.yellow, '#ca8a04', '#eab308');
-        }
-      }
-
-      if (scene.archetype === 'LOW_VISIBILITY') {
-        // Keep the leading vehicle barely visible so the scene matches the loss-of-visibility hazard.
-        block(ctx, project, -0.65, 0, -4.8, 1.3, 0.95, 2.5, '#94a3b8', '#475569', '#64748b');
-        if (/underpass|cau_vuot/.test(kind)) {
-          block(ctx, project, -5.5, 0, -7, 1.2, 5.5, 1.2, '#64748b', '#334155', '#475569');
-          block(ctx, project, 4.3, 0, -7, 1.2, 5.5, 1.2, '#64748b', '#334155', '#475569');
-          block(ctx, project, -5.5, 5.5, -7, 11, 0.8, 1.2, '#94a3b8', '#475569', '#64748b');
-        }
-      }
-
-      // Phương tiện học sinh (W1: đi bộ thì vẽ người đi bộ, không xe, không mũ).
-      const px = d.playerX;
-      const pz = d.playerZ;
-      const isWalk = d.vehicleType === 'WALK';
-      if (!isWalk) {
-        const playerColor = d.brake ? C.brake : C.player;
-        const vehicleWidth = d.vehicleType === 'BIKE' ? 0.5 : d.vehicleType === 'MOTO_50CC' ? 0.9 : 0.72;
-        const vehicleLength = d.vehicleType === 'BIKE' ? 1.5 : d.vehicleType === 'MOTO_50CC' ? 2 : 1.7;
-        const vehicleHeight = d.vehicleType === 'BIKE' ? 0.28 : 0.48;
-        block(ctx, project, px - vehicleWidth / 2, 0, pz, vehicleWidth, vehicleHeight, vehicleLength, playerColor, shade(playerColor, -55), shade(playerColor, -25));
-        block(ctx, project, px - 0.25, vehicleHeight, pz + 0.2, 0.5, 0.6, 0.6, shade(C.player, 45), C.playerDark, C.playerDark);
-        // Đèn phanh: 2 ô đỏ sáng ở đuôi xe khi phanh.
-        if (d.brake) {
-          const tailL = project(px - vehicleWidth / 2 + 0.08, 0.15, pz + vehicleLength);
-          const tailR = project(px + vehicleWidth / 2 - 0.08, 0.15, pz + vehicleLength);
-          ctx.fillStyle = '#ff2d55';
-          ctx.fillRect(tailL.x - 3, tailL.y - 3, 6, 6);
-          ctx.fillRect(tailR.x - 3, tailR.y - 3, 6, 6);
-        }
-        // Xi-nhan xe học sinh (T1): 2 chấm vàng cam nhấp nháy bên hướng rẽ (trước + sau).
-        if (d.signal !== 'OFF' && Math.floor(d.time * 3) % 2 === 0) {
-          const sideX = d.signal === 'LEFT' ? px - vehicleWidth / 2 : px + vehicleWidth / 2;
-          const sigF = project(sideX, 0.35, pz - 0.1);
-          const sigB = project(sideX, 0.35, pz + vehicleLength - 0.1);
-          ctx.fillStyle = '#f59e0b';
-          ctx.beginPath();
-          ctx.arc(sigF.x, sigF.y, 5, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(sigB.x, sigB.y, 5, 0, Math.PI * 2);
-          ctx.fill();
-        }
+      const target = new THREE.Vector3(camX, 0, camZ - 4);
+      if (d.cameraMode === 'TOP_DOWN') {
+        camera.position.set(camX + 0.1, 42, camZ - 3.9);
       } else {
-        // Người đi bộ: thân áo xanh, không xe.
-        block(ctx, project, px - 0.28, 0, pz + 0.1, 0.55, 1.1, 0.55, C.player, shade(C.player, -55), shade(C.player, -25));
+        camera.position.set(camX + 17, 15, camZ + 13);
       }
+      camera.lookAt(target);
+      sun.position.set(target.x + 20, 28, target.z + 12);
+      sun.target.position.copy(target);
 
-      // Nhân vật học sinh 2.5D (đi bộ: không mũ bảo hiểm).
-      const head = project(px, 1.85, pz + 0.15);
-      const hs = Math.max(12, tile * 0.44);
-      ctx.fillStyle = C.skin;
-      ctx.fillRect(head.x - hs / 2, head.y - hs / 2, hs, hs);
-
-      if (!isWalk) {
-        // Mũ bảo hiểm đạt chuẩn ATGT
-        ctx.fillStyle = '#0284c7';
-        ctx.fillRect(head.x - hs / 2 - 1, head.y - hs / 2 - 2, hs + 2, hs * 0.55);
+      // Xi-nhan nhấp nháy (3Hz) — chỉ bên hướng rẽ đang bật.
+      const blinkOn = Math.floor(d.time * 3) % 2 === 0;
+      for (const b of dyn.blinkers) {
+        const active = b.owner === 'PLAYER' ? b.side === d.signal : true;
+        b.mesh.visible = active && blinkOn;
       }
-
-      // Hiệu ứng mưa (R1): chỉ vẽ vệt mưa khi kịch bản đang mưa thật
-      // (spec.raining); đường ướt sau mưa không vẽ mưa. Màn chào không có spec
-      // thì vẽ theo prop weather như cũ.
-      if (activeWeather === 'rain' && (!d.visualSpec || d.visualSpec.raining)) {
-        ctx.fillStyle = 'rgba(207,232,245,0.45)';
-        for (let i = 0; i < 60; i++) {
-          const rx = (i * 97 + d.time * 260) % w;
-          const ry = (i * 53 + d.time * 420) % h;
-          ctx.fillRect(rx, ry, 2, 8);
+      // Đèn chớp xe ưu tiên đỏ/xanh xen kẽ (5Hz).
+      const flashRed = Math.floor(d.time * 5) % 2 === 0;
+      for (const bar of dyn.emergencyBars) {
+        bar.red.emissiveIntensity = flashRed ? 2.4 : 0.25;
+        bar.blue.emissiveIntensity = flashRed ? 0.25 : 2.4;
+      }
+      // Đèn phanh sáng khi phanh.
+      for (const m of dyn.brakeMats) m.emissiveIntensity = d.brake ? 2.2 : 0.15;
+      // Người đi bộ qua đường đi ngang vạch.
+      if (dyn.pedestrian) {
+        const walk = (Math.sin(d.time * 2) + 1) / 2;
+        dyn.pedestrian.position.x = -1.6 + walk * 3.2;
+      }
+      // Mưa rơi.
+      if (dyn.rain && dyn.rainBase && rainGeo) {
+        const attr = rainGeo.getAttribute('position') as THREE.BufferAttribute;
+        for (let i = 0; i < attr.count; i++) {
+          let y = attr.getY(i) - dt * 11;
+          if (y < 0) y = 14;
+          attr.setY(i, y);
+          attr.setX(i, dyn.rainBase[i * 3] + d.time * 1.2);
+        }
+        attr.needsUpdate = true;
+        dyn.rain.position.set(camX, 0, camZ);
+      }
+      // Vòng cảnh báo khi lựa chọn gây xung đột.
+      if (dyn.unsafeRing) {
+        const eff = decisionEffect(d.visualSpec, d.selectedDecision);
+        const unsafe = Boolean(d.selectedDecision) && /rush|accelerate|speed|overtake|pass|ignore|swerve|conflict|near_miss/.test(eff);
+        dyn.unsafeRing.visible = unsafe;
+        if (unsafe) {
+          const s = 1 + Math.sin(d.time * 7) * 0.12;
+          dyn.unsafeRing.scale.set(s, s, s);
+          dyn.unsafeRing.position.set(d.playerX, 2.4, d.playerZ - 0.4);
         }
       }
-      // Lớp phủ tối ban đêm (E1).
-      if (d.visualSpec?.time_of_day === 'NIGHT') {
-        ctx.fillStyle = 'rgba(2, 6, 23, 0.28)';
-        ctx.fillRect(0, 0, w, h);
-      }
-      if (d.visualSpec?.weather === 'FOG' || scene.archetype === 'LOW_VISIBILITY') {
-        ctx.fillStyle = 'rgba(226, 232, 240, 0.42)';
-        ctx.fillRect(0, 0, w, h);
-      }
-
-      const effect = decisionEffect(d.visualSpec, d.selectedDecision);
-      const isUnsafeMovement = /rush|accelerate|speed|overtake|pass|ignore|swerve|conflict|near_miss/.test(effect);
-      if (d.selectedDecision && isUnsafeMovement && scene.archetype !== 'STRAIGHT_ROAD') {
-        const warning = project(px, 2.5, pz - 1.4);
-        ctx.fillStyle = 'rgba(239, 68, 68, 0.78)';
-        ctx.beginPath();
-        ctx.arc(warning.x, warning.y, 18 + Math.sin(d.time * 7) * 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#fff';
-        ctx.font = '900 16px system-ui';
-        ctx.textAlign = 'center';
-        ctx.fillText('!', warning.x, warning.y + 6);
-        ctx.textAlign = 'left';
-      }
-
-      // Badge phản xạ chọn phương án — to hơn (18px) + nền pill tối để nhìn rõ.
-      if (d.selectedDecision) {
-        const badgeText = d.brake ? 'ĐÃ GIẢM TỐC / NHƯỜNG ĐƯỜNG' : isUnsafeMovement ? 'NGUY CƠ XUNG ĐỘT TĂNG CAO' : 'ĐANG THỰC HIỆN LỰA CHỌN';
-        const badgeBg = d.brake ? '#22c55e' : isUnsafeMovement ? '#ef4444' : '#f59e0b';
-        ctx.font = '900 18px system-ui';
-        const badgeW = ctx.measureText(badgeText).width + 44;
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
-        ctx.fillRect(12, 10, badgeW, 30);
-        ctx.fillStyle = badgeBg;
-        ctx.beginPath();
-        ctx.arc(28, 25, 7, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#fff';
-        ctx.textAlign = 'left';
-        ctx.fillText(badgeText, 42, 31);
-      }
+      // Lớp phủ tối ban đêm (E1) — mô phỏng bằng sương mù tối nhẹ.
+      renderer.render(scene, camera);
+      raf = requestAnimationFrame(frame);
     };
+    raf = requestAnimationFrame(frame);
 
-    frame(performance.now());
-    const loop = (now: number) => {
-      frame(now);
-      raf = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      scene.traverse((obj) => {
+        const mesh = obj as THREE.Mesh;
+        if (mesh.geometry) mesh.geometry.dispose();
+        const material = (mesh as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+        if (Array.isArray(material)) material.forEach((m) => m.dispose());
+        else if (material) material.dispose();
+      });
+      renderer.dispose();
+      if (renderer.domElement.parentElement === container) container.removeChild(renderer.domElement);
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [weather, selectedDecision, visualSpec]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cameraMode, vehicleType, weather, sceneKind, sceneEvent, visualSpec]);
 
   return (
-    <div style={{ position: 'relative', width: '100%', flex: 1, minHeight: 420, background: '#38bdf8', overflow: 'hidden', borderRadius: '22px' }}>
-      <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} aria-label="Mô phỏng giao thông 2.5D Isometric" />
+    <div style={{ position: 'relative', width: '100%', flex: 1, minHeight: 420, background: skyBg, overflow: 'hidden', borderRadius: '22px' }}>
+      <div ref={containerRef} style={{ position: 'absolute', inset: 0 }} />
+      {selectedDecision && (
+        <div style={{ position: 'absolute', left: 12, top: 10, display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(15, 23, 42, 0.8)', padding: '6px 12px 6px 6px', borderRadius: 999 }}>
+          <span style={{ width: 14, height: 14, borderRadius: '50%', background: badgeBg, display: 'inline-block' }} />
+          <span style={{ fontFamily: 'system-ui, sans-serif', fontSize: 18, fontWeight: 900, color: '#fff' }}>{badgeText}</span>
+        </div>
+      )}
       <div style={{ position: 'absolute', left: 12, bottom: 12, fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 800, color: '#f8fafc', background: 'rgba(15, 23, 42, 0.75)', padding: '5px 10px', borderRadius: 8 }}>
-        MÔ PHỎNG TÌNH HUỐNG 2.5D
+        MÔ PHỎNG 3D • ISOMETRIC
       </div>
     </div>
   );
