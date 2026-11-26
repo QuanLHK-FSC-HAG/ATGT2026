@@ -82,6 +82,7 @@ export default function HomePage() {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboardTab, setLeaderboardTab] = useState<'ALL' | 'CITY_3D' | 'ARENA_CHALLENGE' | 'SAFE_JOURNEY'>('ALL');
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
+  const [schoolSuggestions, setSchoolSuggestions] = useState<string[]>([]);
   const [localHistory, setLocalHistory] = useState<any[]>([]);
 
   // Tải bảng xếp hạng từ localStorage & server
@@ -91,6 +92,7 @@ export default function HomePage() {
       if (saved) setLocalHistory(JSON.parse(saved));
     } catch {}
     fetchLeaderboard();
+    fetchSchoolSuggestions();
   }, []);
 
   async function fetchLeaderboard() {
@@ -99,6 +101,18 @@ export default function HomePage() {
       if (res.ok) {
         const d = await res.json();
         if (d.leaderboard) setLeaderboardData(d.leaderboard);
+      }
+    } catch {}
+  }
+
+  async function fetchSchoolSuggestions() {
+    try {
+      const res = await fetch('/api/public/schools');
+      if (res.ok) {
+        const d = await res.json();
+        if (Array.isArray(d.schools)) {
+          setSchoolSuggestions(d.schools.filter((s: unknown) => typeof s === 'string'));
+        }
       }
     } catch {}
   }
@@ -531,6 +545,7 @@ export default function HomePage() {
                     <input
                       id="school-name"
                       name="school_name"
+                      list="school-suggestions"
                       value={form.school_name}
                       onChange={(event) => setForm({ ...form, school_name: event.target.value })}
                       placeholder="Ví dụ: THCS ABC hoặc THPT ABC"
@@ -538,6 +553,14 @@ export default function HomePage() {
                       required
                       maxLength={150}
                     />
+                    <datalist id="school-suggestions">
+                      {schoolSuggestions.map((name) => (
+                        <option key={name} value={name} />
+                      ))}
+                    </datalist>
+                    <small style={{ color: '#64748b', fontSize: 13 }}>
+                      Gõ vài chữ để chọn trường đã từng tham gia — trường mới vẫn gõ bình thường.
+                    </small>
                   </div>
                 </div>
 
